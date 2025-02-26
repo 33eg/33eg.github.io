@@ -1,10 +1,31 @@
-/* Стили для навигационного меню */
+/* Общие стили */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Шапка */
+header {
+  background-color: #002B5B; /* Темно-синий */
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+}
+h1 {
+  margin: 0;
+  font-size: 2.5em;
+}
+
+/* Навигационное меню (уже исправлено ранее) */
 nav {
   background-color: #001F4D; /* Темнее оттенок синего */
   color: white;
   padding: 10px 0;
 }
-
 nav ul {
   list-style: none;
   margin: 0;
@@ -13,11 +34,6 @@ nav ul {
   justify-content: center;
   gap: 20px;
 }
-
-nav ul li {
-  position: relative;
-}
-
 nav ul li a {
   color: white;
   text-decoration: none;
@@ -26,40 +42,118 @@ nav ul li a {
   border-radius: 4px;
   transition: background-color 0.3s ease;
 }
-
 nav ul li a:hover {
-  background-color: #003377; /* При наведении — более светлый синий */
+  background-color: #003377;
 }
 
-/* Выпадающее меню */
+/* Выпадающее меню (уже исправлено ранее) */
 .dropdown {
   position: relative;
   display: inline-block;
 }
-
 .dropdown-content {
-  display: none; /* Скрыто по умолчанию */
+  display: none;
   position: absolute;
-  top: 100%; /* Появляется под основным пунктом меню */
+  top: 100%;
   left: 0;
-  background-color: #001F4D; /* Цвет фона выпадающего меню */
+  background-color: #001F4D;
   padding: 10px;
   border-radius: 4px;
-  z-index: 1000; /* Для перекрытия других элементов */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень для лучшего визуального отделения */
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 .dropdown-content a {
   display: block;
   color: white;
   padding: 5px 10px;
   text-decoration: none;
 }
-
 .dropdown-content a:hover {
-  background-color: #003377; /* Подсветка при наведении */
+  background-color: #003377;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
 }
 
-.dropdown:hover .dropdown-content {
-  display: block; /* Показываем выпадающее меню при наведении */
+/* Основной контент */
+main {
+  padding: 20px;
+  text-align: center;
+}
+
+/* Стили для кнопок контактов */
+.contact-buttons {
+  max-width: 400px;
+  margin: 0 auto 20px;
+}
+.contact-buttons button {
+  background-color: #002B5B; /* Темно-синий */
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%; /* Кнопки во всю ширину */
+  margin: 5px 0; /* Отступ между кнопками */
+}
+.contact-buttons button:hover {
+  background-color: #001F4D; /* Темнее оттенок синего */
+}
+
+/* Форма обратной связи */
+form {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+form input[type="text"],
+form input[type="email"],
+form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}
+form button {
+  background-color: #002B5B; /* Темно-синий */
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%; /* Кнопка во всю ширину */
+  margin: 5px 0; /* Отступ между кнопками */
+}
+form button:hover {
+  background-color: #001F4D; /* Темнее оттенок синего */
+}
+
+/* iframe */
+iframe {
+  width: 100%;
+  height: 500px;
+  border: none;
+}
+
+/* Футер */
+footer {
+  text-align: center;
+  padding: 10px 0;
+  background-color: #333;
+  color: white;
+}
+footer p {
+  margin: 0;
 }
