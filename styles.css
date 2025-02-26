@@ -1,65 +1,65 @@
-/* Стили для формы */
-form {
-  max-width: 400px; /* Максимальная ширина формы */
-  margin: 20px auto; /* Центрирование формы */
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Стили для навигационного меню */
+nav {
+  background-color: #001F4D; /* Темнее оттенок синего */
+  color: white;
+  padding: 10px 0;
 }
 
-form label {
-  display: block;
-  margin-bottom: 8px;
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+nav ul li {
+  position: relative;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
   font-weight: bold;
-}
-
-form input[type="text"],
-form input[type="email"],
-form textarea {
-  width: 100%; /* Элементы во всю ширину формы */
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
+  padding: 10px 15px;
   border-radius: 4px;
-  font-size: 1em;
+  transition: background-color 0.3s ease;
 }
 
-form button {
-  background-color: #002B5B; /* Темно-синий */
+nav ul li a:hover {
+  background-color: #003377; /* При наведении — более светлый синий */
+}
+
+/* Выпадающее меню */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none; /* Скрыто по умолчанию */
+  position: absolute;
+  top: 100%; /* Появляется под основным пунктом меню */
+  left: 0;
+  background-color: #001F4D; /* Цвет фона выпадающего меню */
+  padding: 10px;
+  border-radius: 4px;
+  z-index: 1000; /* Для перекрытия других элементов */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень для лучшего визуального отделения */
+}
+
+.dropdown-content a {
+  display: block;
   color: white;
-  border: none;
-  padding: 10px;
-  font-size: 1em;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%; /* Кнопка во всю ширину */
-  margin: 5px 0; /* Отступ между кнопками */
+  padding: 5px 10px;
+  text-decoration: none;
 }
 
-form button:hover {
-  background-color: #001F4D; /* Темнее оттенок синего */
+.dropdown-content a:hover {
+  background-color: #003377; /* Подсветка при наведении */
 }
 
-/* Блок с кнопками контактов */
-.contact-buttons {
-  max-width: 400px; /* Ширина блока кнопок */
-  margin: 0 auto 20px; /* Центрирование и отступ снизу */
-}
-
-/* Кнопки контактов */
-.contact-buttons button {
-  background-color: #002B5B; /* Темно-синий */
-  color: white;
-  border: none;
-  padding: 10px;
-  font-size: 1em;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%; /* Кнопки во всю ширину */
-  margin: 5px 0; /* Отступ между кнопками */
-}
-
-.contact-buttons button:hover {
-  background-color: #001F4D; /* Темнее оттенок синего */
+.dropdown:hover .dropdown-content {
+  display: block; /* Показываем выпадающее меню при наведении */
 }
