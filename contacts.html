@@ -4,50 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Контакты - 33EG</title>
-  <style>
-    /* Включаем те же стили, что и в index.html */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f9;
-      color: #333;
-      line-height: 1.6;
-    }
-
-    header, nav, footer {
-      /* Стили шапки, меню и футера */
-    }
-
-    .contact-buttons {
-      max-width: 400px;
-      margin: 0 auto 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
     <h1>33EG</h1>
   </header>
 
-  <!-- Навигационное меню -->
-  <nav>
-    <ul>
-      <li><a href="index.html">Главная</a></li>
-      <li>
-        <a href="#">Меню ▼</a>
-        <ul>
-          <li><a href="contacts.html">Контакты</a></li>
-          <li><a href="various.html">Разное</a></li>
-        </ul>
-      </li>
-      <li><a href="about.html">О нас</a></li>
-    </ul>
-  </nav>
+  <!-- Включение меню -->
+  <div id="menu-placeholder"></div>
+  <script>
+    fetch('menu.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('menu-placeholder').innerHTML = data;
+      });
+  </script>
 
   <main>
     <section>
       <h2>Контакты</h2>
+      <p>Свяжитесь с нами через следующие каналы:</p>
+
+      <!-- Блок с кнопками контактов -->
       <div class="contact-buttons">
         <a href="mailto:mail@chista-vera.aleeas.com" style="text-decoration: none;">
           <button><i class="fa fa-envelope"></i> Email</button>
@@ -62,11 +41,31 @@
           <button><i class="fa fa-user"></i> Bastyon</button>
         </a>
       </div>
+
+      <!-- Форма обратной связи -->
+      <h3>Напишите нам</h3>
+      <form action="https://formspree.io/f/xovjpabv" method="POST">
+        <label>
+          Ваше имя:
+          <input type="text" name="name" required>
+        </label>
+        <label>
+          Ваш email:
+          <input type="email" name="email" required>
+        </label>
+        <label>
+          Ваше сообщение:
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+        <button type="submit">Отправить</button>
+      </form>
     </section>
   </main>
 
   <footer>
     <p>&copy; 2025 33EG. Все права защищены.</p>
   </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
