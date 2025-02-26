@@ -44,17 +44,20 @@
 
       <!-- Форма обратной связи -->
       <h3>Напишите нам</h3>
-      <form action="https://formspree.io/f/xovjpabv" method="POST" class="contact-form">
-        <label for="name">Ваше имя:</label><br/>
-        <input type="text" id="name" name="name" required><br/><br/>
-
-        <label for="email">Ваш email:</label><br/>
-        <input type="email" id="email" name="email" required><br/><br/>
-
-        <label for="message">Ваше сообщение:</label><br/>
-        <textarea id="message" name="message" rows="5" required></textarea><br/><br/>
-
-        <button type="submit" class="submit-button">Отправить</button>
+      <form action="https://formspree.io/f/xovjpabv" method="POST">
+        <label>
+          Ваше имя:
+          <input type="text" name="name" required>
+        </label>
+        <label>
+          Ваш email:
+          <input type="email" name="email" required>
+        </label>
+        <label>
+          Ваше сообщение:
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+        <button type="submit">Отправить</button>
       </form>
     </section>
   </main>
