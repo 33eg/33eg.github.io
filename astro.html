@@ -3,163 +3,228 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Астрология - PARS FORTUNAE</title>
+  <title>Astro - 33EG</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-
+  
   <!-- Стили для метео информеров -->
   <link href="https://api.rusmeteo.net/service/informers/css/widget-kit-2.min.css" rel="stylesheet">
 </head>
 <body>
-  <!-- Header -->
-  <div id="header-placeholder"></div>
-  <script>
-    // Подключение header.html
-    fetch('header.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('header-placeholder').innerHTML = data;
-      });
-  </script>
+  <header>
+    <h1>33EG</h1>
+<p>33eg.github.io</p>
+  </header>
 
-  <!-- Меню -->
+  <!-- Включение меню -->
   <div id="menu-placeholder"></div>
   <script>
-    // Подключение menu.html
     fetch('menu.html')
-      .then(response => response.text())
+      .then(response => {
+        if (!response.ok) throw new Error('Ошибка загрузки меню');
+        return response.text();
+      })
       .then(data => {
         document.getElementById('menu-placeholder').innerHTML = data;
-      });
+      })
+      .catch(error => console.error(error));
   </script>
 
-  <main class="container">
-    <section>
-      <h2>Астрология</h2>
-      <p>В этом разделе представлены различные астрологические ресурсы и инструменты.</p>
+  <main>
+    <section class="about-section">
+      <h2></h2>
+      <p></p>
 
-      <!-- Время в Лондоне -->
-      <p><a href="https://time.is/London" id="time_is_link" rel="nofollow" style="font-size:36px">Лондон:</a>
-      <span id="London_z716" style="font-size:36px"></span>
-      <script src="//widget.time.is/t.js"></script>
-      <script>
-        time_is_widget.init({London_z716:{}});
-      </script>
+  <p></p>
+<a href="https://time.is/London" id="time_is_link" rel="nofollow" style="font-size:36px">Лондон:</a>
+<span id="London_z716" style="font-size:36px"></span>
+<script src="//widget.time.is/t.js"></script>
+<script>
+time_is_widget.init({London_z716:{}});
+</script>
 
-      <!-- Блок с iframe для астрологического калькулятора -->
 
-      <div class="iframe-container">
-        <iframe 
-          src="https://horoscopes.astro-seek.com/current-planets-new-window?c_city=500&house_system=koch&styl_graf=&typ=ph1"
-          frameborder="0"
-          allowfullscreen
-          allow="geolocation"
-          scrolling="yes"
-          class="astro-iframe"
-        >
-          Ваш браузер не поддерживает iframes. 
-          <a href="https://horoscopes.astro-seek.com/current-planets-new-window?c_city=500&house_system=koch&styl_graf=&typ=ph1" target="_blank">
-            Открыть в новом окне
-          </a>
-        </iframe>
+
+
+<p></p>
+
+
+
+
+
+
+<div class="iframe-container">
+  <iframe 
+    src="https://horoscopes.astro-seek.com/current-planets-new-window?c_city=500&house_system=koch&styl_graf=&typ=ph1"
+    frameborder="0"
+    allowfullscreen
+    allow="geolocation"
+    scrolling="yes"
+    class="astro-iframe"
+  >
+    Ваш браузер не поддерживает iframes. 
+    <a href="https://horoscopes.astro-seek.com/current-planets-new-window?c_city=500&house_system=koch&styl_graf=&typ=ph1" target="_blank">
+      Открыть в новом окне
+    </a>
+  </iframe>
+</div>
+
+<style>
+  .iframe-container {
+    width: 100%;
+    height: 800px; /* Настройте высоту под ваш контент */
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .astro-iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  @media (max-width: 768px) {
+    .iframe-container {
+      height: 600px;
+    }
+  }
+</style>
+
+  <p></p>
+
+ <!-- Блок с кнопками контактов -->
+      
+ <div class="contact-buttons">
+        <a href="https://stellarium-web.org/" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> Stellarium-web </button>
+        </a>
+
+
+
+
+
+   <a href="https://theskylive.com/planetarium" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> Theskylive.com </button>
+        </a>
+
+
+
+      <a href="https://astro-online.ru/" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> Astro-online.ru | Events </button>
+        </a>
+
+
+
+     <a href="https://www.astro.com/cgi/awd.cgi?lang=r&nhor=1&nho2=2" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> Astro.com | Astro Dienst </button>
+        </a>
+       <a href="https://www.astro-seek.com/login" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-user"></i> Astro-seek.com | login </button>
+        </a>
+
+
+ <p></p>
+
+   <a href="http://ephemeris.com/" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> Ephemeris.com </button>
+        </a>
+       <a href="https://www.astropampa.com/?lang=en" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-user"></i> Astropampa.com </button>
+        </a>
+
+ <p></p>
+
+
+   <a href="https://astrozet.net/horoscope/natal_chart" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> ASTRO ZET </button>
+        </a>
+          <a href="https://geocult.ru/natalnaya-karta-onlayn-raschet" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> GeoCult.ru</button>
+        </a>
+       <a href="https://astro-charts.com/tools/new/birth-chart/" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-user"></i> AC | Astro-Charts </button>
+        </a>
+
+
+
+   <a href="https://astro.cafeastrology.com/index.php" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> Astro.cafeastrology.com </button>
+        </a>
+
+
+       <a href="https://orb.astrolis.com/" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-user"></i> Astrolis </button>
+        </a>
+   <a href="https://www.greatastromatcher.com/FreeTools/NatalChartForm" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> Greatastromatcher.com * </button>
+        </a>
+       <a href="https://sotis-online.ru/" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-user"></i> Sotis-online.ru </button>
+        </a>
+ <p></p>
+
+anaconda-fax-bonus@duck.com
+ <p></p>
+
+   <a href="https://litresp.ru/avtor/ru/%D0%92/vronskij-sergej-alekseevich" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> Wronski </button>
+        </a>
+       <a href="https://alphard.art.blog/" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-user"></i> alphard.art.blog </button>
+        </a>
+
+   <a href="https://astroeg.wordpress.com/" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> ASTRO EG </button>
+        </a>
+       <a href="https://www.astro-seek.com/login" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-user"></i> Astro-seek.com | login </button>
+        </a>
+
+ <p></p>
+
+        <a href="https://horoscopes.astro-seek.com/calculate-custom-natal-chart/?send_calculation=1&narozeni_den=1&narozeni_mesic=5&narozeni_rok=1916&narozeni_hodina=12&narozeni_minuta=00&narozeni_city=Sainte-Christine%2C+Canada&narozeni_mesto_hidden=Sainte-Christine&narozeni_stat_hidden=CA&narozeni_podstat_kratky_hidden=Qu%C3%A9bec&narozeni_podstat_hidden=&narozeni_input_hidden=Sainte-Christine%2C+Canada&narozeni_podstat2_kratky_hidden=Sainte-Christine&narozeni_podstat3_kratky_hidden=Sainte-Christine&narozeni_sirka_stupne=46&narozeni_sirka_minuty=49&narozeni_sirka_smer=0&narozeni_delka_stupne=71&narozeni_delka_minuty=14&narozeni_delka_smer=1&narozeni_timezone_form=auto&narozeni_timezone_dst_form=auto&house_layout=10&barva_planet=2&barva_stupne=0&domy_cisla=0&hide_aspects=0&barva_vzduch=1&barva_pozadi=0&barva_invert=0&house_system=koch&hid_fortune=1&hid_fortune_check=on&hid_spirit=1&hid_spirit_check=on&hid_syzygy=1&hid_syzygy_check=on&hid_vertex=1&hid_vertex_check=on&hid_chiron=1&hid_chiron_check=on&hid_lilith=1&hid_lilith_check=on&hid_uzel=1&hid_uzel_check=on&tolerance=1&hid_asc_asp=on&zmena_nastaveni=1&aktivni_tab=&hide_aspects=0&house_layout=12&barva_planet=2&barva_stupne=0&domy_cisla=0&hide_aspects=0&barva_vzduch=1&barva_pozadi=0&barva_invert=0" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-paper-plane"></i> Chart castomizer </button>
+        </a>
+
+
+     <a href="https://mooncalendar.astro-seek.com/" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> MOON PHASE CALENDAR </button>
+        </a>
+
+  <a href="https://horoscopes.astro-seek.com/planet-ingresses-and-particular-degree-returns-calculator" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-whatsapp"></i> RETURNS TO PARTICULAR DEGREE </button>
+        </a>
+     <a href="https://horoscopes.astro-seek.com/astrocartography-relocation-asc-mc-finder-calculator">
+          <button><i class="fa fa-paper-plane"></i> RELOCATION AS & MC FINDER </button>
+        </a>
+
+
+
+
+
+       <a href="https://horoscopes.astro-seek.com/current-planets-astrology-transits-planetary-positions" target="_blank" style="text-decoration: none;">
+          <button><i class="fa fa-user"></i> CURRENT PLANETS POSITION </button>
+        </a>
+
+        <a href="https://astro-online.ru/current.php">
+          <button><i class="fa fa-paper-plane"></i> ASTRO-ONLINE.RU | CURRENT </button>
+        </a>
+
+
+ 
       </div>
 
-      <!-- Блок с кнопками контактов -->
-      <h3>Полезные ссылки</h3>
-      <div class="contact-buttons">
-        <a href="https://stellarium-web.org/" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Stellarium-web</button>
-        </a>
-        <a href="https://theskylive.com/planetarium" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Theskylive.com</button>
-        </a>
-        <a href="https://astro-online.ru/" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Astro-online.ru | Events</button>
-        </a>
-        <a href="https://www.astro.com/cgi/awd.cgi?lang=r&nhor=1&nho2=2" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Astro.com | Astro Dienst</button>
-        </a>
-        <a href="https://www.astro-seek.com/login" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Astro-seek.com | Login</button>
-        </a>
-        <a href="http://ephemeris.com/" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Ephemeris.com</button>
-        </a>
-        <a href="https://www.astropampa.com/?lang=en" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Astropampa.com</button>
-        </a>
-        <a href="https://astrozet.net/horoscope/natal_chart" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> ASTRO ZET</button>
-        </a>
-        <a href="https://geocult.ru/natalnaya-karta-onlayn-raschet" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> GeoCult.ru</button>
-        </a>
-        <a href="https://astro-charts.com/tools/new/birth-chart/" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Astro-Charts | Birth Chart</button>
-        </a>
-        <a href="https://astro.cafeastrology.com/index.php" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Astro.cafeastrology.com</button>
-        </a>
-        <a href="https://orb.astrolis.com/" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Astrolis</button>
-        </a>
-        <a href="https://www.greatastromatcher.com/FreeTools/NatalChartForm" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Greatastromatcher.com</button>
-        </a>
-        <a href="https://sotis-online.ru/" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Sotis-online.ru</button>
-        </a>
-        <a href="https://litresp.ru/avtor/ru/%D0%92/vronskij-sergej-alekseevich" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Wronski</button>
-        </a>
-        <a href="https://alphard.art.blog/" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Alphard.art.blog</button>
-        </a>
-        <a href="https://astroeg.wordpress.com/" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> ASTRO EG</button>
-        </a>
-        <a href="https://mooncalendar.astro-seek.com/" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Moon Phase Calendar</button>
-        </a>
-        <a href="https://horoscopes.astro-seek.com/planet-ingresses-and-particular-degree-returns-calculator" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Returns to Particular Degree</button>
-        </a>
-        <a href="https://horoscopes.astro-seek.com/astrocartography-relocation-asc-mc-finder-calculator" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Relocation AS & MC Finder</button>
-        </a>
-        <a href="https://horoscopes.astro-seek.com/current-planets-astrology-transits-planetary-positions" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Current Planets Position</button>
-        </a>
-        <a href="https://astro-online.ru/current.php" target="_blank" style="text-decoration: none;">
-          <button><i class="fa fa-user"></i> Astro-online.ru | Current</button>
-        </a>
-      </div>
-
-      <!-- Встраиваемые пады CryptPad -->
-      <h3>Встраиваемые пады CryptPad</h3>
-
-  <div class="iframe-container">
-       
-<iframe width="100%" height="100%" src="https://cryptpad.disroot.org/pad/#/2/pad/view/dJ8qVXj6t5xR-jTkUDuZV1DxsJEKe76Dkqp4r79kVOg/p/embed/" ></iframe>
 
 
 
-   
-      </div>
-    </section>
-  </main>
 
-  <!-- Footer -->
-  <div id="footer-placeholder"></div>
-  <script>
-    // Подключение footer.html
-    fetch('footer.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('footer-placeholder').innerHTML = data;
-      });
-  </script>
+  <p></p>
 
-  <script src="script.js"></script>
+<iframe src="https://cryptpad.disroot.org/pad/#/2/pad/view/dJ8qVXj6t5xR-jTkUDuZV1DxsJEKe76Dkqp4r79kVOg/p/embed/"></iframe>
+
+  <p></p>
+
 </body>
 </html>
