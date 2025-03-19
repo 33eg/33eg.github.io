@@ -113,7 +113,25 @@ time_is_widget.init({London_z716:{}});
 
 
 <p></p><p></p>
+    <h2>Генератор Да/Нет
 
+<p></p>
+    Нажми кнопку для случайного выбора.</h2>
+    <button onclick="generateAnswer()">Получить ответ</button>
+  <h1>  <div id="result"></div></h1>
+
+    <script>
+        function generateAnswer() {
+            // Массив с возможными ответами
+            const answers = ['Да', 'Нет'];
+
+            // Случайный выбор
+            const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
+
+            // Вывод результата на страницу
+            document.getElementById('result').textContent = randomAnswer;
+        }
+    </script>
 <p></p>
 
  <!-- Блок с кнопками контактов -->
