@@ -29,6 +29,88 @@
       <h2></h2>
       <p></p>
 
+<div id="rss-container"></div>
+
+<script>
+// URL RSS-ленты
+const rssUrl = 'http://publication.pravo.gov.ru/api/rss?block=president&org=225698f1-cfbc-4e42-9caa-32f9f7403211&pageSize=10';
+
+// Функция для обработки и отображения RSS
+async function loadRSS() {
+    try {
+        // Загрузка данных
+        const response = await fetch(rssUrl);
+        const xmlString = await response.text();
+        
+        // Парсинг XML
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+        
+        // Извлечение элементов
+        const items = xmlDoc.getElementsByTagName('item');
+        const container = document.getElementById('rss-container');
+        
+        // Создание HTML-структуры
+        let html = '<ul class="rss-list">';
+        for (let item of items) {
+            const title = item.getElementsByTagName('title')[0].textContent;
+            const link = item.getElementsByTagName('link')[0].textContent;
+            const pubDate = item.getElementsByTagName('pubDate')[0].textContent;
+            
+            html += 
+                <li class="rss-item">
+                    <a href="${link}" target="_blank" class="rss-link">
+                        ${title}
+                        <span class="rss-date">${new Date(pubDate).toLocaleDateString()}</span>
+                    </a>
+                </li>
+            ;
+        }
+        html += '</ul>';
+        
+        container.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Ошибка загрузки RSS:', error);
+        document.getElementById('rss-container').innerHTML = 'Не удалось загрузить ленту';
+    }
+}
+
+// Запуск загрузки при загрузке страницы
+loadRSS();
+</script>
+
+<style>
+.rss-list {
+    list-style: none;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.rss-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.rss-link {
+    text-decoration: none;
+    color: #0366d6;
+    display: block;
+}
+
+.rss-link:hover {
+    text-decoration: underline;
+}
+
+.rss-date {
+    display: block;
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
+}
+</style>
+
 
  <!-- Блок с кнопками контактов -->
 
