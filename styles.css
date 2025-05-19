@@ -83,7 +83,7 @@ main {
 
 /* Стили для кнопок контактов */
 .contact-buttons {
-  max-width: 400px;
+  max-width: 90%;
   margin: 0 auto 20px;
 }
 .contact-buttons button {
@@ -103,7 +103,7 @@ main {
 
 /* Форма обратной связи */
 form {
-  max-width: 400px;
+  max-width: 90%;
   margin: 20px auto;
   padding: 20px;
   background-color: white;
