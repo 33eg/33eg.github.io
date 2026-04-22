@@ -1,1 +1,997 @@
-** new one 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSINT TOOLS</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f7fa;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+      padding: 30px 20px;
+      text-align: center;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+    header p {
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+    .toc {
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .toc h2 {
+      margin-bottom: 20px;
+      color: #1a1a2e;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 10px;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    .toc-category {
+      margin-bottom: 10px;
+    }
+    .toc-category h4 {
+      color: #16213e;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+    .toc-category a {
+      display: block;
+      color: #4a69bd;
+      text-decoration: none;
+      padding: 3px 0;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .toc-category a:hover {
+      color: #1a1a2e;
+      text-decoration: underline;
+    }
+    section {
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    section h2 {
+      color: #1a1a2e;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e0e0e0;
+      font-size: 1.5rem;
+    }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 12px;
+    }
+    .links-grid a {
+      display: block;
+      padding: 12px 16px;
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      color: #2c3e50;
+      text-decoration: none;
+      transition: all 0.2s;
+      word-break: break-all;
+      font-size: 0.95rem;
+    }
+    .links-grid a:hover {
+      background: #4a69bd;
+      border-color: #4a69bd;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(74,105,189,0.3);
+    }
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+      .toc-grid {
+        grid-template-columns: 1fr;
+      }
+      .links-grid {
+        grid-template-columns: 1fr;
+      }
+      header h1 {
+        font-size: 1.8rem;
+      }
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1a1a2e;
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
+    }
+    .back-to-top:hover {
+      transform: translateY(-3px);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <h1>OSINT TOOLS</h1>
+    <p>Коллекция инструментов для OSINT</p>
+  </header>
+
+  <nav class="toc">
+    <h2>Оглавление</h2>
+    <div class="toc-grid">
+      <div class="toc-category">
+        <h4>Поисковые системы</h4>
+        <a href="#poiskoviki">Поисковики</a>
+        <a href="#advanced_search">Расширенный поиск</a>
+        <a href="#parser">Парсеры</a>
+        <a href="#cameras">Онлайн камеры</a>
+      </div>
+      <div class="toc-category">
+        <h4>OSINT по людям</h4>
+        <a href="#personal">Персональные данные</a>
+        <a href="#username">Username</a>
+        <a href="#email">E-mail</a>
+        <a href="#phone">Телефон</a>
+        <a href="#telspravka">Справочники</a>
+        <a href="#whatsapp">WhatsApp</a>
+      </div>
+      <div class="toc-category">
+        <h4>Социальные сети</h4>
+        <a href="#telegram">Telegram</a>
+        <a href="#youtube">YouTube</a>
+        <a href="#vk">ВКонтакте</a>
+        <a href="#odnoklasniki">Одноклассники</a>
+        <a href="#facebook">Facebook</a>
+        <a href="#instagram">Instagram</a>
+        <a href="#twitter">Twitter</a>
+        <a href="#reddit">Reddit</a>
+        <a href="#discord">Discord</a>
+        <a href="#tiktok">TikTok</a>
+      </div>
+      <div class="toc-category">
+        <h4>Медиа и файлы</h4>
+        <a href="#foto">Фотографии</a>
+        <a href="#face">Поиск по фото</a>
+        <a href="#video">Видео</a>
+        <a href="#sound">Звук</a>
+        <a href="#poisk_failov">Поиск файлов</a>
+        <a href="#documents">Текст и документы</a>
+      </div>
+      <div class="toc-category">
+        <h4>Бизнес и сайты</h4>
+        <a href="#business">Бизнес разведка</a>
+        <a href="#factcheck">Проверка фактов</a>
+        <a href="#site">Сайты, домены, IP</a>
+        <a href="#archiv">Web-архив</a>
+      </div>
+      <div class="toc-category">
+        <h4>Геолокация</h4>
+        <a href="#geolocation">Геолокация</a>
+        <a href="#maps">Карты</a>
+        <a href="#satellites">Спутники</a>
+        <a href="#war_maps">Военные карты</a>
+        <a href="#time">Время и пояса</a>
+        <a href="#pogoda">Погода</a>
+      </div>
+      <div class="toc-category">
+        <h4>Безопасность</h4>
+        <a href="#antivirus">Проверка ссылок</a>
+        <a href="#fake">Создание фейков</a>
+        <a href="#leaks">Проверка утечек</a>
+      </div>
+      <div class="toc-category">
+        <h4>Транспорт</h4>
+        <a href="#cars">Автотранспорт</a>
+        <a href="#ships">Корабли</a>
+        <a href="#airplane">Самолёты</a>
+        <a href="#trains">Поезда</a>
+      </div>
+      <div class="toc-category">
+        <h4>Разное</h4>
+        <a href="#useful">Полезные инструменты</a>
+        <a href="#collections">Подборки</a>
+        <a href="#maltego">Модули Maltego</a>
+        <a href="#loggers">Логгеры</a>
+        <a href="#sms">Приём SMS</a>
+        <a href="#hosting">Хостинги</a>
+      </div>
+    </div>
+  </nav>
+
+  <section id="poiskoviki">
+    <h2>Поисковики</h2>
+    <div class="links-grid">
+      <a href="https://www.google.com">https://www.google.com</a>
+      <a href="https://yandex.com">https://yandex.com</a>
+      <a href="https://searx.info">https://searx.info</a>
+      <a href="https://www.bing.com">https://www.bing.com</a>
+      <a href="https://duckduckgo.com">https://duckduckgo.com</a>
+      <a href="https://search.brave.com">https://search.brave.com</a>
+      <a href="https://search.yahoo.com">https://search.yahoo.com</a>
+      <a href="https://www.baidu.com">https://www.baidu.com</a>
+      <a href="https://www.mojeek.com/">https://www.mojeek.com</a>
+      <a href="https://gs.statcounter.com/search-engine-market-share">https://gs.statcounter.com/search-engine-market-share</a>
+    </div>
+  </section>
+
+  <section id="advanced_search">
+    <h2>Расширенный поиск и комплексные инструменты</h2>
+    <div class="links-grid">
+      <a href="https://www.google.com/advanced_search">https://www.google.com/advanced_search</a>
+      <a href="https://osint.rocks">https://osint.rocks</a>
+      <a href="https://www.searchall.net">https://www.searchall.net</a>
+      <a href="https://2lingual.com">https://2lingual.com</a>
+      <a href="http://isearchfrom.com">http://isearchfrom.com</a>
+      <a href="https://biznar.com">https://biznar.com</a>
+      <a href="https://you.com">https://you.com</a>
+      <a href="https://synapsint.com">https://synapsint.com</a>
+      <a href="https://www.vedbex.com/home">https://www.vedbex.com/home</a>
+      <a href="https://randomtools.io">https://randomtools.io</a>
+      <a href="https://github.com/Shad0w-ops/H.I.V.E">https://github.com/Shad0w-ops/H.I.V.E</a>
+      <a href="https://github.com/seekr-osint/seekr">https://github.com/seekr-osint/seekr</a>
+      <a href="https://cylect.io">https://cylect.io</a>
+      <a href="https://meta-webtools.com">https://meta-webtools.com</a>
+      <a href="https://www.toolsley.com">https://www.toolsley.com</a>
+      <a href="https://www.invid-project.eu/tools-and-services/invid-verification-plugin/">https://www.invid-project.eu/tools-and-services/invid-verification-plugin/</a>
+    </div>
+  </section>
+
+  <section id="personal">
+    <h2>Контактные и персональные данные</h2>
+    <div class="links-grid">
+      <a href="https://osintkit.net">https://osintkit.net</a>
+      <a href="https://himera-search.net">https://himera-search.net</a>
+      <a href="https://www.signalhire.com">https://www.signalhire.com</a>
+      <a href="https://www.osint.industries">https://www.osint.industries</a>
+      <a href="https://x-ray.contact">https://x-ray.contact</a>
+    </div>
+  </section>
+
+  <section id="username">
+    <h2>Username</h2>
+    <div class="links-grid">
+      <a href="https://whatsmyname.app">https://whatsmyname.app</a>
+      <a href="https://webmii.com">https://webmii.com</a>
+      <a href="https://seintpl.github.io/NAMINT/">https://seintpl.github.io/NAMINT/</a>
+      <a href="https://github.com/soxoj/maigret">https://github.com/soxoj/maigret</a>
+      <a href="https://github.com/sherlock-project/sherlock">https://github.com/sherlock-project/sherlock</a>
+      <a href="https://github.com/snooppr/snoop">https://github.com/snooppr/snoop</a>
+      <a href="https://www.social-searcher.com">https://www.social-searcher.com</a>
+      <a href="https://namecheckup.com">https://namecheckup.com</a>
+      <a href="https://namechk.com">https://namechk.com</a>
+    </div>
+  </section>
+
+  <section id="email">
+    <h2>E-mail</h2>
+    <div class="links-grid">
+      <a href="https://epieos.com">https://epieos.com</a>
+      <a href="https://hunter.io/email-verifier">https://hunter.io/email-verifier</a>
+      <a href="https://tools.emailhippo.com">https://tools.emailhippo.com</a>
+      <a href="http://metricsparrow.com/toolkit/email-permutator">http://metricsparrow.com/toolkit/email-permutator</a>
+      <a href="https://haveibeenpwned.com">https://haveibeenpwned.com</a>
+      <a href="https://github.com/megadose/holehe">https://github.com/megadose/holehe</a>
+      <a href="https://github.com/mxrch/GHunt">https://github.com/mxrch/GHunt</a>
+      <a href="https://www.getnotify.com">https://www.getnotify.com</a>
+      <a href="https://github.com/HowToFind-bot/YaSeeker">https://github.com/HowToFind-bot/YaSeeker</a>
+      <a href="https://castrickclues.com">https://castrickclues.com</a>
+    </div>
+  </section>
+
+  <section id="phone">
+    <h2>Телефон</h2>
+    <div class="links-grid">
+      <a href="https://start.me/p/0PYlQd/decoding-smartphone-identifiers">https://start.me/p/0PYlQd/decoding-smartphone-identifiers</a>
+      <a href="https://epieos.com">https://epieos.com</a>
+      <a href="https://github.com/sundowndev/phoneinfoga">https://github.com/sundowndev/phoneinfoga</a>
+      <a href="https://opencellid.org/">https://opencellid.org</a>
+      <a href="https://www.cellmapper.net/">https://www.cellmapper.net</a>
+      <a href="https://imei24.com">https://imei24.com</a>
+      <a href="https://sndeep.info">https://sndeep.info</a>
+      <a href="https://www.no-nonsense-intel.com/phone-variant-search">https://www.no-nonsense-intel.com/phone-variant-search</a>
+    </div>
+  </section>
+
+  <section id="telspravka">
+    <h2>Телефонные справочники</h2>
+    <div class="links-grid">
+      <a href="http://i.spravkaru.net">http://i.spravkaru.net</a>
+      <a href="http://spravochnik109.link">http://spravochnik109.link</a>
+      <a href="http://numberway.com">http://numberway.com</a>
+      <a href="https://www.411.com">https://www.411.com</a>
+      <a href="https://www.whitepages.com">https://www.whitepages.com</a>
+      <a href="http://personlookup.com.au">http://personlookup.com.au</a>
+      <a href="https://www.teatmik.ee">https://www.teatmik.ee</a>
+      <a href="https://www.192.com">https://www.192.com</a>
+      <a href="https://www.canada411.ca">https://www.canada411.ca</a>
+    </div>
+  </section>
+
+  <section id="whatsapp">
+    <h2>WhatsApp</h2>
+    <div class="links-grid">
+      <a href="https://whatsapp.checkleaked.cc">https://whatsapp.checkleaked.cc</a>
+    </div>
+  </section>
+
+  <section id="vk">
+    <h2>ВКонтакте</h2>
+    <div class="links-grid">
+      <a href="https://220vk.com">https://220vk.com</a>
+      <a href="http://vk.city4me.com">http://vk.city4me.com</a>
+      <a href="https://vkdia.com">https://vkdia.com</a>
+      <a href="https://www.yasiv.com/vk">https://www.yasiv.com/vk</a>
+      <a href="http://photo-map.ru">http://photo-map.ru</a>
+      <a href="https://regvk.com">https://regvk.com</a>
+      <a href="http://searchlikes.ru">http://searchlikes.ru</a>
+      <a href="https://vk.watch">https://vk.watch</a>
+      <a href="https://vk.barkov.net">https://vk.barkov.net</a>
+      <a href="https://github.com/bellingcat/vk-url-scraper">https://github.com/bellingcat/vk-url-scraper</a>
+      <a href="https://github.com/migalin/VKAnalysis">https://github.com/migalin/VKAnalysis</a>
+    </div>
+  </section>
+
+  <section id="odnoklasniki">
+    <h2>Одноклассники</h2>
+    <div class="links-grid">
+      <a href="https://vk.barkov.net">https://vk.barkov.net</a>
+    </div>
+  </section>
+
+  <section id="facebook">
+    <h2>Facebook</h2>
+    <div class="links-grid">
+      <a href="https://whopostedwhat.com">https://whopostedwhat.com</a>
+      <a href="https://graph.tips/beta/">https://graph.tips/beta</a>
+      <a href="https://lookup-id.com">https://lookup-id.com</a>
+      <a href="https://randomtools.io">https://randomtools.io</a>
+      <a href="https://www.fanpagekarma.com/facebook-catalogue">https://www.fanpagekarma.com/facebook-catalogue</a>
+      <a href="https://github.com/sqren/fb-sleep-stats">https://github.com/sqren/fb-sleep-stats</a>
+      <a href="https://exportcomments.com">https://exportcomments.com</a>
+      <a href="https://fdown.net">https://fdown.net</a>
+      <a href="https://www.facebook.com/ads/library/">https://www.facebook.com/ads/library/</a>
+      <a href="https://intelx.io/tools?tab=facebook">https://intelx.io/tools?tab=facebook</a>
+      <a href="https://osintcurio.us/2019/08/22/the-new-facebook-graph-search-part-1/">https://osintcurio.us/2019/08/22/the-new-facebook-graph-search-part-1/</a>
+      <a href="https://osintcurio.us/2019/08/22/the-new-facebook-graph-search-part-2/">https://osintcurio.us/2019/08/22/the-new-facebook-graph-search-part-2/</a>
+    </div>
+  </section>
+
+  <section id="instagram">
+    <h2>Instagram</h2>
+    <div class="links-grid">
+      <a href="https://github.com/Datalux/Osintgram">https://github.com/Datalux/Osintgram</a>
+      <a href="https://github.com/instaloader/instaloader">https://github.com/instaloader/instaloader</a>
+      <a href="https://gramhir.com">https://gramhir.com</a>
+      <a href="https://inflact.com/tools/profile-analyzer/">https://inflact.com/tools/profile-analyzer/</a>
+      <a href="https://github.com/DavizinBR/SocialOSINTbr">https://github.com/DavizinBR/SocialOSINTbr</a>
+      <a href="https://www.picuki.com">https://www.picuki.com</a>
+      <a href="https://snapinsta.app">https://snapinsta.app</a>
+    </div>
+  </section>
+
+  <section id="twitter">
+    <h2>Twitter</h2>
+    <div class="links-grid">
+      <a href="https://followerwonk.com">https://followerwonk.com</a>
+      <a href="https://foller.me">https://foller.me</a>
+      <a href="https://twdown.net">https://twdown.net</a>
+      <a href="https://github.com/keitharm/Tweet-Mapper">https://github.com/keitharm/Tweet-Mapper</a>
+      <a href="https://github.com/sowdust/tafferugli">https://github.com/sowdust/tafferugli</a>
+      <a href="https://waybacktweets.streamlit.app">https://waybacktweets.streamlit.app</a>
+      <a href="https://github.com/igorbrigadir/twitter-advanced-search">https://github.com/igorbrigadir/twitter-advanced-search</a>
+      <a href="https://cache.digitaldigging.org/">https://cache.digitaldigging.org/</a>
+    </div>
+  </section>
+
+  <section id="youtube">
+    <h2>YouTube</h2>
+    <div class="links-grid">
+      <a href="https://github.com/cqcore/YouTube-Video-OSINT">https://github.com/cqcore/YouTube-Video-OSINT</a>
+      <a href="https://commentpicker.com/youtube-video-id.php">https://commentpicker.com/youtube-video-id.php</a>
+      <a href="https://hadzy.com/">https://hadzy.com/</a>
+      <a href="https://ytcomment.kmcat.uk/">https://ytcomment.kmcat.uk/</a>
+      <a href="https://randomtools.io/youtube-video-id-thumbnails/">https://randomtools.io/youtube-video-id-thumbnails/</a>
+      <a href="https://mattw.io/youtube-metadata/">https://mattw.io/youtube-metadata/</a>
+      <a href="https://audiotag.info">https://audiotag.info</a>
+      <a href="https://anilyzer.com">https://anilyzer.com</a>
+      <a href="https://socialblade.com/youtube/">https://socialblade.com/youtube/</a>
+      <a href="https://filmot.com">https://filmot.com</a>
+    </div>
+  </section>
+
+  <section id="reddit">
+    <h2>Reddit</h2>
+    <div class="links-grid">
+      <a href="https://redditcommentsearch.com">https://redditcommentsearch.com</a>
+    </div>
+  </section>
+
+  <section id="discord">
+    <h2>Discord</h2>
+    <div class="links-grid">
+      <a href="https://discordbee.com">https://discordbee.com</a>
+      <a href="https://disboard.org">https://disboard.org</a>
+      <a href="https://discordservers.com/browse">https://discordservers.com/browse</a>
+      <a href="https://pixelatomy.com/snow-stamp">https://pixelatomy.com/snow-stamp</a>
+      <a href="https://dht.chylex.com">https://dht.chylex.com</a>
+      <a href="https://dfir.blog/unfurl/">https://dfir.blog/unfurl/</a>
+      <a href="https://top.gg">https://top.gg</a>
+    </div>
+  </section>
+
+  <section id="telegram">
+    <h2>Telegram</h2>
+    <div class="links-grid">
+      <a href="https://cse.google.com/cse?&amp;cx=006368593537057042503:efxu7xprihg#gsc.tab=0">https://cse.google.com/cse?&amp;cx=006368593537057042503:efxu7xprihg#gsc.tab=0</a>
+      <a href="https://cse.google.com/cse?cx=004805129374225513871:p8lhfo0g3hg">https://cse.google.com/cse?cx=004805129374225513871:p8lhfo0g3hg</a>
+      <a href="https://github.com/Grigorich-JSDio/TG-Parser">https://github.com/Grigorich-JSDio/TG-Parser</a>
+      <a href="https://github.com/Forichok/TelegramOnlineSpy">https://github.com/Forichok/TelegramOnlineSpy</a>
+      <a href="https://www.telegramdb.org">https://www.telegramdb.org</a>
+      <a href="https://tgdev.io/tgscan">https://tgdev.io/tgscan</a>
+      <a href="https://t.me/where_a_person_wrote">https://t.me/where_a_person_wrote</a>
+      <a href="https://github.com/cqcore/Telegram-OSINT">https://github.com/cqcore/Telegram-OSINT</a>
+      <a href="https://tgfind.org">https://tgfind.org</a>
+      <a href="https://telemetr.io">https://telemetr.io</a>
+      <a href="https://uk.tgstat.com">https://uk.tgstat.com</a>
+      <a href="https://web.archive.org/collection-search/telegram">https://web.archive.org/collection-search/telegram</a>
+      <a href="https://www.tgcollector.com">https://www.tgcollector.com</a>
+    </div>
+  </section>
+
+  <section id="tiktok">
+    <h2>TikTok</h2>
+    <div class="links-grid">
+      <a href="https://dfir.blog/unfurl/">https://dfir.blog/unfurl/</a>
+      <a href="https://bellingcat.github.io/tiktok-timestamp/">https://bellingcat.github.io/tiktok-timestamp/</a>
+      <a href="https://www.famety.net/find-tiktok-user-id">https://www.famety.net/find-tiktok-user-id</a>
+      <a href="https://cobalt.tools">https://cobalt.tools</a>
+      <a href="https://exportcomments.com">https://exportcomments.com</a>
+      <a href="https://omar-thing.site">https://omar-thing.site</a>
+      <a href="https://urlebird.com">https://urlebird.com</a>
+    </div>
+  </section>
+
+  <section id="foto">
+    <h2>Фотографии</h2>
+    <div class="links-grid">
+      <a href="https://imglarger.com">https://imglarger.com</a>
+      <a href="https://www.imgonline.com.ua/exif.php">https://www.imgonline.com.ua/exif.php</a>
+      <a href="https://www.fotor.com">https://www.fotor.com</a>
+      <a href="https://snapedit.app">https://snapedit.app</a>
+      <a href="https://cleanup.pictures">https://cleanup.pictures</a>
+      <a href="https://www.diffchecker.com/image-compare/">https://www.diffchecker.com/image-compare/</a>
+      <a href="https://bigjpg.com">https://bigjpg.com</a>
+      <a href="https://app.remini.ai">https://app.remini.ai</a>
+      <a href="https://imagecolorizer.com/enhance">https://imagecolorizer.com</a>
+      <a href="https://letsenhance.io">https://letsenhance.io</a>
+      <a href="https://hotpot.ai/upscale-photo">https://hotpot.ai/upscale-photo</a>
+      <a href="https://www.remove.bg">https://www.remove.bg</a>
+      <a href="https://removal.ai">https://removal.ai</a>
+      <a href="https://29a.ch/photo-forensics/#forensic-magnifier">https://29a.ch/photo-forensics/#forensic-magnifier</a>
+      <a href="https://mever.iti.gr/forensics/">https://mever.iti.gr/forensics/</a>
+      <a href="https://github.com/GuidoBartoli/sherloq">https://github.com/GuidoBartoli/sherloq</a>
+      <a href="https://www.getghiro.org">https://www.getghiro.org</a>
+      <a href="https://www.iloveimg.com/crop-image">https://www.iloveimg.com</a>
+    </div>
+  </section>
+
+  <section id="face">
+    <h2>Поиск по фото</h2>
+    <div class="links-grid">
+      <a href="https://facecheck.id">https://facecheck.id</a>
+      <a href="https://search4faces.com">https://search4faces.com</a>
+      <a href="https://pimeyes.com">https://pimeyes.com</a>
+      <a href="https://www.image-search.org">https://www.image-search.org</a>
+      <a href="https://tineye.com">https://tineye.com</a>
+      <a href="https://www.reverse-image-search.org">https://www.reverse-image-search.org</a>
+      <a href="https://www.numlookup.com/reverse-image-search">https://www.numlookup.com/reverse-image-search</a>
+      <a href="http://betaface.com/demo_old.html">http://betaface.com/demo_old.html</a>
+      <a href="http://www.pictriev.com">http://www.pictriev.com</a>
+      <a href="https://age.toolpie.com">https://age.toolpie.com</a>
+      <a href="https://plant.toolpie.com/">https://plant.toolpie.com</a>
+      <a href="https://animal.toolpie.com">https://animal.toolpie.com</a>
+    </div>
+  </section>
+
+  <section id="video">
+    <h2>Видео</h2>
+    <div class="links-grid">
+      <a href="https://scanner.deepware.ai">https://scanner.deepware.ai</a>
+      <a href="https://www.unscreen.com/upload">https://www.unscreen.com/upload</a>
+      <a href="https://app.remini.ai">https://app.remini.ai</a>
+      <a href="https://www.onlineconverter.com/extract-image-from-video">https://www.onlineconverter.com/extract-image-from-video</a>
+    </div>
+  </section>
+
+  <section id="sound">
+    <h2>Звук</h2>
+    <div class="links-grid">
+      <a href="https://tuberipper.com/16/save/mp3">https://tuberipper.com/16/save/mp3</a>
+      <a href="https://audio-extractor.net">https://audio-extractor.net</a>
+      <a href="https://audiochum.com/voiceisolation/">https://audiochum.com/voiceisolation/</a>
+      <a href="https://audiochum.com/voicerestore/">https://audiochum.com/voicerestore/</a>
+      <a href="https://audiochum.com/voiceseparation/">https://audiochum.com/voiceseparation/</a>
+    </div>
+  </section>
+
+  <section id="poisk_failov">
+    <h2>Поиск файлов</h2>
+    <div class="links-grid">
+      <a href="https://www.file-extensions.org">https://www.file-extensions.org</a>
+      <a href="https://github.com/opsdisk/metagoofil">https://github.com/opsdisk/metagoofil</a>
+      <a href="https://github.com/laramies/metagoofil">https://github.com/laramies/metagoofil</a>
+      <a href="https://github.com/Josue87/MetaFinder">https://github.com/Josue87/MetaFinder</a>
+      <a href="https://github.com/dievus/msdorkdump">https://github.com/dievus/msdorkdump</a>
+      <a href="https://intelx.io/tools?tab=file">https://intelx.io/tools?tab=file</a>
+      <a href="https://find-pdf-form.pdffiller.com">https://find-pdf-form.pdffiller.com</a>
+      <a href="https://www.dedigger.com">https://www.dedigger.com</a>
+      <a href="https://www.pdfsearchengine.net">https://www.pdfsearchengine.net</a>
+      <a href="https://www.searchftps.net">https://www.searchftps.net</a>
+      <a href="https://www.mmnt.net">https://www.mmnt.net</a>
+      <a href="https://dirb.sourceforge.net/">https://dirb.sourceforge.net</a>
+      <a href="https://filesearch.link/">https://filesearch.link</a>
+      <a href="https://torrends.to">https://torrends.to</a>
+      <a href="https://buckets.grayhatwarfare.com">https://buckets.grayhatwarfare.com</a>
+    </div>
+  </section>
+
+  <section id="site">
+    <h2>Сайты, домены, IP</h2>
+    <div class="links-grid">
+      <a href="https://github.com/jonkeegan/behind-this-website">https://github.com/jonkeegan/behind-this-website</a>
+      <a href="https://www.lopseg.com.br/osint">https://www.lopseg.com.br/osint</a>
+      <a href="https://github.com/cqcore/Website-OSINT">https://github.com/cqcore/Website-OSINT</a>
+      <a href="https://osint.sh">https://osint.sh</a>
+      <a href="https://web-check.as93.net">https://web-check.as93.net</a>
+      <a href="https://synapsint.com">https://synapsint.com</a>
+      <a href="https://github.com/Nekmo/dirhunt">https://github.com/Nekmo/dirhunt</a>
+      <a href="https://pentest-tools.com/website-vulnerability-scanning/discover-hidden-directories-and-files">https://pentest-tools.com/website-vulnerability-scanning/discover-hidden-directories-and-files</a>
+      <a href="https://sitereport.netcraft.com/">https://sitereport.netcraft.com</a>
+      <a href="https://whois.domaintools.com">https://whois.domaintools.com</a>
+      <a href="https://www.whoxy.com">https://www.whoxy.com</a>
+      <a href="https://www.duplichecker.com/website-checker-tools">https://www.duplichecker.com/website-checker-tools</a>
+      <a href="https://www.immuniweb.com/websec/">https://www.immuniweb.com/websec/</a>
+      <a href="https://tools.pingdom.com">https://tools.pingdom.com</a>
+      <a href="https://2ip.ru">https://2ip.ru</a>
+      <a href="https://github.com/radioactivetobi/geo-recon">https://github.com/radioactivetobi/geo-recon</a>
+      <a href="https://www.httrack.com">https://www.httrack.com</a>
+      <a href="https://distill.io">https://distill.io</a>
+      <a href="https://www.followthatpage.com">https://www.followthatpage.com</a>
+      <a href="https://changedetection.io">https://changedetection.io</a>
+      <a href="https://github.com/spyboy-productions/CloakQuest3r">https://github.com/spyboy-productions/CloakQuest3r</a>
+      <a href="https://github.com/cipher387/awesome-ip-search-engines">https://github.com/cipher387/awesome-ip-search-engines</a>
+      <a href="https://informationlaundromat.com">https://informationlaundromat.com</a>
+    </div>
+  </section>
+
+  <section id="archiv">
+    <h2>Web-архив</h2>
+    <div class="links-grid">
+      <a href="https://archive.org">https://archive.org</a>
+      <a href="https://archive.is">https://archive.is</a>
+      <a href="https://cybdetective.com/webarchiveviewer/">https://cybdetective.com/webarchiveviewer/</a>
+    </div>
+  </section>
+
+  <section id="maps">
+    <h2>Карты</h2>
+    <div class="links-grid">
+      <a href="http://data.mashedworld.com/dualmaps/map.htm">http://data.mashedworld.com/dualmaps/map.htm</a>
+      <a href="https://dualmaps.com">https://dualmaps.com</a>
+      <a href="https://demo.f4map.com">https://demo.f4map.com</a>
+      <a href="http://wikimapia.org">http://wikimapia.org</a>
+      <a href="https://2gis.ua">https://2gis.ua</a>
+      <a href="https://cybdetective.com/osintmap/">https://cybdetective.com/osintmap/</a>
+      <a href="https://www.suncalc.org">https://www.suncalc.org</a>
+      <a href="https://www.openstreetmap.org">https://www.openstreetmap.org</a>
+      <a href="https://gridreferencefinder.com">https://gridreferencefinder.com</a>
+      <a href="https://www.freemaptools.com">https://www.freemaptools.com</a>
+      <a href="https://www.oldmapsonline.org">https://www.oldmapsonline.org</a>
+      <a href="https://esri2.maps.arcgis.com/apps/mapviewer/index.html">https://esri2.maps.arcgis.com/apps/mapviewer/index.html</a>
+      <a href="https://felt.com">https://felt.com</a>
+      <a href="https://tankaru.github.io/OpenSwitchMapsWeb/">https://tankaru.github.io/OpenSwitchMapsWeb/</a>
+      <a href="https://livingatlas.arcgis.com/wayback">https://livingatlas.arcgis.com/wayback</a>
+      <a href="https://www.citypopulation.de/en/world/bymap/">https://www.citypopulation.de</a>
+      <a href="https://github.com/thedoubler/awesome-maps-data">https://github.com/thedoubler/awesome-maps-data</a>
+    </div>
+  </section>
+
+  <section id="satellites">
+    <h2>Спутники</h2>
+    <div class="links-grid">
+      <a href="https://zoom.earth">https://zoom.earth</a>
+      <a href="https://discover.maxar.com">https://discover.maxar.com</a>
+      <a href="https://apps.sentinel-hub.com/eo-browser/">https://apps.sentinel-hub.com/eo-browser/</a>
+      <a href="https://worldview.earthdata.nasa.gov">https://worldview.earthdata.nasa.gov</a>
+      <a href="https://earth.esa.int/eogateway">https://earth.esa.int/eogateway</a>
+      <a href="https://developers.google.com/earth-engine/datasets/catalog">https://developers.google.com/earth-engine/datasets/catalog</a>
+      <a href="https://wego.here.com">https://wego.here.com</a>
+      <a href="https://gisgeography.com/satellite-maps/">https://gisgeography.com/satellite-maps/</a>
+    </div>
+  </section>
+
+  <section id="war_maps">
+    <h2>Военные карты</h2>
+    <div class="links-grid">
+      <a href="https://deepstatemap.live">https://deepstatemap.live</a>
+      <a href="https://liveuamap.com">https://liveuamap.com</a>
+      <a href="https://eyesonrussia.org">https://eyesonrussia.org</a>
+      <a href="https://alerts.in.ua">https://alerts.in.ua</a>
+      <a href="https://gfsis.org.ge/maps/russian-military-forces">https://gfsis.org.ge/maps/russian-military-forces</a>
+      <a href="https://www.marinevesseltraffic.com/2013/02/military-ship-track.html">https://www.marinevesseltraffic.com/2013/02/military-ship-track.html</a>
+      <a href="https://www.nato.int/nato-on-the-map/#lat=54.6871555&amp;lon=25.2796514&amp;zoom=2&amp;layer-1">https://www.nato.int/nato-on-the-map/#lat=54.6871555&amp;lon=25.2796514&amp;zoom=2&amp;layer-1</a>
+      <a href="https://www.map.army">https://www.map.army</a>
+    </div>
+  </section>
+
+  <section id="geolocation">
+    <h2>Геолокация</h2>
+    <div class="links-grid">
+      <a href="https://opencellid.org/">https://opencellid.org</a>
+      <a href="https://www.cellmapper.net/">https://www.cellmapper.net</a>
+      <a href="https://t.me/SearchOnMapBot">https://t.me/SearchOnMapBot</a>
+      <a href="https://www.skydb.net">https://www.skydb.net</a>
+      <a href="https://labs.tib.eu/geoestimation/">https://labs.tib.eu/geoestimation/</a>
+      <a href="https://geospy.web.app">https://geospy.web.app</a>
+      <a href="https://search.ix5.org">https://search.ix5.org</a>
+      <a href="https://github.com/coldfusion39/geOSINT">https://github.com/coldfusion39/geOSINT</a>
+      <a href="https://app.skylens.io">https://app.skylens.io</a>
+      <a href="https://cse.google.com/cse?cx=015328649639895072395:sbv3zyxzmji#gsc.tab=0">https://cse.google.com/cse?cx=015328649639895072395:sbv3zyxzmji#gsc.tab=0</a>
+      <a href="https://peakvisor.com">https://peakvisor.com</a>
+      <a href="https://travelwithdrone.com">https://travelwithdrone.com</a>
+      <a href="https://geotips.net">https://geotips.net</a>
+      <a href="https://www.smappen.com">https://www.smappen.com</a>
+      <a href="https://osm-search.bellingcat.com">https://osm-search.bellingcat.com</a>
+      <a href="https://www.ctbuh.org">https://www.ctbuh.org</a>
+      <a href="https://mattw.io/youtube-geofind/location">https://mattw.io/youtube-geofind/location</a>
+    </div>
+  </section>
+
+  <section id="time">
+    <h2>Время и часовые пояса</h2>
+    <div class="links-grid">
+      <a href="https://www.worldtimebuddy.com">https://www.worldtimebuddy.com</a>
+      <a href="https://www.timeanddate.com">https://www.timeanddate.com</a>
+      <a href="https://www.wolframalpha.com/examples/society-and-culture/dates-and-times/">https://www.wolframalpha.com</a>
+      <a href="https://www.gaisma.com/en/">https://www.gaisma.com/en/</a>
+    </div>
+  </section>
+
+  <section id="pogoda">
+    <h2>Погода</h2>
+    <div class="links-grid">
+      <a href="https://zoom.earth">https://zoom.earth</a>
+      <a href="https://www.windy.com">https://www.windy.com</a>
+    </div>
+  </section>
+
+  <section id="cameras">
+    <h2>Онлайн камеры</h2>
+    <div class="links-grid">
+      <a href="https://www.earthcam.com">https://www.earthcam.com</a>
+      <a href="https://world-cam.ru">https://world-cam.ru</a>
+      <a href="https://youwebcams.org">https://youwebcams.org</a>
+      <a href="https://www.earthcam.com/mapsearch/">https://www.earthcam.com/mapsearch/</a>
+      <a href="https://worldcams.tv/map/">https://worldcams.tv/map/</a>
+      <a href="https://cipher387.github.io/webcamcse/">https://cipher387.github.io/webcamcse/</a>
+      <a href="https://windy.com/-Webcams/webcams">https://windy.com/-Webcams/webcams</a>
+      <a href="https://sunders.uber.space">https://sunders.uber.space</a>
+      <a href="https://www.stolencamerafinder.com">https://www.stolencamerafinder.com</a>
+    </div>
+  </section>
+
+  <section id="business">
+    <h2>Бизнес разведка</h2>
+    <div class="links-grid">
+      <a href="https://github.com/CScorza/CORPINT-Corporate-Intelligence">https://github.com/CScorza/CORPINT-Corporate-Intelligence</a>
+      <a href="https://opencorporates.com">https://opencorporates.com</a>
+      <a href="https://register.openownership.org">https://register.openownership.org</a>
+      <a href="https://cybdetective.com/osintmap/">https://cipher387.github.io/osintmap/</a>
+      <a href="https://branddb.wipo.int">https://branddb.wipo.int</a>
+      <a href="https://www.tmdn.org/tmview/#/tmview/">https://www.tmdn.org/tmview/#/tmview/</a>
+      <a href="https://munscanner.com/dbs/">https://munscanner.com/dbs/</a>
+      <a href="https://offshoreleaks.icij.org">https://offshoreleaks.icij.org</a>
+      <a href="https://logo.toolpie.com">https://logo.toolpie.com</a>
+      <a href="https://ruassets.com">https://ruassets.com</a>
+      <a href="https://www.opensanctions.org">https://www.opensanctions.org</a>
+      <a href="https://www.importyeti.com">https://www.importyeti.com</a>
+      <a href="https://www.city-data.com">https://www.city-data.com</a>
+      <a href="https://data.occrp.org">https://data.occrp.org</a>
+      <a href="https://search.gleif.org">https://search.gleif.org</a>
+    </div>
+  </section>
+
+  <section id="cars">
+    <h2>Автотранспорт</h2>
+    <div class="links-grid">
+      <a href="http://www.worldlicenseplates.com/">http://www.worldlicenseplates.com</a>
+      <a href="https://cipher387.github.io/venicle_number_search_toolbox/">https://cipher387.github.io/venicle_number_search_toolbox/</a>
+      <a href="https://www.autocheck.com/vehiclehistory/autocheck-score">https://www.autocheck.com/vehiclehistory/autocheck-score</a>
+      <a href="https://driving-tests.org/vin-decoder/">https://driving-tests.org/vin-decoder/</a>
+      <a href="https://www.nomerogram.ru">https://www.nomerogram.ru</a>
+      <a href="https://mobility.portal.geops.io">https://mobility.portal.geops.io</a>
+      <a href="https://www.waze.com/en-GB/live-map">https://www.waze.com/en-GB/live-map</a>
+      <a href="https://platerecognizer.com">https://platerecognizer.com</a>
+      <a href="https://platesmania.com">https://platesmania.com</a>
+    </div>
+  </section>
+
+  <section id="ships">
+    <h2>Корабли</h2>
+    <div class="links-grid">
+      <a href="https://map.openseamap.org">https://map.openseamap.org</a>
+      <a href="https://www.vesselfinder.com">https://www.vesselfinder.com</a>
+      <a href="https://www.marinetraffic.com">https://www.marinetraffic.com</a>
+      <a href="https://seatracker.ru/ais.php">https://seatracker.ru/ais.php</a>
+      <a href="https://crewell.net">https://crewell.net</a>
+      <a href="https://www.shipspotting.com">https://www.shipspotting.com</a>
+      <a href="https://www.track-trace.com/container">https://www.track-trace.com/container</a>
+      <a href="https://www.searates.com/container/tracking/">https://www.searates.com/container/tracking/</a>
+      <a href="https://www.cma-cgm.com/ebusiness/schedules/voyage">https://www.cma-cgm.com/ebusiness/schedules/voyage</a>
+      <a href="https://theshippingdatabase.com">https://theshippingdatabase.com</a>
+      <a href="https://www.submarinecablemap.com">https://www.submarinecablemap.com</a>
+      <a href="https://www.marinevesseltraffic.com/submarine-vessels-tracking-map">https://www.marinevesseltraffic.com/submarine-vessels-tracking-map</a>
+    </div>
+  </section>
+
+  <section id="airplane">
+    <h2>Самолёты</h2>
+    <div class="links-grid">
+      <a href="https://www.flightradar24.com">https://www.flightradar24.com</a>
+      <a href="https://www.radarbox.com">https://www.radarbox.com</a>
+      <a href="https://planefinder.net">https://planefinder.net</a>
+      <a href="https://www.track-trace.com/aircargo">https://www.track-trace.com/aircargo</a>
+      <a href="https://flightaware.com">https://flightaware.com</a>
+      <a href="https://opensky-network.org">https://opensky-network.org</a>
+      <a href="https://www.jetphotos.com">https://www.jetphotos.com</a>
+      <a href="https://aviation-safety.net">https://aviation-safety.net</a>
+      <a href="http://www.airframes.org">http://www.airframes.org</a>
+      <a href="https://www.airfleets.net">https://www.airfleets.net</a>
+      <a href="https://airportwebcams.net">https://airportwebcams.net</a>
+    </div>
+  </section>
+
+  <section id="trains">
+    <h2>Поезда</h2>
+    <div class="links-grid">
+      <a href="https://www.openrailwaymap.org">https://www.openrailwaymap.org</a>
+      <a href="https://www.nsinternational.com/en/stations/station-maps-floor-plan">https://www.nsinternational.com/en/stations/station-maps-floor-plan</a>
+      <a href="https://mobility.portal.geops.io">https://mobility.portal.geops.io</a>
+      <a href="https://rasp.yandex.ru/map/trains">https://rasp.yandex.ru/map/trains</a>
+      <a href="https://wikiroutes.info">https://wikiroutes.info</a>
+      <a href="https://direkt.bahn.guru">https://direkt.bahn.guru</a>
+      <a href="https://railcabrides.com/en/mapsearch">https://railcabrides.com/en/mapsearch</a>
+      <a href="https://www.citypopulation.de/en/world/bymap/railways/">https://www.citypopulation.de/en/world/bymap/railways/</a>
+    </div>
+  </section>
+
+  <section id="antivirus">
+    <h2>Проверка ссылок и файлов</h2>
+    <div class="links-grid">
+      <a href="https://www.virustotal.com">https://www.virustotal.com</a>
+      <a href="https://www.hybrid-analysis.com">https://www.hybrid-analysis.com</a>
+      <a href="https://malwr.ee/dashboard/">https://malwr.ee/dashboard/</a>
+      <a href="https://urlscan.io">https://urlscan.io</a>
+      <a href="https://www.getlinkinfo.com">https://www.getlinkinfo.com</a>
+      <a href="https://unshorten.me">https://unshorten.me</a>
+      <a href="https://urlhaus.abuse.ch">https://urlhaus.abuse.ch</a>
+      <a href="https://www.toolsley.com/file.html">https://www.toolsley.com/file.html</a>
+      <a href="https://www.aconvert.com/analyze.html">https://www.aconvert.com/analyze.html</a>
+      <a href="https://www.textise.net">https://www.textise.net</a>
+      <a href="https://redirectdetective.com">https://redirectdetective.com</a>
+    </div>
+  </section>
+
+  <section id="parser">
+    <h2>Парсеры</h2>
+    <div class="links-grid">
+      <a href="https://www.convertcsv.com">https://www.convertcsv.com</a>
+      <a href="https://dataminer.io">https://dataminer.io</a>
+    </div>
+  </section>
+
+  <section id="loggers">
+    <h2>Логгеры</h2>
+    <div class="links-grid">
+      <a href="https://canarytokens.org">https://canarytokens.org</a>
+      <a href="https://whiteclouddrive.com/">https://whiteclouddrive.com</a>
+      <a href="https://www.getnotify.com">https://www.getnotify.com</a>
+      <a href="https://github.com/thewhiteh4t/seeker">https://github.com/thewhiteh4t/seeker</a>
+      <a href="https://iplogger.org">https://iplogger.org</a>
+      <a href="https://github.com/Bafomet666/Bigbro">https://github.com/Bafomet666/Bigbro</a>
+    </div>
+  </section>
+
+  <section id="fake">
+    <h2>Создание фейков и аккаунтов</h2>
+    <div class="links-grid">
+      <a href="https://buyaccs.com/">https://buyaccs.com</a>
+      <a href="https://accsmarket.com/">https://accsmarket.com</a>
+      <a href="https://fakeinfo.net/">https://fakeinfo.net</a>
+      <a href="https://www.fakewhats.com/generator">https://www.fakewhats.com/generator</a>
+      <a href="https://start.me/p/zpkMMO/deep-fake-tools-detection">https://start.me/p/zpkMMO/deep-fake-tools-detection</a>
+      <a href="https://github.com/iperov/DeepFaceLab">https://github.com/iperov/DeepFaceLab</a>
+      <a href="https://www.fakenamegenerator.com/">https://www.fakenamegenerator.com</a>
+      <a href="https://thispersondoesnotexist.com">https://thispersondoesnotexist.com</a>
+      <a href="https://seintpl.github.io/AmIReal/">https://seintpl.github.io/AmIReal/</a>
+      <a href="https://generated.photos/anonymizer">https://generated.photos/anonymizer</a>
+      <a href="https://generated.photos/human-generator">https://generated.photos/human-generator</a>
+      <a href="https://verif.tools">https://verif.tools</a>
+    </div>
+  </section>
+
+  <section id="documents">
+    <h2>Текст и документы</h2>
+    <div class="links-grid">
+      <a href="https://voyant-tools.org">https://voyant-tools.org</a>
+      <a href="https://diffnow.com/compare-clips">https://diffnow.com/compare-clips</a>
+      <a href="https://www.diffchecker.com">https://www.diffchecker.com</a>
+      <a href="https://www.copyscape.com/compare.php">https://www.copyscape.com/compare.php</a>
+      <a href="https://chrome.google.com/webstore/detail/docsumo-free-ocr-software/ihmmlfacoffajllfpdfkdikgmoogbnph?ref=producthunt">https://chrome.google.com/webstore/detail/docsumo-free-ocr-software/ihmmlfacoffajllfpdfkdikgmoogbnph?ref=producthunt</a>
+      <a href="https://github.com/evllabs/JGAAP">https://github.com/evllabs/JGAAP</a>
+      <a href="https://www.documentcloud.org">https://www.documentcloud.org</a>
+    </div>
+  </section>
+
+  <section id="factcheck">
+    <h2>Проверка фактов</h2>
+    <div class="links-grid">
+      <a href="https://toolbox.google.com/factcheck">https://toolbox.google.com/factcheck</a>
+      <a href="https://github.com/cqcore/Fact-Checking-Verification">https://github.com/cqcore/Fact-Checking-Verification</a>
+    </div>
+  </section>
+
+  <section id="leaks">
+    <h2>Проверка скомпрометированных данных</h2>
+    <div class="links-grid">
+      <a href="https://www.dehashed.com">https://www.dehashed.com</a>
+      <a href="https://haveibeenpwned.com">https://haveibeenpwned.com</a>
+      <a href="https://github.com/cqcore/Data-OSINT">https://github.com/cqcore/Data-OSINT</a>
+      <a href="https://exposed.lol">https://exposed.lol</a>
+    </div>
+  </section>
+
+  <section id="useful">
+    <h2>Полезные инструменты</h2>
+    <div class="links-grid">
+      <a href="https://journaliststudio.google.com/pinpoint">https://journaliststudio.google.com/pinpoint</a>
+      <a href="https://programmablesearchengine.google.com">https://programmablesearchengine.google.com</a>
+      <a href="https://www.google.com/alerts">https://www.google.com/alerts</a>
+      <a href="https://gchq.github.io/CyberChef/">https://gchq.github.io/CyberChef/</a>
+      <a href="https://github.com/alephdata/aleph">https://github.com/alephdata/aleph</a>
+      <a href="https://www.dtsearch.com">https://www.dtsearch.com</a>
+      <a href="https://www.dorkgpt.com">https://www.dorkgpt.com</a>
+    </div>
+  </section>
+
+  <section id="collections">
+    <h2>Подборки OSINT инструментов</h2>
+    <div class="links-grid">
+      <a href="https://www.osintdojo.com//diagrams/main">https://www.osintdojo.com//diagrams/main</a>
+      <a href="https://start.me/p/EL84Km/cse-utopia">https://start.me/p/EL84Km/cse-utopia</a>
+      <a href="https://github.com/CScorza/SOCMIntelligence">https://github.com/CScorza/SOCMIntelligence</a>
+      <a href="https://www.journaliststoolbox.org">https://www.journaliststoolbox.org</a>
+    </div>
+  </section>
+
+  <section id="maltego">
+    <h2>Модули для Maltego</h2>
+    <div class="links-grid">
+      <a href="https://github.com/cipher387/maltego-transforms-list/">https://github.com/cipher387/maltego-transforms-list/</a>
+      <a href="https://github.com/soxoj/maigret-maltego">https://github.com/soxoj/maigret-maltego</a>
+      <a href="https://github.com/SocialLinks-IO/telegram-similar-channels">https://github.com/SocialLinks-IO/telegram-similar-channels</a>
+      <a href="https://github.com/AlienVault-OTX/ThreatCrowd-Maltego">https://github.com/AlienVault-OTX/ThreatCrowd-Maltego</a>
+      <a href="https://github.com/cmlh/Maltego-FullContact">https://github.com/cmlh/Maltego-FullContact</a>
+      <a href="https://github.com/cmlh/Maltego-GitHub">https://github.com/cmlh/Maltego-GitHub</a>
+      <a href="https://github.com/cmlh/Maltego-haveibeenpwned">https://github.com/cmlh/Maltego-haveibeenpwned</a>
+      <a href="https://github.com/GreyNoise-Intelligence/greynoise-maltego">https://github.com/GreyNoise-Intelligence/greynoise-maltego</a>
+      <a href="https://github.com/leresearcher/Maltego---Domaintools">https://github.com/leresearcher/Maltego---Domaintools</a>
+      <a href="https://github.com/megadose/cqfd-maltego">https://github.com/megadose/cqfd-maltego</a>
+      <a href="https://github.com/megadose/holehe-maltego">https://github.com/megadose/holehe-maltego</a>
+      <a href="https://github.com/megadose/hunter-maltego">https://github.com/megadose/hunter-maltego</a>
+      <a href="https://github.com/megadose/nqntnqnqmb-maltego">https://github.com/megadose/nqntnqnqmb-maltego</a>
+      <a href="https://github.com/megadose/phoneinfoga-maltego">https://github.com/megadose/phoneinfoga-maltego</a>
+      <a href="https://github.com/megadose/toutatis-maltego">https://github.com/megadose/toutatis-maltego</a>
+      <a href="https://github.com/WlndyMiller/SteamTransforms">https://github.com/WlndyMiller/SteamTransforms</a>
+      <a href="https://github.com/zeropwn/intelx-maltego">https://github.com/zeropwn/intelx-maltego</a>
+    </div>
+  </section>
+
+  <section id="sms">
+    <h2>Бесплатные номера для приёма смс</h2>
+    <div class="links-grid">
+      <a href="https://www.receivesmsonline.net">https://www.receivesmsonline.net</a>
+      <a href="http://receivefreesms.net">http://receivefreesms.net</a>
+      <a href="http://receivesmsonline.in">http://receivesmsonline.in</a>
+      <a href="http://hs3x.com">http://hs3x.com</a>
+      <a href="http://receive-a-sms.com">http://receive-a-sms.com</a>
+      <a href="http://www.receive-sms-online.info">http://www.receive-sms-online.info</a>
+      <a href="https://www.textmagic.com">https://www.textmagic.com</a>
+      <a href="http://freesmsverification.com">http://freesmsverification.com</a>
+      <a href="https://smsreceivefree.com">https://smsreceivefree.com</a>
+      <a href="http://receivefreesms.com">http://receivefreesms.com</a>
+      <a href="http://receivesmsonline.me">http://receivesmsonline.me</a>
+      <a href="https://www.proovl.com/numbers">https://www.proovl.com/numbers</a>
+      <a href="http://www.esendex.com.au/send-sms-online">http://www.esendex.com.au/send-sms-online</a>
+      <a href="https://sms-online.co">https://sms-online.co</a>
+    </div>
+  </section>
+
+  <section id="hosting">
+    <h2>Хостинги</h2>
+    <div class="links-grid">
+      <a href="https://freewha.com">https://freewha.com</a>
+      <a href="https://www.zzz.com.ua">https://www.zzz.com.ua</a>
+      <a href="https://www.000webhost.com">https://www.000webhost.com</a>
+      <a href="https://www.trilightzone.org">https://www.trilightzone.org</a>
+      <a href="https://njal.la">https://njal.la</a>
+      <a href="https://nicevps.net">https://nicevps.net</a>
+      <a href="https://www.hostingssi.com">https://www.hostingssi.com</a>
+      <a href="https://www.superbithost.com">https://www.superbithost.com</a>
+      <a href="https://superbytehosting.com">https://superbytehosting.com</a>
+      <a href="https://whattheserver.com">https://whattheserver.com</a>
+      <a href="https://host-world.com">https://host-world.com</a>
+      <a href="https://cryptoho.st">https://cryptoho.st</a>
+      <a href="https://www.epio.host">https://www.epio.host</a>
+      <a href="https://www.privex.io">https://www.privex.io</a>
+      <a href="https://www.99stack.com">https://www.99stack.com</a>
+      <a href="https://www.serverwhere.com">https://www.serverwhere.com</a>
+      <a href="https://coinhost.io">https://coinhost.io</a>
+      <a href="https://bithost.io">https://bithost.io</a>
+      <a href="https://impreza.host">https://impreza.host</a>
+      <a href="https://coin.host">https://coin.host</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>OSINT TOOLS &copy; 2026 | Коллекция инструментов для OSINT</p>
+  </footer>
+
+  <a href="#" class="back-to-top">↑ Вверх</a>
+
+</div>
+
+</body>
+</html>
