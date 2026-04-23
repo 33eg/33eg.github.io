@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Генератор конфигурации</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<style>
+body { margin: 0; background: #0b0e11; color: #e9edef; font-family: sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+.container { width: 100%; max-width: 500px; background: #151921; padding: 40px 20px; border-radius: 12px; }
+h2 { text-align: center; color: #00a884; margin-bottom: 10px; }
+p { text-align: center; color: #888; font-size: 13px; margin-bottom: 20px; line-height: 1.4; }
+label { display: block; color: #888; font-size: 12px; margin-top: 15px; margin-bottom: 5px; }
+input, textarea { width: 100%; padding: 15px; background: #20262d; border: 1px solid #30363d; color: white; border-radius: 8px; font-size: 14px; box-sizing: border-box; outline: none; }
+input:focus, textarea:focus { border-color: #00a884; }
+textarea { min-height: 100px; resize: vertical; font-family: monospace; font-size: 12px; }
+button { width: 100%; padding: 15px; background: #00a884; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+button:hover { background: #008f6f; }
+.copyBtn { background: #30363d; margin-top: 10px; }
+.copyBtn:hover { background: #404852; }
+#result { margin-top: 20px; }
+.success { color: #4ade80; text-align: center; margin-top: 10px; }
+.error { color: #f87171; text-align: center; margin-top: 10px; }
+.pass-row { display: flex; gap: 10px; align-items: center; }
+.pass-row input { flex: 1; margin: 10px 0; }
+.gen-btn { width: auto; padding: 15px 10px; margin: 10px 0 10px 0; background: #30363d; font-size: 12px; flex-shrink: 0; }
+.gen-btn:hover { background: #404852; }
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Генератор конфигурации</h2>
+<p>Введи токен GitHub, ID Gist и пароль. Получи зашифрованную строку для вставки в чат.</p>
+
+<label>GitHub Token</label>
+<input type="text" id="token" placeholder="ghp_..." autocomplete="off">
+
+<label>Gist ID</label>
+<input type="text" id="gist" placeholder="38a90c1ce31a989dfa2f08e0989ac733" autocomplete="off">
+
+<label>Пароль шифрования</label>
+<div class="pass-row">
+<input type="password" id="pass" placeholder="Придумай надёжный пароль" autocomplete="off">
+<button class="gen-btn" onclick="generatePass()">ГЕН</button>
+</div>
+
+<button onclick="generate()">ЗАШИФРОВАТЬ</button>
+
+<div id="result">
+<label>Зашифрованная конфигурация (скопируй это)</label>
+<textarea id="output" readonly></textarea>
+<button class="copyBtn" onclick="copyResult()">КОПИРОВАТЬ</button>
+<div id="msg"></div>
+</div>
+
+<p style="margin-top:30px;font-size:11px;color:#555;">Эту строку вставляй в первое поле входа основного файла. Пароль шифрования вводи во второе поле. Пароль останется видимым после генерации для копирования.</p>
+</div>
+
+<script>
+function generatePass() {
+var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+var pass = "";
+for (var i = 0; i < 16; i++) {
+pass += chars.charAt(Math.floor(Math.random() * chars.length));
+}
+var field = document.getElementById('pass');
+if (field) {
+field.value = pass;
+field.type = "text";
+}
+}
+
+function generate() {
+var token = document.getElementById('token').value.trim();
+var gist = document.getElementById('gist').value.trim();
+var pass = document.getElementById('pass').value.trim();
+var msg = document.getElementById('msg');
+
+if (!token || !gist || !pass) {
+msg.innerHTML = '<div class="error">Заполни все поля</div>';
+return;
+}
+
+try {
+var configObj = { t: token, g: gist };
+var configStr = JSON.stringify(configObj);
+var encrypted = CryptoJS.AES.encrypt(configStr, pass).toString();
+document.getElementById('output').value = encrypted;
+msg.innerHTML = '<div class="success">Готово! Копируй строку выше.</div>';
+} catch (e) {
+msg.innerHTML = '<div class="error">Ошибка: ' + e.message + '</div>';
+}
+}
+
+function copyResult() {
+var output = document.getElementById('output');
+if (!output.value) return;
+output.select();
+document.execCommand('copy');
+var msg = document.getElementById('msg');
+msg.innerHTML = '<div class="success">Скопировано в буфер!</div>';
+setTimeout(function() { msg.innerHTML = ''; }, 2000);
+}
+</script>
+</body>
+</html>
