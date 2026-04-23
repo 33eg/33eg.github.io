@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Оффлайн шифрование текста MAX SECURE</title>
+<style>
+body {
+font-family: 'Courier New', Courier, monospace;
+padding: 20px;
+background: #fff;
+color: #000;
+margin: 0;
+}
+.container {
+max-width: 600px;
+margin: 0 auto;
+border: 2px solid #000;
+padding: 20px;
+}
+h1 {
+text-align: center;
+text-transform: uppercase;
+border-bottom: 2px solid #000;
+padding-bottom: 10px;
+margin-bottom: 20px;
+}
+h2 {
+text-transform: uppercase;
+font-size: 18px;
+margin-top: 20px;
+border-bottom: 1px solid #000;
+padding-bottom: 5px;
+}
+textarea {
+width: 100%;
+height: 100px;
+margin: 8px 0;
+border: 1px solid #000;
+padding: 10px;
+background: #fff;
+color: #000;
+font-family: inherit;
+resize: vertical;
+}
+textarea:focus, input:focus {
+outline: 2px solid #000;
+outline-offset: -1px;
+}
+input[type="password"], input[type="text"] {width: 100%;
+padding: 10px;
+margin: 8px 0;
+border: 1px solid #000;
+background: #fff;
+color: #000;
+font-family: inherit;
+}
+button {
+width: 100%;
+padding: 12px;
+margin: 8px 0;
+background: #000;
+color: #fff;
+border: 1px solid #000;
+cursor: pointer;
+font-family: inherit;
+font-weight: bold;
+text-transform: uppercase;
+}
+button:hover {
+background: #333;
+}
+button:disabled {
+background: #666;
+cursor: not-allowed;
+}
+.result {
+background: #f5f5f5;
+padding: 12px;
+border: 1px solid #000;
+white-space: pre-wrap;
+word-break: all;
+min-height: 40px;
+margin-top: 8px;
+cursor: pointer;
+}
+.result:hover {
+background: #e0e0e0;
+}
+.status {
+font-size: 12px;
+height: 15px;
+text-align: right;
+color: #000;
+margin-top: 4px;
+}
+.error {
+background: #000;
+color: #fff;padding: 2px 5px;
+}
+.warning {
+background: #ffcc00;
+color: #000;
+padding: 2px 5px;
+}
+.success {
+background: #00cc00;
+color: #fff;
+padding: 2px 5px;
+}
+.password-strength {
+font-size: 11px;
+margin-top: 4px;
+padding: 4px;
+border: 1px solid #000;
+}
+.weak { background: #ff6666; color: #000; }
+.medium { background: #ffcc00; color: #000; }
+.strong { background: #66ff66; color: #000; }
+.secure-notice {
+font-size: 11px;
+background: #f0f0f0;
+padding: 8px;
+border: 1px solid #000;
+margin-bottom: 15px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Оффлайн шифрование MAX SECURE</h1>
+<div class="secure-notice">
+БЕЗОПАСНОСТЬ: 600000 итераций PBKDF2 | AES-256-GCM | Случайная соль 128 бит | Требуется HTTPS или localhost
+</div>
+<h2>1. Зашифровать</h2>
+<textarea id="plainText" placeholder="Введите текст для шифрования"></textarea>
+<input type="password" id="encryptPass" placeholder="Пароль для шифрования (минимум 12 символов)" oninput="checkPasswordStrength('encryptPass', 'encryptStrength')">
+<div id="encryptStrength" class="password-strength"></div>
+<button onclick="encrypt()" id="encryptBtn">Зашифровать</button>
+<div id="encStatus" class="status"></div>
+<div id="encryptedResult" class="result" onclick="copyText(this)" title="Нажмите чтобы копировать"></div>
+<button onclick="clearField('plainText')" style="background:#666; font-size:11px;">ОЧИСТИТЬ ПОЛЕ ВВОДА</button>
+<h2>2. Расшифровать</h2>
+<textarea id="cipherText" placeholder="Вставьте зашифрованный текст"></textarea>
+<input type="password" id="decryptPass" placeholder="Пароль для расшифровки" oninput="checkPasswordStrength('decryptPass', 'decryptStrength')">
+<div id="decryptStrength" class="password-strength"></div>
+<button onclick="decrypt()" id="decryptBtn">Расшифровать</button>
+<div id="decStatus" class="status"></div><div id="decryptedResult" class="result" onclick="copyText(this)" title="Нажмите чтобы копировать"></div>
+<button onclick="clearField('cipherText'); clearField('decryptPass'); clearField('decryptedResult')" style="background:#666; font-size:11px;">ОЧИСТИТЬ ВСЕ ПОЛЯ</button>
+</div>
+<script>
+const PBKDF2_ITERATIONS = 600000;
+const MIN_PASSWORD_LENGTH = 12;
+function str2ab(str) {
+const buf = new ArrayBuffer(str.length);
+const bufView = new Uint8Array(buf);
+for (let i = 0; i < str.length; i++) {
+bufView[i] = str.charCodeAt(i);
+}
+return buf;
+}
+function ab2str(buf) {
+return String.fromCharCode.apply(null, new Uint8Array(buf));
+}
+function ab2b64(buffer) {
+let binary = '';
+const bytes = new Uint8Array(buffer);
+for (let i = 0; i < bytes.byteLength; i++) {
+binary += String.fromCharCode(bytes[i]);
+}
+return btoa(binary);
+}
+function b642ab(base64) {
+const binary = atob(base64);
+const bytes = new Uint8Array(binary.length);
+for (let i = 0; i < binary.length; i++) {
+bytes[i] = binary.charCodeAt(i);
+}
+return bytes.buffer;
+}
+function checkPasswordStrength(inputId, strengthId) {
+const password = document.getElementById(inputId).value;
+const strengthEl = document.getElementById(strengthId);
+if (password.length === 0) {
+strengthEl.textContent = '';
+strengthEl.className = 'password-strength';
+return;
+}
+let score = 0;
+if (password.length >= 12) score++;
+if (password.length >= 16) score++;
+if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+if (/[0-9]/.test(password)) score++;
+if (/[^a-zA-Z0-9]/.test(password)) score++;
+if (score <= 2) {
+strengthEl.textContent = 'СЛАБЫЙ ПАРОЛЬ - РЕКОМЕНДУЕТСЯ МИНИМУМ 12 СИМВОЛОВ С ЦИФРАМИ И СПЕЦСИМВОЛАМИ';
+strengthEl.className = 'password-strength weak';} else if (score <= 3) {
+strengthEl.textContent = 'СРЕДНЯЯ НАДЁЖНОСТЬ';
+strengthEl.className = 'password-strength medium';
+} else {
+strengthEl.textContent = 'ВЫСОКАЯ НАДЁЖНОСТЬ';
+strengthEl.className = 'password-strength strong';
+}
+}
+function isSecureContext() {
+return window.isSecureContext;
+}
+function showStatus(id, text, type = 'normal') {
+const el = document.getElementById(id);
+el.textContent = text;
+el.className = 'status';
+if (type === 'error') {
+el.classList.add('error');
+} else if (type === 'warning') {
+el.classList.add('warning');
+} else if (type === 'success') {
+el.classList.add('success');
+}
+setTimeout(() => {
+el.textContent = '';
+el.className = 'status';
+}, 5000);
+}
+function clearField(id) {
+const el = document.getElementById(id);
+if (el) {
+el.value = '';
+if (el.tagName === 'DIV') el.textContent = '';
+}
+}
+function secureClear() {
+const fields = ['plainText', 'encryptPass', 'cipherText', 'decryptPass', 'encryptedResult', 'decryptedResult'];
+fields.forEach(id => {
+const el = document.getElementById(id);
+if (el) {
+if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
+el.value = '';
+} else {
+el.textContent = '';
+}
+}
+});
+}
+async function deriveKey(password, salt) {
+const enc = new TextEncoder();
+const keyMaterial = await window.crypto.subtle.importKey("raw",
+enc.encode(password),
+{ name: "PBKDF2" },
+false,
+["deriveBits", "deriveKey"]
+);
+return await window.crypto.subtle.deriveKey(
+{
+name: "PBKDF2",
+salt: salt,
+iterations: PBKDF2_ITERATIONS,
+hash: "SHA-256"
+},
+keyMaterial,
+{ name: "AES-GCM", length: 256 },
+false,
+["encrypt", "decrypt"]
+);
+}
+async function encrypt() {
+if (!isSecureContext()) {
+showStatus("encStatus", "ОШИБКА: Требуется HTTPS или localhost для шифрования", 'error');
+return;
+}
+const plainText = document.getElementById("plainText").value;
+const password = document.getElementById("encryptPass").value;
+const statusId = "encStatus";
+if (!plainText || !password) {
+showStatus(statusId, "Ошибка: введите текст и пароль", 'error');
+return;
+}
+if (password.length < MIN_PASSWORD_LENGTH) {
+showStatus(statusId, `Ошибка: пароль должен быть минимум ${MIN_PASSWORD_LENGTH} символов`, 'error');
+return;
+}
+try {
+const salt = window.crypto.getRandomValues(new Uint8Array(16));
+const iv = window.crypto.getRandomValues(new Uint8Array(12));
+const key = await deriveKey(password, salt);
+const enc = new TextEncoder();
+const encrypted = await window.crypto.subtle.encrypt(
+{ name: "AES-GCM", iv: iv },
+key,
+enc.encode(plainText)
+);
+const result = ab2b64(salt) + "|" + ab2b64(iv) + "|" + ab2b64(encrypted);
+document.getElementById("encryptedResult").textContent = result;
+showStatus(statusId, "Зашифровано успешно (600000 итераций PBKDF2)", 'success');
+clearField('plainText');
+clearField('encryptPass');} catch (e) {
+showStatus(statusId, "Ошибка шифрования: " + e.message, 'error');
+}
+}
+async function decrypt() {
+if (!isSecureContext()) {
+showStatus("decStatus", "ОШИБКА: Требуется HTTPS или localhost для расшифровки", 'error');
+return;
+}
+const cipherText = document.getElementById("cipherText").value;
+const password = document.getElementById("decryptPass").value;
+const statusId = "decStatus";
+if (!cipherText || !password) {
+showStatus(statusId, "Ошибка: введите текст и пароль", 'error');
+return;
+}
+const parts = cipherText.split("|");
+if (parts.length !== 3) {
+showStatus(statusId, "Ошибка: неверный формат данных", 'error');
+return;
+}
+try {
+const salt = b642ab(parts[0]);
+const iv = b642ab(parts[1]);
+const encrypted = b642ab(parts[2]);
+const key = await deriveKey(password, salt);
+const decrypted = await window.crypto.subtle.decrypt(
+{ name: "AES-GCM", iv: iv },
+key,
+encrypted
+);
+const dec = new TextDecoder();
+document.getElementById("decryptedResult").textContent = dec.decode(decrypted);
+showStatus(statusId, "Расшифровано успешно", 'success');
+} catch (e) {
+document.getElementById("decryptedResult").textContent = "";
+showStatus(statusId, "Ошибка: неверный пароль или данные повреждены", 'error');
+}
+}
+function copyText(el) {
+if (el.textContent && el.textContent.trim() !== "") {
+if (navigator.clipboard) {
+navigator.clipboard.writeText(el.textContent).then(() => {
+const originalText = el.textContent;
+el.textContent = "СКОПИРОВАНО";
+setTimeout(() => {
+el.textContent = originalText;
+}, 1000);
+}).catch(() => {
+alert("Не удалось скопировать автоматически");});
+}
+}
+}
+window.addEventListener('beforeunload', () => {
+secureClear();
+});
+</script>
+</body>
+</html>

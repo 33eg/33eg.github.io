@@ -1,1 +1,165 @@
-crypted
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Инструменты шифрования</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+      padding: 20px;
+      background: #fff;
+      color: #000;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 750px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 35px;
+      border: 3px solid #000;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 35px;
+      color: #000;
+      font-size: 26px;
+      text-transform: uppercase;
+      border-bottom: 3px solid #000;
+      padding-bottom: 18px;
+      letter-spacing: 3px;
+      font-weight: 900;
+    }
+    .tool-link {
+      display: block;
+      padding: 22px 25px;
+      margin: 18px 0;
+      background: #fff;
+      border: 2px solid #000;
+      color: #000;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 17px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .tool-link:hover {
+      background: #000;
+      color: #fff;
+    }
+    .description {
+      margin-top: 10px;
+      color: #222;
+      font-size: 15px;
+      line-height: 1.7;
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: bold;
+    }
+    .tool-link:hover .description {
+      color: #eee;
+    }
+    @media (max-width: 800px) {
+      body { 
+        padding: 15px; 
+        font-size: 17px;
+      }
+      .container { 
+        padding: 28px; 
+      }
+      h1 { 
+        font-size: 24px; 
+      }
+      .tool-link { 
+        font-size: 16px; 
+        padding: 20px 22px; 
+      }
+      .description { 
+        font-size: 14px; 
+      }
+    }
+    @media (max-width: 550px) {
+      body { 
+        padding: 12px; 
+        font-size: 16px;
+      }
+      .container { 
+        padding: 22px; 
+      }
+      h1 { 
+        font-size: 22px; 
+      }
+      .tool-link { 
+        font-size: 15px; 
+        padding: 18px 20px; 
+      }
+      .description { 
+        font-size: 13px; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Инструменты шифрования</h1>
+    
+    <a href="aes.html" class="tool-link" target="_blank">
+      AES-256 Шифрование
+      <div class="description">Шифрует и расшифровывает текст по паролю. Формат AES-256. Работает оффлайн.</div>
+    </a>
+
+    <a href="pgp.html" class="tool-link" target="_blank">
+      PGP-шифрование
+      <div class="description">Шифрует текст по паролю в формате PGP MESSAGE. Работает оффлайн.</div>
+    </a>
+    
+    <a href="qr.html" class="tool-link" target="_blank">
+      Шифрование с QR-кодом
+      <div class="description">Создаёт QR-код с зашифрованным текстом. Расшифровка по паролю.</div>
+    </a>
+    
+    <a href="img.html" class="tool-link" target="_blank">
+      Скрытие текста в изображении
+      <div class="description">Прячет текст в PNG-изображение. Извлечение только по паролю.</div>
+    </a>
+
+    <a href="fromimg.html" class="tool-link" target="_blank">
+      Прочесть текст из изображения
+      <div class="description">Извлекает и расшифровывает текст из защищённого PNG-файла.</div>
+    </a>
+    
+    <a href="pass.html" class="tool-link" target="_blank">
+      Генератор надёжных паролей
+      <div class="description">Создаёт криптостойкие пароли и фразы с настройкой длины и символов.</div>
+    </a>
+
+    <a href="https://code-qr.ru/" class="tool-link" target="_blank">
+      Генератор QR-code
+      <div class="description">Создаёт QR-коды для любых данных.</div>
+    </a>
+
+
+
+
+
+    <a href="https://batchtools.pro/ru/overlay" class="tool-link" target="_blank">
+      Наложить изображения онлайн
+      <div class="description">Инструмент для наложения одной картинки на другую.</div>
+    </a>
+
+    <a href="https://www.pokecut.com/ru" class="tool-link" target="_blank">
+      Фоторедактор pokecut.com
+      <div class="description">Создание и редактирование изображений онлайн.</div>
+    </a>
+
+    <a href="https://33eg.github.io/" class="tool-link" target="_blank">
+      33eg.github.io 
+      <div class="description">Основная страница ресурса.</div>
+    </a>
+
+  </div>
+</body>
+</html>

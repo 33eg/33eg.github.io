@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ПРОЧИТАТЬ</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+font-family: 'Courier New', Courier, monospace;
+padding: 20px;
+background: #fff;
+color: #000;
+}
+.container {
+max-width: 600px;
+margin: 0 auto;
+background: #fff;
+padding: 20px;
+border: 2px solid #000;
+border-radius: 0;
+}
+h1 {
+text-align: center;
+color: #000;
+text-transform: uppercase;
+border-bottom: 2px solid #000;
+padding-bottom: 10px;
+margin-bottom: 20px;
+font-size: 20px;
+}
+h3 {
+text-transform: uppercase;
+font-size: 16px;
+margin-top: 25px;
+margin-bottom: 15px;
+border-bottom: 1px solid #000;
+padding-bottom: 5px;
+}
+textarea, input, button {
+width: 100%;
+margin: 8px 0;
+padding: 10px;
+box-sizing: border-box;
+border: 1px solid #000;
+background: #fff;
+color: #000;
+font-family: inherit;
+font-size: 14px;
+}textarea {
+height: 100px;
+resize: vertical;
+}
+textarea:focus, input:focus {
+outline: 2px solid #000;
+outline-offset: -1px;
+}
+button {
+background: #000;
+color: #fff;
+border: 1px solid #000;
+border-radius: 0;
+cursor: pointer;
+font-weight: bold;
+text-transform: uppercase;
+font-size: 15px;
+}
+button:hover {
+background: #333;
+}
+button:disabled {
+background: #666;
+cursor: not-allowed;
+}
+#imageContainer {
+text-align: center;
+margin-top: 20px;
+}
+#imageContainer canvas {
+border: 1px solid #000;
+margin-top: 10px;
+max-width: 100%;
+}
+#resultText {
+margin-top: 15px;
+padding: 10px;
+background: #f5f5f5;
+border: 1px solid #000;
+border-radius: 0;
+white-space: pre-wrap;
+word-break: break-all;
+cursor: pointer;
+font-family: inherit;
+font-size: 13px;
+min-height: 40px;
+}
+#resultText:hover {
+background: #e0e0e0;
+}#resultText.copied {
+background: #000;
+color: #fff;
+}
+#resultText.error {
+background: #ffcccc;
+color: #cc0000;
+}
+#copyBtn {
+margin-top: 8px;
+background: #000;
+color: #fff;
+display: none;
+}
+#copyBtn.visible {
+display: block;
+}
+#downloadBtn {
+margin-top: 8px;
+background: #000;
+color: #fff;
+display: none;
+}
+#downloadBtn.visible {
+display: block;
+}
+.section {
+margin-top: 25px;
+padding-top: 18px;
+border-top: 1px solid #000;
+}
+::placeholder { color: #666; }
+@media (max-width: 650px) {
+body { padding: 15px; }
+.container { padding: 16px; }
+h1 { font-size: 18px; }
+h3 { font-size: 14px; }
+textarea, input, button { font-size: 13px; padding: 9px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>ПРОЧИТАТЬ</h1>
+<h3>1. Создать изображение</h3>
+<textarea id="plainText" placeholder="Введите текст"></textarea>
+<input type="password" id="password1" placeholder="Пароль (минимум 12 символов)" autocomplete="off" />
+<button onclick="createImage()" id="createBtn">Создать и скачать</button>
+<div id="imageContainer"></div>
+<button id="downloadBtn" onclick="downloadImage()">СКАЧАТЬ ИЗОБРАЖЕНИЕ</button><div class="section">
+<h3>2. Расшифровать из изображения</h3>
+<input type="file" id="imageInput" accept="image/png" style="width:100%; margin:10px 0;" />
+<input type="password" id="password2" placeholder="Пароль" autocomplete="off" />
+<button onclick="extractFromImage()" id="extractBtn">Расшифровать</button>
+<div id="resultText" onclick="copyResult()"></div>
+<button id="copyBtn" onclick="copyResult()">КОПИРОВАТЬ</button>
+</div>
+</div>
+<script>
+const PBKDF2_ITERATIONS = 600000;
+
+async function deriveKey(password, salt) {
+const enc = new TextEncoder();
+const keyMaterial = await crypto.subtle.importKey(
+"raw",
+enc.encode(password),
+{ name: "PBKDF2" },
+false,
+["deriveBits", "deriveKey"]
+);
+return await crypto.subtle.deriveKey(
+{
+name: "PBKDF2",
+salt: salt,
+iterations: PBKDF2_ITERATIONS,
+hash: "SHA-256"
+},
+keyMaterial,
+{ name: "AES-GCM", length: 256 },
+false,
+["encrypt", "decrypt"]
+);
+}
+
+async function encryptText(text, password) {
+const encoder = new TextEncoder();
+const data = encoder.encode(text);
+const iv = crypto.getRandomValues(new Uint8Array(12));
+const salt = crypto.getRandomValues(new Uint8Array(16));
+const key = await deriveKey(password, salt);
+const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, data);
+const full = new Uint8Array(16 + 12 + encrypted.byteLength);
+full.set(salt, 0);
+full.set(iv, 16);
+full.set(new Uint8Array(encrypted), 28);
+return full;
+}
+
+async function decryptBytes(bytes, password) {if (bytes.length < 29) throw new Error("Слишком коротко");
+const salt = bytes.slice(0, 16);
+const iv = bytes.slice(16, 28);
+const encrypted = bytes.slice(28);
+const key = await deriveKey(password, salt);
+const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, encrypted.buffer);
+return new TextDecoder().decode(decrypted);
+}
+
+function bytesToBits(bytes) {
+const bits = [];
+for (let byte of bytes) {
+for (let i = 7; i >= 0; i--) {
+bits.push((byte >> i) & 1);
+}
+}
+return bits;
+}
+
+function bitsToBytes(bits) {
+const bytes = [];
+for (let i = 0; i < bits.length; i += 8) {
+let byte = 0;
+for (let j = 0; j < 8 && i + j < bits.length; j++) {
+byte = (byte << 1) | bits[i + j];
+}
+bytes.push(byte);
+}
+return new Uint8Array(bytes);
+}
+
+let createdCanvas = null;
+
+async function createImage() {
+const text = document.getElementById("plainText").value.trim();
+const password = document.getElementById("password1").value;
+const resultDiv = document.getElementById("resultText");
+const copyBtn = document.getElementById("copyBtn");
+const downloadBtn = document.getElementById("downloadBtn");
+const imageContainer = document.getElementById("imageContainer");
+const createBtn = document.getElementById("createBtn");
+
+resultDiv.className = "";
+resultDiv.textContent = "";
+copyBtn.classList.remove("visible");
+downloadBtn.classList.remove("visible");
+
+if (!text || !password) {
+resultDiv.textContent = "Введите текст и пароль";
+resultDiv.className = "error";return;
+}
+
+if (password.length < 12) {
+resultDiv.textContent = "Ошибка: пароль должен быть минимум 12 символов";
+resultDiv.className = "error";
+return;
+}
+
+createBtn.disabled = true;
+
+try {
+const encryptedBytes = await encryptText(text, password);
+const dataLength = encryptedBytes.length;
+
+// 4 байта длины + зашифрованные данные (БЕЗ MAGIC заголовка)
+const fullData = new Uint8Array(4 + dataLength);
+fullData[0] = (dataLength >> 24) & 0xFF;
+fullData[1] = (dataLength >> 16) & 0xFF;
+fullData[2] = (dataLength >> 8) & 0xFF;
+fullData[3] = dataLength & 0xFF;
+fullData.set(encryptedBytes, 4);
+
+const bits = bytesToBits(fullData);
+const size = Math.ceil(Math.sqrt(bits.length));
+const canvas = document.createElement('canvas');
+canvas.width = size;
+canvas.height = size;
+const ctx = canvas.getContext('2d');
+ctx.fillStyle = '#ffffff';
+ctx.fillRect(0, 0, size, size);
+
+// Записываем биты в пиксели (каждый пиксель = 1 бит)
+let index = 0;
+for (let y = 0; y < size && index < bits.length; y++) {
+for (let x = 0; x < size && index < bits.length; x++) {
+ctx.fillStyle = bits[index] ? '#000000' : '#ffffff';
+ctx.fillRect(x, y, 1, 1);
+index++;
+}
+}
+
+createdCanvas = canvas;
+imageContainer.innerHTML = '';
+imageContainer.appendChild(canvas);
+downloadBtn.classList.add("visible");
+resultDiv.textContent = "Изображение создано успешно";
+document.getElementById("plainText").value = '';
+document.getElementById("password1").value = '';
+} catch (error) {resultDiv.textContent = "Ошибка: " + (error.message || error);
+resultDiv.className = "error";
+} finally {
+createBtn.disabled = false;
+}
+}
+
+function downloadImage() {
+if (createdCanvas) {
+const link = document.createElement('a');
+link.href = createdCanvas.toDataURL('image/png');
+link.download = 'secret.png';
+link.click();
+}
+}
+
+function extractFromImage() {
+const file = document.getElementById("imageInput").files[0];
+const password = document.getElementById("password2").value;
+const resultDiv = document.getElementById("resultText");
+const copyBtn = document.getElementById("copyBtn");
+const extractBtn = document.getElementById("extractBtn");
+
+resultDiv.className = "";
+resultDiv.textContent = "";
+copyBtn.classList.remove("visible");
+
+if (!file || !password) {
+resultDiv.textContent = "Выберите изображение и пароль";
+resultDiv.className = "error";
+return;
+}
+
+extractBtn.disabled = true;
+
+const img = new Image();
+img.src = URL.createObjectURL(file);
+img.onload = () => {
+const canvas = document.createElement('canvas');
+canvas.width = img.width;
+canvas.height = img.height;
+const ctx = canvas.getContext('2d');
+ctx.drawImage(img, 0, 0);
+
+// Извлекаем биты из пикселей (каждый пиксель = 1 бит)
+const bits = [];
+for (let y = 0; y < canvas.height; y++) {
+for (let x = 0; x < canvas.width; x++) {
+const pixel = ctx.getImageData(x, y, 1, 1).data;
+bits.push(pixel[0] < 128 ? 1 : 0);}
+}
+
+// Читаем первые 32 бита = 4 байта длины
+if (bits.length < 32) {
+resultDiv.textContent = "Ошибка: изображение слишком маленькое";
+resultDiv.className = "error";
+extractBtn.disabled = false;
+return;
+}
+
+const lenBytes = bitsToBytes(bits.slice(0, 32));
+const length = (lenBytes[0] << 24) | (lenBytes[1] << 16) | (lenBytes[2] << 8) | lenBytes[3];
+
+if (length <= 0 || length > 1000000) {
+resultDiv.textContent = "Ошибка: неверная длина данных";
+resultDiv.className = "error";
+extractBtn.disabled = false;
+return;
+}
+
+// Извлекаем данные (начиная с 33 бита)
+const dataBits = bits.slice(32, 32 + length * 8);
+
+try {
+const dataBytes = bitsToBytes(dataBits);
+decryptBytes(new Uint8Array(dataBytes), password).then(text => {
+resultDiv.textContent = text;
+resultDiv.className = "";
+copyBtn.classList.add("visible");
+extractBtn.disabled = false;
+}).catch(e => {
+resultDiv.textContent = "Ошибка: неверный пароль или данные повреждены";
+resultDiv.className = "error";
+extractBtn.disabled = false;
+});
+} catch (e) {
+resultDiv.textContent = "Ошибка при расшифровке";
+resultDiv.className = "error";
+extractBtn.disabled = false;
+}
+};
+img.onerror = () => {
+resultDiv.textContent = "Ошибка: не удалось загрузить изображение";
+resultDiv.className = "error";
+extractBtn.disabled = false;
+};
+}
+
+function copyResult() {const resultDiv = document.getElementById("resultText");
+const copyBtn = document.getElementById("copyBtn");
+if (resultDiv.textContent && resultDiv.textContent.trim() !== "" && !resultDiv.classList.contains("error")) {
+if (navigator.clipboard) {
+navigator.clipboard.writeText(resultDiv.textContent).then(() => {
+const original = resultDiv.textContent;
+resultDiv.textContent = "СКОПИРОВАНО";
+resultDiv.classList.add("copied");
+copyBtn.textContent = "СКОПИРОВАНО";
+setTimeout(() => {
+resultDiv.textContent = original;
+resultDiv.classList.remove("copied");
+copyBtn.textContent = "КОПИРОВАТЬ";
+}, 1200);
+});
+}
+}
+}
+</script>
+</body>
+</html>
