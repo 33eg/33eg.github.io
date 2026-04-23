@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Просмотр метаданных изображений</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/piexifjs/1.0.6/piexif.min.js"></script>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: system-ui, -apple-system, sans-serif; max-width: 800px; margin: 20px auto; padding: 15px; color: #222; background: #f4f6f9; }
+h2 { margin: 0 0 10px; font-size: 20px; }
+#dropZone { border: 2px dashed #aaa; padding: 30px 20px; text-align: center; border-radius: 8px; cursor: pointer; background: #fff; margin: 15px 0; }
+#dropZone.dragover { border-color: #0066cc; background: #eef4ff; }
+input[type="file"] { display: none; }
+#preview { max-width: 100%; margin: 15px 0; border-radius: 6px; display: none; }
+.metaSection { background: #fff; border: 1px solid #ddd; border-radius: 8px; margin: 10px 0; overflow: hidden; }
+.metaHeader { background: #f8f9fa; padding: 12px 15px; font-weight: 600; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.metaHeader:active { background: #e9ecef; }
+.metaContent { padding: 12px 15px; display: none; }
+.metaContent.show { display: block; }
+.metaRow { display: flex; padding: 6px 0; border-bottom: 1px solid #eee; font-size: 13px; }
+.metaRow:last-child { border-bottom: none; }
+.metaKey { font-weight: 600; color: #555; width: 40%; word-break: break-word; }
+.metaValue { color: #222; width: 60%; word-break: break-all; }
+.copyBtn { background: #0066cc; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-left: 10px; }
+.copyBtn:active { background: #0052a3; }
+.copyAll { background: #28a745; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; margin: 10px 0; width: 100%; }
+.copyAll:active { background: #218838; }
+#log { background: #fff; border: 1px solid #ddd; padding: 12px; border-radius: 6px; min-height: 50px; font-size: 13px; color: #666; text-align: center; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 6px; font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000; }
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<h2>Просмотр метаданных EXIF</h2>
+<div id="dropZone">Нажмите или перетащите изображение</div>
+<input type="file" id="fileInput" accept="image/*">
+<img id="preview" alt="Preview">
+<div id="log">Ожидание файла...</div>
+<div id="toast" class="toast">Скопировано!</div>
+
+<script>
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const preview = document.getElementById('preview');
+const log = document.getElementById('log');
+const toast = document.getElementById('toast');
+let currentExif = null;
+let allMetadata = {};
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+e.preventDefault();
+dropZone.classList.remove('dragover');
+const file = e.dataTransfer.files[0];
+if (file && file.type.startsWith('image/')) loadFile(file);
+});
+fileInput.addEventListener('change', e => {
+if (e.target.files[0]) loadFile(e.target.files[0]);
+});
+
+function showToast(msg) {
+toast.textContent = msg;
+toast.classList.add('show');
+setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+function copyToClipboard(text) {
+navigator.clipboard.writeText(text).then(() => {
+showToast('Скопировано!');
+}).catch(() => {
+const ta = document.createElement('textarea');
+ta.value = text;
+document.body.appendChild(ta);
+ta.select();
+document.execCommand('copy');
+document.body.removeChild(ta);
+showToast('Скопировано!');
+});
+}
+
+function loadFile(file) {
+log.textContent = 'Загрузка...';
+preview.style.display = 'none';
+document.querySelectorAll('.metaSection').forEach(el => el.remove());
+currentExif = null;
+allMetadata = {};
+
+const reader = new FileReader();
+reader.onload = e => {
+try {
+const exifData = piexif.load(e.target.result);
+currentExif = exifData;
+displayMetadata(exifData);
+preview.src = e.target.result;
+preview.style.display = 'block';
+log.textContent = 'Метаданные извлечены';
+} catch (err) {
+log.textContent = 'EXIF не найден или файл не поддерживается';
+preview.src = e.target.result;
+preview.style.display = 'block';
+}
+};
+reader.readAsDataURL(file);
+}
+
+function displayMetadata(exif) {
+const sections = {
+'0th': 'Основные данные',
+'Exif': 'EXIF',
+'GPS': 'GPS',
+'1st': 'Thumbnail'
+};
+
+let jsonStr = JSON.stringify(exif, null, 2);
+allMetadata.json = jsonStr;
+
+const copyAllBtn = document.createElement('button');
+copyAllBtn.className = 'copyAll';
+copyAllBtn.textContent = 'Копировать все метаданные (JSON)';
+copyAllBtn.addEventListener('click', () => copyToClipboard(jsonStr));
+document.body.appendChild(copyAllBtn);
+
+for (const [key, name] of Object.entries(sections)) {
+if (!exif[key] || Object.keys(exif[key]).length === 0) continue;
+
+const section = document.createElement('div');
+section.className = 'metaSection';
+
+const header = document.createElement('div');
+header.className = 'metaHeader';
+header.innerHTML = '<span>' + name + '</span><span>▼</span>';
+header.addEventListener('click', () => {
+content.classList.toggle('show');
+});
+
+const content = document.createElement('div');
+content.className = 'metaContent';
+
+const copyBtn = document.createElement('button');
+copyBtn.className = 'copyBtn';
+copyBtn.textContent = 'Копировать раздел';
+copyBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+const text = JSON.stringify(exif[key], null, 2);
+copyToClipboard(text);
+});
+header.appendChild(copyBtn);
+
+for (const [tagId, value] of Object.entries(exif[key])) {
+const row = document.createElement('div');
+row.className = 'metaRow';
+const tagName = getTagName(key, tagId);
+const displayValue = formatValue(value);
+row.innerHTML = '<div class="metaKey">' + tagName + '</div><div class="metaValue">' + displayValue + '</div>';
+content.appendChild(row);
+}
+
+section.appendChild(header);
+section.appendChild(content);
+document.body.appendChild(section);
+}
+
+if (!currentExif || (Object.keys(currentExif).length === 0)) {
+log.textContent = 'Метаданные не найдены';
+}
+}
+
+function getTagName(section, tagId) {
+const names = {
+'0th': {
+256: 'ImageWidth',
+257: 'ImageHeight',
+258: 'BitsPerSample',
+259: 'Compression',
+262: 'PhotometricInterpretation',
+270: 'ImageDescription',
+271: 'Make',
+272: 'Model',
+273: 'StripOffsets',
+274: 'Orientation',
+277: 'SamplesPerPixel',
+278: 'RowsPerStrip',
+279: 'StripByteCounts',
+282: 'XResolution',
+283: 'YResolution',
+284: 'PlanarConfiguration',
+296: 'ResolutionUnit',
+305: 'Software',
+306: 'DateTime',
+315: 'Artist',
+513: 'ThumbnailOffset',
+514: 'ThumbnailLength',
+33432: 'Copyright',
+34665: 'ExifOffset',
+34675: 'ICCProfile',
+53248: 'ThumbnailImage'
+},
+'Exif': {
+33214: 'SpectralSensitivity',
+34665: 'ExifOffset',
+34675: 'ICCProfile',
+36864: 'ExifVersion',
+36867: 'DateTimeOriginal',
+36868: 'DateTimeDigitized',
+37121: 'ComponentsConfiguration',
+37122: 'CompressedBitsPerPixel',
+37500: 'MakerNote',
+37510: 'UserComment',
+37520: 'RelatedSoundFile',
+36867: 'DateTimeOriginal',
+36868: 'DateTimeDigitized',
+37521: 'DateTimeOriginal',
+40960: 'FlashpixVersion',
+40961: 'ColorSpace',
+40962: 'PixelXDimension',
+40963: 'PixelYDimension',
+40964: 'RelatedSoundFile',
+40965: 'InteroperabilityOffset',
+41483: 'FlashEnergy',
+41484: 'SpatialFrequencyResponse',
+41486: 'FocalPlaneXResolution',
+41487: 'FocalPlaneYResolution',
+41488: 'FocalPlaneResolutionUnit',
+41492: 'SubjectLocation',
+41493: 'ExposureIndex',
+41495: 'SensingMethod',
+41728: 'FileSource',
+41729: 'SceneType',
+41730: 'CFAPattern',
+41985: 'CustomRendered',
+41986: 'ExposureMode',
+41987: 'WhiteBalance',
+41988: 'DigitalZoomRatio',
+41989: 'FocalLengthIn35mmFilm',
+41990: 'SceneCaptureType',
+41991: 'GainControl',
+41992: 'Contrast',
+41993: 'Saturation',
+41994: 'Sharpness',
+41995: 'DeviceSettingDescription',
+41996: 'SubjectDistanceRange',
+42016: 'ImageUniqueID',
+42032: 'CameraOwnerName',
+42033: 'BodySerialNumber',
+42034: 'LensSpecification',
+42035: 'LensMake',
+42036: 'LensModel',
+42037: 'LensSerialNumber',
+33434: 'ExposureTime',
+33437: 'FNumber',
+34665: 'ExifOffset',
+34850: 'ExposureProgram',
+34852: 'SpectralSensitivity',
+34855: 'ISOSpeedRatings',
+34856: 'OECF',
+34864: 'SensitivityType',
+34865: 'StandardOutputSensitivity',
+34866: 'RecommendedExposureIndex',
+34867: 'ISOSpeed',
+34868: 'ISOSpeedLatitudeyyy',
+34869: 'ISOSpeedLatitudezzz',
+36864: 'ExifVersion',
+36867: 'DateTimeOriginal',
+36868: 'DateTimeDigitized',
+37121: 'ComponentsConfiguration',
+37122: 'CompressedBitsPerPixel',
+37377: 'ShutterSpeedValue',
+37378: 'ApertureValue',
+37379: 'BrightnessValue',
+37380: 'ExposureBiasValue',
+37381: 'MaxApertureValue',
+37382: 'SubjectDistance',
+37383: 'MeteringMode',
+37384: 'LightSource',
+37385: 'Flash',
+37386: 'FocalLength',
+37396: 'SubjectArea',
+37500: 'MakerNote',
+37510: 'UserComment',
+37520: 'RelatedSoundFile',
+37521: 'DateTimeOriginal',
+40960: 'FlashpixVersion',
+40961: 'ColorSpace',
+40962: 'PixelXDimension',
+40963: 'PixelYDimension',
+40964: 'RelatedSoundFile',
+40965: 'InteroperabilityOffset',
+41483: 'FlashEnergy',
+41484: 'SpatialFrequencyResponse',
+41486: 'FocalPlaneXResolution',
+41487: 'FocalPlaneYResolution',
+41488: 'FocalPlaneResolutionUnit',
+41492: 'SubjectLocation',
+41493: 'ExposureIndex',
+41495: 'SensingMethod',
+41728: 'FileSource',
+41729: 'SceneType',
+41730: 'CFAPattern',
+41985: 'CustomRendered',
+41986: 'ExposureMode',
+41987: 'WhiteBalance',
+41988: 'DigitalZoomRatio',
+41989: 'FocalLengthIn35mmFilm',
+41990: 'SceneCaptureType',
+41991: 'GainControl',
+41992: 'Contrast',
+41993: 'Saturation',
+41994: 'Sharpness',
+41995: 'DeviceSettingDescription',
+41996: 'SubjectDistanceRange',
+42016: 'ImageUniqueID',
+42032: 'CameraOwnerName',
+42033: 'BodySerialNumber',
+42034: 'LensSpecification',
+42035: 'LensMake',
+42036: 'LensModel',
+42037: 'LensSerialNumber'
+},
+'GPS': {
+0: 'GPSVersionID',
+1: 'GPSLatitudeRef',
+2: 'GPSLatitude',
+3: 'GPSLongitudeRef',
+4: 'GPSLongitude',
+5: 'GPSAltitudeRef',
+6: 'GPSAltitude',
+7: 'GPSTimeStamp',
+8: 'GPSSatellites',
+9: 'GPSStatus',
+10: 'GPSMeasureMode',
+11: 'GPSDOP',
+12: 'GPSSpeedRef',
+13: 'GPSSpeed',
+14: 'GPSTrackRef',
+15: 'GPSTrack',
+16: 'GPSImgDirectionRef',
+17: 'GPSImgDirection',
+18: 'GPSMapDatum',
+19: 'GPSDestLatitudeRef',
+20: 'GPSDestLatitude',
+21: 'GPSDestLongitudeRef',
+22: 'GPSDestLongitude',
+23: 'GPSDestBearingRef',
+24: 'GPSDestBearing',
+25: 'GPSDestDistanceRef',
+26: 'GPSDestDistance',
+27: 'GPSProcessingMethod',
+28: 'GPSAreaInformation',
+29: 'GPSDateStamp',
+30: 'GPSDifferential'
+}
+};
+
+const tag = names[section] && names[section][parseInt(tagId)];
+return tag || ('Tag_' + tagId);
+}
+
+function formatValue(value) {
+if (value instanceof Array) {
+if (value.length > 10) return '[' + value.slice(0, 10).join(', ') + '...]';
+return '[' + value.join(', ') + ']';
+}
+if (typeof value === 'object') {
+try {
+return JSON.stringify(value);
+} catch (e) {
+return String(value);
+}
+}
+return String(value);
+}
+</script>
+</body>
+</html>
