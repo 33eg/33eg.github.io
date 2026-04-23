@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Скрытый текст в изображении</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 16px;
+      background: #f5f5f5;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #1976d2;
+      font-size: 22px;
+    }
+    textarea, input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    textarea {
+      height: 110px;
+      resize: vertical;
+      font-family: monospace;
+    }
+    button {
+      background: #1976d2;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      font-size: 17px;
+      padding: 14px;
+    }
+    button:active {
+      background: #1565c0;
+    }
+    #imageContainer {
+      text-align: center;
+      margin-top: 24px;
+    }
+    #imageContainer canvas {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: white;
+      margin-top: 12px;
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+    }
+    #resultText {
+      margin-top: 16px;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .section {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Скрытый текст в изображении</h1>
+    
+    <h3>1. Создать изображение</h3>
+    <textarea id="plainText" placeholder="Введите текст"></textarea>
+    <input type="password" id="password1" placeholder="Пароль" autocomplete="off" />
+    <button onclick="createImage()">Создать и скачать</button>
+    <div id="imageContainer"></div>
+    
+    <div class="section">
+      <h3>2. Расшифровать из изображения</h3>
+      <input type="file" id="imageInput" accept="image/png" style="width:100%; margin:10px 0;" />
+      <input type="password" id="password2" placeholder="Пароль" autocomplete="off" />
+      <button onclick="extractFromImage()">Расшифровать</button>
+      <div id="resultText"></div>
+    </div>
+  </div>
+
+  <script>
+    // Шифрование
+    async function encryptText(text, password) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(text);
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const keyData = await crypto.subtle.digest("SHA-256", encoder.encode(password));
+      const key = await crypto.subtle.importKey("raw", keyData, { name: "AES-GCM" }, false, ["encrypt"]);
+      const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, data);
+      const full = new Uint8Array(12 + encrypted.byteLength);
+      full.set(iv, 0);
+      full.set(new Uint8Array(encrypted), 12);
+      return full;
+    }
+
+    // Расшифровка
+    async function decryptBytes(bytes, password) {
+      if (bytes.length < 13) throw new Error("Слишком коротко");
+      const iv = bytes.slice(0, 12);
+      const encrypted = bytes.slice(12);
+      const key = await crypto.subtle.importKey("raw", await crypto.subtle.digest("SHA-256", new TextEncoder().encode(password)), { name: "AES-GCM" }, false, ["decrypt"]);
+      const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, encrypted.buffer);
+      return new TextDecoder().decode(decrypted);
+    }
+
+    // Создание изображения
+    async function createImage() {
+      const text = document.getElementById("plainText").value.trim();
+      const password = document.getElementById("password1").value;
+      if (!text || !password) {
+        alert("Введите текст и пароль");
+        return;
+      }
+
+      try {
+        const encryptedBytes = await encryptText(text, password);
+        const dataLength = encryptedBytes.length;
+        
+        // Добавляем 4 байта длины в начало
+        const fullData = new Uint8Array(4 + dataLength);
+        fullData[0] = (dataLength >> 24) & 0xFF;
+        fullData[1] = (dataLength >> 16) & 0xFF;
+        fullData[2] = (dataLength >> 8) & 0xFF;
+        fullData[3] = dataLength & 0xFF;
+        fullData.set(encryptedBytes, 4);
+
+        // Преобразуем в биты
+        const bits = [];
+        for (let byte of fullData) {
+          for (let i = 7; i >= 0; i--) {
+            bits.push((byte >> i) & 1);
+          }
+        }
+
+        // Создаём изображение
+        const size = Math.ceil(Math.sqrt(bits.length));
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, size, size);
+
+        // Записываем биты
+        let index = 0;
+        for (let y = 0; y < size && index < bits.length; y++) {
+          for (let x = 0; x < size && index < bits.length; x++) {
+            ctx.fillStyle = bits[index] ? '#000000' : '#ffffff';
+            ctx.fillRect(x, y, 1, 1);
+            index++;
+          }
+        }
+
+        // Показываем
+        const container = document.getElementById("imageContainer");
+        container.innerHTML = '';
+        container.appendChild(canvas);
+
+        // Скачивание
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'secret.png';
+        link.textContent = 'Скачать изображение';
+        link.style.display = 'block';
+        link.style.marginTop = '10px';
+        container.appendChild(link);
+      } catch (error) {
+        alert("Ошибка: " + (error.message || error));
+      }
+    }
+
+    // Извлечение из изображения
+    function extractFromImage() {
+      const file = document.getElementById("imageInput").files[0];
+      const password = document.getElementById("password2").value;
+      const resultDiv = document.getElementById("resultText");
+      resultDiv.textContent = "";
+
+      if (!file || !password) {
+        resultDiv.textContent = "Выберите изображение и пароль";
+        return;
+      }
+
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        // Извлекаем все биты
+        const bits = [];
+        for (let y = 0; y < canvas.height; y++) {
+          for (let x = 0; x < canvas.width; x++) {
+            const pixel = ctx.getImageData(x, y, 1, 1).data;
+            bits.push(pixel[0] < 128 ? 1 : 0);
+          }
+        }
+
+        // Преобразуем биты в байты
+        const bytes = [];
+        for (let i = 0; i < bits.length; i += 8) {
+          let byte = 0;
+          for (let j = 0; j < 8 && i + j < bits.length; j++) {
+            byte = (byte << 1) | bits[i + j];
+          }
+          bytes.push(byte);
+        }
+
+        // Читаем длину (первые 4 байта)
+        if (bytes.length < 4) {
+          resultDiv.textContent = "Ошибка: повреждённое изображение";
+          return;
+        }
+        const dataLength = (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
+        if (dataLength <= 0 || dataLength > bytes.length - 4) {
+          resultDiv.textContent = "Ошибка: неверная длина данных";
+          return;
+        }
+
+        // Извлекаем полезные данные
+        const dataBytes = bytes.slice(4, 4 + dataLength);
+
+        // Расшифровываем
+        decryptBytes(new Uint8Array(dataBytes), password).then(text => {
+          resultDiv.textContent = text;
+        }).catch(e => {
+          resultDiv.textContent = "Ошибка: неверный пароль";
+        });
+      };
+    }
+  </script>
+</body>
+</html>

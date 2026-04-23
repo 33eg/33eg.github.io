@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Описание картины</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 16px;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        label {
+            display: block;
+            margin-top: 16px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        input, select {
+            width: 100%;
+            padding: 14px;
+            margin-top: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .pixels-group {
+            display: none;
+            margin-top: 16px;
+        }
+        .pixels-group label {
+            margin-top: 12px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            margin: 24px 0 20px;
+            font-size: 18px;
+            font-weight: 600;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:active {
+            background-color: #0d5bbd;
+        }
+        .output-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .output-header {
+            padding: 14px 16px;
+            background-color: #f1f3f4;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .copy-btn {
+            background: #e8eaed;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #5f6368;
+            cursor: pointer;
+        }
+        .copy-btn:active {
+            background: #dadce0;
+        }
+        .output-content {
+            padding: 20px 16px;
+            font-size: 18px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            user-select: text;
+        }
+        @media (min-width: 600px) {
+            body { padding: 24px; }
+            h1 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Описание картины</h1>
+
+        <label for="titleRu">Название:</label>
+        <input type="text" id="titleRu" placeholder="Например: Зимний пейзаж">
+
+        <label for="mediumRu">Материал / Техника:</label>
+        <select id="mediumRu">
+            <option value="холст, масло">холст, масло</option>
+            <option value="бумага, акварель">бумага, акварель</option>
+            <option value="бумага, тушь">бумага, тушь</option>
+            <option value="холст, акрил">холст, акрил</option>
+            <option value="дерево, темпера">дерево, темпера</option>
+            <option value="холст, смешанная техника">холст, смешанная техника</option>
+            <option value="цифровая живопись, цифровой файл">цифровая живопись, цифровой файл</option>
+            <option value="цифровая живопись, принт на холсте">цифровая живопись, принт на холсте</option>
+            <option value="цифровая живопись, принт на бумаге">цифровая живопись, принт на бумаге</option>
+            <option value="NFT, уникальный цифровой арт">NFT, уникальный цифровой арт</option>
+            <option value="другое">другое</option>
+        </select>
+        <input type="text" id="mediumCustom" placeholder="Укажите при выборе «другое»" style="display:none;">
+
+        <div id="pixelsGroup" class="pixels-group">
+            <label for="pixelPreset">Разрешение (пиксели):</label>
+            <select id="pixelPreset">
+                <option value="">— выберите или введите вручную —</option>
+                <option value="320x320">320 × 320</option>
+                <option value="1920x1080">1920 × 1080 (Full HD)</option>
+                <option value="2560x1440">2560 × 1440 (QHD)</option>
+                <option value="3840x2160">3840 × 2160 (4K UHD)</option>
+                <option value="4096x2160">4096 × 2160 (DCI 4K)</option>
+                <option value="5120x2880">5120 × 2880 (5K)</option>
+                <option value="7680x4320">7680 × 4320 (8K UHD)</option>
+                <option value="custom">Другое → введите вручную</option>
+            </select>
+
+            <div id="customPixels" style="display:none;">
+                <label for="widthPx">Ширина (пиксели):</label>
+                <input type="number" id="widthPx" placeholder="напр. 3000" min="100">
+
+                <label for="heightPx">Высота (пиксели):</label>
+                <input type="number" id="heightPx" placeholder="напр. 3000" min="100">
+            </div>
+        </div>
+
+        <label for="year">Год:</label>
+        <select id="year">
+            <option value="">— выберите год —</option>
+            <script>
+                document.write(
+                    Array.from({length: 4}, (_, i) => 2024 + i)
+                        .map(y => `<option value="${y}">${y}</option>`)
+                        .join('')
+                );
+            </script>
+        </select>
+
+        <label for="widthCm">Ширина (см) [для физических работ]:</label>
+        <input type="number" id="widthCm" placeholder="напр. 40" step="0.1" min="0">
+
+        <label for="heightCm">Высота (см) [для физических работ]:</label>
+        <input type="number" id="heightCm" placeholder="напр. 60" step="0.1" min="0">
+
+        <label for="priceEur">Цена (€):</label>
+        <input type="number" id="priceEur" placeholder="напр. 1200" min="0">
+
+        <button onclick="generate()">Сгенерировать описание</button>
+
+        <div id="output"></div>
+    </div>
+
+    <script>
+        const translations = {
+            "холст, масло": "canvas, oil",
+            "бумага, акварель": "paper, watercolour",
+            "бумага, тушь": "paper, ink",
+            "холст, акрил": "canvas, acrylic",
+            "дерево, темпера": "wood panel, tempera",
+            "холст, смешанная техника": "canvas, mixed media",
+            "цифровая живопись, цифровой файл": "digital painting, digital file",
+            "цифровая живопись, принт на холсте": "digital painting, canvas print",
+            "цифровая живопись, принт на бумаге": "digital painting, paper print",
+            "NFT, уникальный цифровой арт": "NFT, unique digital artwork"
+        };
+
+        const digitalTypes = [
+            "цифровая живопись, цифровой файл",
+            "цифровая живопись, принт на холсте",
+            "цифровая живопись, принт на бумаге",
+            "NFT, уникальный цифровой арт"
+        ];
+
+        document.getElementById('mediumRu').addEventListener('change', function() {
+            const isDigital = digitalTypes.includes(this.value);
+            document.getElementById('pixelsGroup').style.display = isDigital ? 'block' : 'none';
+
+            const custom = document.getElementById('mediumCustom');
+            custom.style.display = this.value === 'другое' ? 'block' : 'none';
+
+            if (!isDigital) {
+                document.getElementById('pixelPreset').value = '';
+                document.getElementById('customPixels').style.display = 'none';
+                document.getElementById('widthPx').value = '';
+                document.getElementById('heightPx').value = '';
+            }
+        });
+
+        document.getElementById('pixelPreset').addEventListener('change', function() {
+            const container = document.getElementById('customPixels');
+            if (this.value === 'custom') {
+                container.style.display = 'block';
+                document.getElementById('widthPx').value = '';
+                document.getElementById('heightPx').value = '';
+            } else {
+                container.style.display = 'none';
+                if (this.value) {
+                    const [w, h] = this.value.split('x').map(Number);
+                    document.getElementById('widthPx').value = w;
+                    document.getElementById('heightPx').value = h;
+                } else {
+                    document.getElementById('widthPx').value = '';
+                    document.getElementById('heightPx').value = '';
+                }
+            }
+        });
+
+        function generate() {
+            const titleRu = document.getElementById('titleRu').value.trim();
+            let mediumRu = document.getElementById('mediumRu').value;
+            if (mediumRu === 'другое') {
+                mediumRu = document.getElementById('mediumCustom').value.trim().toLowerCase();
+                if (!mediumRu) {
+                    alert('Укажите материал при выборе «другое».');
+                    return;
+                }
+            }
+            const year = parseInt(document.getElementById('year').value);
+            const widthCm = parseFloat(document.getElementById('widthCm').value) || null;
+            const heightCm = parseFloat(document.getElementById('heightCm').value) || null;
+            const priceEur = parseFloat(document.getElementById('priceEur').value);
+
+            const isDigital = digitalTypes.includes(mediumRu);
+            let widthPx = null, heightPx = null;
+
+            if (isDigital) {
+                const preset = document.getElementById('pixelPreset').value;
+                if (preset === 'custom') {
+                    widthPx = parseInt(document.getElementById('widthPx').value);
+                    heightPx = parseInt(document.getElementById('heightPx').value);
+                } else if (preset) {
+                    const [w, h] = preset.split('x').map(Number);
+                    widthPx = w;
+                    heightPx = h;
+                }
+
+                if (!widthPx || !heightPx || widthPx < 100 || heightPx < 100) {
+                    alert('Для цифровых/NFT работ укажите корректное разрешение (пиксели).');
+                    return;
+                }
+            }
+
+            if (!titleRu || isNaN(year) || isNaN(priceEur)) {
+                alert('Заполните все обязательные поля.');
+                return;
+            }
+
+            const mediumEn = translations[mediumRu] || mediumRu;
+            const titleEn = translateTitle(titleRu);
+            const priceEurRounded = Math.round(priceEur);
+
+            let enText = `"${titleEn}"\n${mediumEn}\n${year}`;
+            let ruText = `«${titleRu}»\n${mediumRu}\n${year} г.`;
+
+            if (isDigital) {
+                enText += `\nResolution: ${widthPx} × ${heightPx} px`;
+                ruText += `\nРазрешение: ${widthPx} × ${heightPx} пикс.`;
+            } else if (widthCm !== null && heightCm !== null) {
+                const widthIn = (widthCm / 2.54).toFixed(1);
+                const heightIn = (heightCm / 2.54).toFixed(1);
+                enText += `\nSize: ${widthCm} × ${heightCm} cm (${widthIn} × ${heightIn} in)`;
+                ruText += `\nРазмер: ${widthCm} × ${heightCm} см`;
+            }
+
+            enText += `\nPrice: €${priceEurRounded}`;
+            ruText += `\nЦена: €${priceEurRounded}`;
+
+            const outputHtml = `
+                <div class="output-section">
+                    <div class="output-header">
+                        <span>English version</span>
+                        <button class="copy-btn" data-text="${encodeURIComponent(enText)}">Копировать</button>
+                    </div>
+                    <div class="output-content">${enText.replace(/\n/g, '<br>')}</div>
+                </div>
+
+                <div class="output-section">
+                    <div class="output-header">
+                        <span>Русская версия</span>
+                        <button class="copy-btn" data-text="${encodeURIComponent(ruText)}">Копировать</button>
+                    </div>
+                    <div class="output-content">${ruText.replace(/\n/g, '<br>')}</div>
+                </div>`;
+
+            document.getElementById('output').innerHTML = outputHtml;
+
+            // Назначаем обработчик после вставки
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.removeEventListener('click', handleCopy); // избегаем дублей
+                btn.addEventListener('click', handleCopy);
+            });
+        }
+
+        function handleCopy(event) {
+            const btn = event.target;
+            const text = decodeURIComponent(btn.getAttribute('data-text'));
+            copyTextToClipboard(text, btn);
+        }
+
+        function copyTextToClipboard(text, buttonElement) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const original = buttonElement.textContent;
+                    buttonElement.textContent = 'Скопировано!';
+                    setTimeout(() => {
+                        buttonElement.textContent = original;
+                    }, 1500);
+                }).catch(err => {
+                    console.warn('Clipboard API failed, fallback:', err);
+                    fallbackCopy(text, buttonElement);
+                });
+            } else {
+                fallbackCopy(text, buttonElement);
+            }
+        }
+
+        function fallbackCopy(text, buttonElement) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                const original = buttonElement.textContent;
+                buttonElement.textContent = 'Скопировано!';
+                setTimeout(() => { buttonElement.textContent = original; }, 1500);
+            } catch (err) {
+                alert('Не удалось скопировать текст.');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function translateTitle(title) {
+            const dict = {
+                'зимний': 'Winter',
+                'летний': 'Summer',
+                'весенний': 'Spring',
+                'осенний': 'Autumn',
+                'пейзаж': 'Landscape',
+                'портрет': 'Portrait',
+                'натюрморт': 'Still Life',
+                'лес': 'Forest',
+                'река': 'River',
+                'горы': 'Mountains',
+                'деревня': 'Village',
+                'город': 'City',
+                'абстракция': 'Abstraction',
+                'композиция': 'Composition',
+                'утро': 'Morning',
+                'вечер': 'Evening',
+                'ночь': 'Night',
+                'в': 'in',
+                'на': 'on',
+                'с': 'with',
+                'и': 'and',
+                'цифровой': 'Digital',
+                'электронный': 'Digital',
+                'уникальный': 'Unique',
+                'арт': 'Art',
+                'арт-объект': 'Art Object',
+                'nft': 'NFT'
+            };
+
+            return title.toLowerCase()
+                .replace(/ё/g, 'е')
+                .split(/\s+/)
+                .map(word => {
+                    const clean = word.replace(/[.,;:!?()«»"']/g, '');
+                    const trans = dict[clean];
+                    if (trans) {
+                        return word.replace(clean, trans);
+                    }
+                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                })
+                .join(' ')
+                .replace(/\s+(in|on|with|and)\s+/g, match => match.toLowerCase());
+        }
+    </script>
+</body>
+</html>

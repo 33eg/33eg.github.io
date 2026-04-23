@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AES-256 Шифрование</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 28px;
+      color: #1976d2;
+      font-size: 24px;
+    }
+    textarea, input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    textarea {
+      height: 120px;
+      resize: vertical;
+      font-family: monospace;
+    }
+    button {
+      background: #1976d2;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      padding: 14px;
+    }
+    button.decrypt {      background: #388e3c;
+    }
+    #result {
+      background: #f8f9fa;
+      padding: 14px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-size: 14px;
+      margin-top: 16px;
+      max-height: 200px;
+      overflow-y: auto;
+      cursor: pointer;
+      user-select: text;
+    }
+    #result.copied {
+      background: #e8f5e9;
+    }
+    .error {
+      background: #ffebee !important;
+      color: #c62828;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AES-256 Шифрование</h1>
+    
+    <textarea id="inputText" placeholder="Введите текст для шифрования"></textarea>
+    <input type="password" id="password" placeholder="Пароль" autocomplete="off" />
+    <button onclick="encryptText()">Зашифровать</button>
+    <button class="decrypt" onclick="decryptText()">Расшифровать</button>
+    <div id="result" onclick="copyResult(this)"></div>
+  </div>
+
+  <script>
+    // Проверка поддержки crypto.subtle
+    function isCryptoAvailable() {
+      return window.crypto && window.crypto.subtle;
+    }
+
+    // Проверка безопасного контекста
+    function isSecureContext() {
+      return window.isSecureContext;
+    }
+
+    // Копирование результата
+    function copyResult(el) {      const text = el.textContent.trim();
+      if (!text || text.startsWith("Ошибка")) return;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          el.classList.add('copied');
+          setTimeout(() => el.classList.remove('copied'), 1200);
+        });
+      }
+    }
+
+    // Общая ошибка
+    function showSecurityError() {
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = "Ошибка: шифрование недоступно по HTTP.\nОткройте страницу по HTTPS или локально.";
+      resultDiv.className = "error";
+    }
+
+    // Шифрование
+    async function encryptText() {
+      if (!isCryptoAvailable() || !isSecureContext()) {
+        showSecurityError();
+        return;
+      }
+
+      const text = document.getElementById("inputText").value.trim();
+      const password = document.getElementById("password").value;
+      const resultDiv = document.getElementById("result");
+      
+      if (!text || !password) {
+        resultDiv.textContent = "Ошибка: введите текст и пароль";
+        resultDiv.className = "";
+        return;
+      }
+      
+      try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        
+        const keyData = await crypto.subtle.digest("SHA-256", encoder.encode(password));
+        const key = await crypto.subtle.importKey(
+          "raw",
+          keyData,
+          { name: "AES-GCM" },
+          false,
+          ["encrypt"]
+        );
+        
+        const encrypted = await crypto.subtle.encrypt(
+          { name: "AES-GCM", iv: iv },          key,
+          data
+        );
+        
+        const full = new Uint8Array(12 + encrypted.byteLength);
+        full.set(iv, 0);
+        full.set(new Uint8Array(encrypted), 12);
+        
+        let binary = '';
+        for (let i = 0; i < full.length; i++) {
+          binary += String.fromCharCode(full[i]);
+        }
+        const base64 = btoa(binary);
+        resultDiv.textContent = base64;
+        resultDiv.className = "";
+      } catch (error) {
+        resultDiv.textContent = "Ошибка шифрования: " + (error.message || error);
+        resultDiv.className = "error";
+      }
+    }
+
+    // Расшифровка
+    async function decryptText() {
+      if (!isCryptoAvailable() || !isSecureContext()) {
+        showSecurityError();
+        return;
+      }
+
+      const base64 = document.getElementById("inputText").value.trim();
+      const password = document.getElementById("password").value;
+      const resultDiv = document.getElementById("result");
+      
+      if (!base64 || !password) {
+        resultDiv.textContent = "Ошибка: введите зашифрованный текст и пароль";
+        resultDiv.className = "";
+        return;
+      }
+      
+      try {
+        const binary = atob(base64);
+        const buf = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          buf[i] = binary.charCodeAt(i);
+        }
+        
+        if (buf.length < 13) {
+          resultDiv.textContent = "Ошибка: данные слишком короткие";
+          resultDiv.className = "error";
+          return;
+        }        
+        const iv = buf.slice(0, 12);
+        const encrypted = buf.slice(12);
+        
+        const keyData = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(password));
+        const key = await crypto.subtle.importKey(
+          "raw",
+          keyData,
+          { name: "AES-GCM" },
+          false,
+          ["decrypt"]
+        );
+        
+        const decrypted = await crypto.subtle.decrypt(
+          { name: "AES-GCM", iv: iv },
+          key,
+          encrypted.buffer
+        );
+        
+        const decoder = new TextDecoder();
+        const text = decoder.decode(decrypted);
+        resultDiv.textContent = text;
+        resultDiv.className = "";
+      } catch (error) {
+        resultDiv.textContent = "Ошибка расшифровки: неверный пароль или данные повреждены";
+        resultDiv.className = "error";
+      }
+    }
+  </script>
+</body>
+</html>

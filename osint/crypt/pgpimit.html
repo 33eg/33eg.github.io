@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PGP-имитация</title>
+  <style>
+    body { font-family: monospace; padding: 16px; background: #000; color: #0f0; }
+    h1 { text-align: center; font-size: 18px; margin-bottom: 20px; }
+    textarea, input { width: 100%; margin: 6px 0; padding: 8px; background: #000; color: #0f0; border: 1px solid #0f0; }
+    textarea { height: 90px; }
+    button { width: 100%; padding: 10px; margin: 10px 0; background: #002200; color: #0f0; border: 1px solid #0f0; cursor: pointer; }
+    .result { background: #000; padding: 10px; border: 1px solid #0f0; white-space: pre-wrap; word-break: break-all; }
+  </style>
+</head>
+<body>
+
+<h1>PGP (оффлайн, Android-совместимый)</h1>
+
+<!-- Создание ключа -->
+<input type="password" id="keyPass" placeholder="Пароль для ключа" autocomplete="off" />
+<button onclick="generateKey()">Создать ключ</button>
+<div class="result" id="keyOutput" onclick="copyText(this)"></div>
+
+<!-- Шифрование -->
+<textarea id="plainText" placeholder="Текст для шифрования"></textarea>
+<button onclick="encryptText()">Зашифровать</button>
+<div class="result" id="encryptedOutput" onclick="copyText(this)"></div>
+
+<!-- Расшифровка -->
+<textarea id="cipherText" placeholder="-----BEGIN PGP MESSAGE----- ..."></textarea>
+<textarea id="privateKeyBlock" placeholder="-----BEGIN PGP PRIVATE KEY BLOCK----- ..."></textarea>
+<input type="password" id="decryptPass" placeholder="Пароль от ключа" autocomplete="off" />
+<button onclick="decryptText()">Расшифровать</button>
+<div class="result" id="decryptedOutput"></div>
+
+<script>
+  function copyText(el) {
+    if (el.textContent && !el.textContent.includes("Скопировано") && el.textContent.trim()) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(el.textContent).then(() => {
+          const orig = el.textContent;
+          el.textContent = "✅ Скопировано!";
+          setTimeout(() => el.textContent = orig, 1200);
+        });
+      }
+    }
+  }
+
+  function generateKey() {
+    const pass = document.getElementById("keyPass").value;
+    if (!pass) { document.getElementById("keyOutput").textContent = "Ошибка: введите пароль"; return; }
+    window.PGP_SESSION = { passphrase: pass };
+    document.getElementById("keyOutput").textContent = `-----BEGIN PGP PRIVATE KEY BLOCK-----
+(ключ не используется — расшифровка по паролю)
+-----END PGP PRIVATE KEY BLOCK-----`;
+  }
+
+  function uint8ToBase64(u8) {
+    let s = '';
+    for (let i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]);
+    return btoa(s);
+  }
+
+  async function encryptText() {
+    const text = document.getElementById("plainText").value.trim();
+    const pass = window.PGP_SESSION?.passphrase;
+    if (!text) return alert("Введите текст");
+    if (!pass) return alert("Создайте ключ");
+
+    try {
+      const enc = new TextEncoder();
+      const data = enc.encode(text);
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await crypto.subtle.importKey("raw", await crypto.subtle.digest("SHA-256", enc.encode(pass)), { name: "AES-GCM" }, false, ["encrypt"]);
+      const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, data);
+      
+      const full = new Uint8Array(12 + encrypted.byteLength);
+      full.set(iv, 0);
+      full.set(new Uint8Array(encrypted), 12);
+      
+      const b64 = uint8ToBase64(full);
+      document.getElementById("encryptedOutput").textContent = `-----BEGIN PGP MESSAGE-----
+${b64}
+-----END PGP MESSAGE-----`;
+    } catch (e) {
+      document.getElementById("encryptedOutput").textContent = "Ошибка шифрования";
+    }
+  }
+
+  async function decryptText() {
+    const cipher = document.getElementById("cipherText").value.trim();
+    const pass = document.getElementById("decryptPass").value;
+    if (!cipher || !pass) {
+      document.getElementById("decryptedOutput").textContent = "gpg: missing argument";
+      return;
+    }
+
+    try {
+      const start = cipher.indexOf("-----BEGIN PGP MESSAGE-----");
+      const end = cipher.indexOf("-----END PGP MESSAGE-----");
+      if (start === -1 || end === -1) throw new Error();
+
+      let inner = cipher.substring(start + 27, end);
+      let b64 = inner.replace(/[^A-Za-z0-9+/=]/g, "");
+      if (b64.length === 0) throw new Error();
+      while (b64.length % 4 !== 0) b64 += "=";
+
+      const binary = atob(b64);
+      const buf = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) buf[i] = binary.charCodeAt(i);
+      if (buf.length < 13) throw new Error();
+
+      const iv = buf.slice(0, 12);
+      const encrypted = buf.slice(12);
+      
+      const key = await crypto.subtle.importKey("raw", await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pass)), { name: "AES-GCM" }, false, ["decrypt"]);
+      const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, encrypted.buffer);
+      document.getElementById("decryptedOutput").textContent = new TextDecoder().decode(decrypted);
+    } catch (e) {
+      // Имитация ошибки GnuPG
+      document.getElementById("decryptedOutput").textContent = "gpg: decryption failed: No secret key";
+    }
+  }
+</script>
+</body>
+</html>

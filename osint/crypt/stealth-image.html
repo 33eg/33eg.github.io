@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Скрыть текст в изображении (исправлено)</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+    .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #1976d2; }
+    input, textarea, button { width: 100%; margin: 10px 0; padding: 10px; box-sizing: border-box; }
+    textarea { height: 100px; }
+    button { background: #1976d2; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    button.decrypt { background: #388e3c; }
+    .output { margin-top: 20px; text-align: center; }
+    .output img { max-width: 100%; border: 1px solid #ccc; border-radius: 6px; margin-top: 10px; }
+    #resultText { margin-top: 15px; padding: 10px; background: #f0f8ff; border-radius: 6px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Скрыть текст в изображении</h1>
+
+    <h3>1. Скрыть текст</h3>
+    <input type="file" id="inputImage" accept="image/png, image/jpeg" />
+    <textarea id="secretText" placeholder="Секретный текст"></textarea>
+    <input type="password" id="encryptPass" placeholder="Пароль" />
+    <button onclick="hideTextInImage()">Скачать изображение с текстом</button>
+
+    <h3>2. Извлечь текст</h3>
+    <input type="file" id="outputImage" accept="image/png" />
+    <input type="password" id="decryptPass" placeholder="Пароль" />
+    <button class="decrypt" onclick="extractTextFromImage()">Извлечь</button>
+    <div id="resultText"></div>
+  </div>
+
+  <script>
+    // Шифруем текст → Uint8Array
+    async function encryptText(text, password) {
+      const enc = new TextEncoder();
+      const data = enc.encode(text);
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await crypto.subtle.importKey(
+        "raw",
+        await crypto.subtle.digest("SHA-256", enc.encode(password)),
+        { name: "AES-GCM" },
+        false,
+        ["encrypt"]
+      );
+      const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, data);
+      
+      const full = new Uint8Array(12 + encrypted.byteLength);
+      full.set(iv, 0);
+      full.set(new Uint8Array(encrypted), 12);
+      return full;
+    }
+
+    // Расшифровываем Uint8Array → текст
+    async function decryptBytes(bytes, password) {
+      if (bytes.length < 13) throw new Error("Слишком коротко");
+      const iv = bytes.slice(0, 12);
+      const encrypted = bytes.slice(12);
+      const key = await crypto.subtle.importKey(
+        "raw",
+        await crypto.subtle.digest("SHA-256", new TextEncoder().encode(password)),
+        { name: "AES-GCM" },
+        false,
+        ["decrypt"]
+      );
+      const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, encrypted.buffer);
+      return new TextDecoder().decode(decrypted);
+    }
+
+    // Преобразуем байты в биты
+    function bytesToBits(bytes) {
+      const bits = [];
+      for (let byte of bytes) {
+        for (let i = 7; i >= 0; i--) bits.push((byte >> i) & 1);
+      }
+      return bits;
+    }
+
+    // Преобразуем биты в байты
+    function bitsToBytes(bits) {
+      const bytes = [];
+      for (let i = 0; i < bits.length; i += 8) {
+        let byte = 0;
+        for (let j = 0; j < 8 && i + j < bits.length; j++) {
+          byte = (byte << 1) | bits[i + j];
+        }
+        bytes.push(byte);
+      }
+      return new Uint8Array(bytes);
+    }
+
+    // === СКРЫТЬ ТЕКСТ ===
+    async function hideTextInImage() {
+      const file = document.getElementById("inputImage").files[0];
+      const text = document.getElementById("secretText").value.trim();
+      const pass = document.getElementById("encryptPass").value;
+      if (!file || !text || !pass) return alert("Заполните все поля");
+
+      try {
+        const encrypted = await encryptText(text, pass);
+        const lengthBytes = new Uint8Array(4);
+        const length = encrypted.length;
+        lengthBytes[0] = (length >> 24) & 0xFF;
+        lengthBytes[1] = (length >> 16) & 0xFF;
+        lengthBytes[2] = (length >> 8) & 0xFF;
+        lengthBytes[3] = length & 0xFF;
+
+        // Данные: [4 байта длины] + [зашифрованный текст]
+        const fullData = new Uint8Array(4 + encrypted.length);
+        fullData.set(lengthBytes, 0);
+        fullData.set(encrypted, 4);
+
+        const bits = bytesToBits(fullData);
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const { data } = imageData;
+
+          if (bits.length > data.length) {
+            alert("Изображение слишком маленькое для этого текста!");
+            return;
+          }
+
+          for (let i = 0; i < bits.length; i++) {
+            data[i] = (data[i] & 0xFE) | bits[i];
+          }
+
+          ctx.putImageData(imageData, 0, 0);
+          canvas.toBlob(blob => {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "secret-image.png";
+            a.click();
+          }, "image/png");
+        };
+      } catch (e) {
+        alert("Ошибка шифрования: " + e.message);
+      }
+    }
+
+    // === ИЗВЛЕЧЬ ТЕКСТ ===
+    function extractTextFromImage() {
+      const file = document.getElementById("outputImage").files[0];
+      const pass = document.getElementById("decryptPass").value;
+      if (!file || !pass) return alert("Выберите PNG и введите пароль");
+
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const { data } = imageData;
+
+        // Извлекаем первые 32 бита (4 байта = длина)
+        const lenBits = [];
+        for (let i = 0; i < 32; i++) {
+          if (i < data.length) lenBits.push(data[i] & 1);
+        }
+        if (lenBits.length < 32) {
+          document.getElementById("resultText").textContent = "Ошибка: изображение слишком маленькое";
+          return;
+        }
+
+        const lenBytes = bitsToBytes(lenBits);
+        const length = (lenBytes[0] << 24) | (lenBytes[1] << 16) | (lenBytes[2] << 8) | lenBytes[3];
+
+        if (length <= 0 || length > 1000000) {
+          document.getElementById("resultText").textContent = "Ошибка: неверная длина данных";
+          return;
+        }
+
+        // Извлекаем данные
+        const dataBits = [];
+        const totalBits = 32 + length * 8;
+        for (let i = 32; i < totalBits && i < data.length; i++) {
+          dataBits.push(data[i] & 1);
+        }
+
+        try {
+          const dataBytes = bitsToBytes(dataBits);
+          decryptBytes(dataBytes, pass).then(text => {
+            document.getElementById("resultText").textContent = text;
+          }).catch(e => {
+            document.getElementById("resultText").textContent = "Ошибка: неверный пароль или данные повреждены";
+          });
+        } catch (e) {
+          document.getElementById("resultText").textContent = "Ошибка при расшифровке";
+        }
+      };
+    }
+  </script>
+</body>
+</html>

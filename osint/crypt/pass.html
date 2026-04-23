@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Инструменты шифрования</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+    }
+    #lock-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 10,0vw;
+      height: 100vh;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      color: white;
+      font-family: monospace;
+    }
+    #lock-screen h2 {
+      margin-bottom: 30px;
+      font-size: 28px;
+      text-align: center;
+      padding: 0 20px;
+    }
+    #password-input {
+      padding: 14px;
+      font-size: 20px;
+      border: 2px solid #444;
+      border-radius: 8px;
+      background: #222;
+      color: white;
+      width: 80%;
+      max-width: 300px;
+      text-align: center;
+    }
+    #password-input:focus {
+      outline: none;
+      border-color: #1976d2;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 32px;
+      color: #1976d2;
+      font-size: 28px;
+    }
+    .tool-link {
+      display: block;
+      padding: 16px;
+      margin: 14px 0;
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      color: #1976d2;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 18px;
+      transition: all 0.2s;
+    }
+    .tool-link:hover {
+      background: #e3f2fd;
+      border-color: #1976d2;
+      transform: translateY(-2px);
+    }
+    .description {
+      margin-top: 8px;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+<div id="lock-screen">
+  <h2>Доступ защищён паролем</h2>
+  <input type="password" id="password-input" placeholder="Введите пароль" autocomplete="off" />
+</div>
+
+<div class="container" style="display:none;">
+  <h1>Инструменты шифрования</h1>
+    
+   <a href="aescrypto.html" class="tool-link" target="_blank">
+      AES-256 Шифрование
+      <div class="description">Шифрует, расшифровывает текст по паролю и выводит в формате AES-256. Работает оффлайн.</div>
+    </a>
+
+  <a href="pgp-offline.html" class="tool-link" target="_blank">
+    PGP-шифрование
+    <div class="description">Шифрует текст по паролю и выводит в формате PGP MESSAGE. Работает оффлайн.</div>
+  </a>
+  
+  <a href="cipher-qr.html" class="tool-link" target="_blank">
+    Шифрование с QR-кодом
+    <div class="description">Создаёт QR-код с зашифрованным текстом. Расшифровка по паролю.</div>
+  </a>
+  
+  <a href="stealth-image.html" class="tool-link" target="_blank">
+    Скрытие текста в изображении
+    <div class="description">Прячет текст в PNG-изображение. Извлечение по паролю.</div>
+  </a>
+
+
+     <a href="textfrompng.html" class="tool-link" target="_blank">
+      Прочесть текст из изображения 
+      <div class="description">Прочесть текст из изображения.</div>
+    </a>
+
+
+  <a href="password-generator.html" class="tool-link" target="_blank">
+    Генератор надёжных паролей
+    <div class="description">Создаёт криптостойкие пароли с настройками длины и символов.</div>
+  </a>
+
+  <a href="https://code-qr.ru/" class="tool-link" target="_blank">
+    Генератор QR-code
+    <div class="description">Создаёт QR-code.</div>
+  </a>
+
+
+   <a href="chat.html" class="tool-link" target="_blank">
+      Секретный чат
+      <div class="description">Секретный чат со сквозным шифрованием. Срок хранения сообщений: 7 дней. </div>
+    </a>
+
+
+
+
+   <a href="finearts.html" class="tool-link" target="_blank">
+      FineArts
+      <div class="description">Задаёт текст для FineArts.</div>
+    </a>
+
+
+  <a href="https://batchtools.pro/ru/overlay" class="tool-link" target="_blank">
+    Наложить одну картинку на другую онлайн
+    <div class="description">Наложить одну картинку на другую онлайн.</div>
+  </a>
+
+  <a href="https://www.pokecut.com/ru" class="tool-link" target="_blank">
+    Фоторедактор pokecut.com
+    <div class="description">Создаёт и редактирует изображения.</div>
+  </a>
+
+  <a href="https://eg.infy.uk/" class="tool-link" target="_blank">
+    eg.infy.uk
+    <div class="description">eg.infy.uk</div>
+  </a>
+</div>
+
+<script>
+  // === ГДЕ МЕНЯТЬ ПАРОЛЬ: ЗАМЕНИТЕ СТРОКУ НИЖЕ НА НУЖНЫЙ ПАРОЛЬ ===
+  const CORRECT_PASSWORD = "eg";
+
+  const passwordInput = document.getElementById('password-input');
+  const lockScreen = document.getElementById('lock-screen');
+  const container = document.querySelector('.container');
+
+  passwordInput.addEventListener('keyup', function(e) {
+    if (e.key === 'Enter') {
+      if (passwordInput.value === CORRECT_PASSWORD) {
+        lockScreen.style.display = 'none';
+        container.style.display = 'block';
+      } else {
+        passwordInput.value = '';
+        passwordInput.placeholder = 'Неверный пароль! Повторите.';
+      }
+    }
+  });
+</script>
+</body>
+</html>
