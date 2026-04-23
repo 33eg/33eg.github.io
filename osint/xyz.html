@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<!-- 
+    ОСНОВНОЙ ФАЙЛ САЙТА - 33EG Resources
+    Для редактирования: открывайте этот файл в любом текстовом редакторе
+    Все комментарии видны только в коде, не отображаются на сайте
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Каталог полезных онлайн-сервисов и инструментов">
+<title>33EG Resources</title>
+<style>
+/* 
+    СТИЛИ САЙТА
+    Можно менять цвета, шрифты и размеры здесь
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    background: #f5f5f5;
+    color: #333;
+}
+
+/* Шапка сайта */
+header {
+    background: #2c3e50;
+    color: white;
+    padding: 15px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header h1 {
+    font-size: 1.5em;
+    text-align: center;
+}
+
+/* Навигационное меню */
+nav {
+    background: #34495e;
+    padding: 10px 20px;
+}
+nav select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background: white;
+    color: #333;
+}
+
+/* Основной контент */
+main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Секции контента */
+.section {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.section h2 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 1.7em;
+}
+
+.section h3 {
+    color: #2c3e50;
+    margin: 15px 0 10px 0;
+    font-size: 1.4em;
+}
+
+.section h4 {
+    color: #34495e;
+    margin: 12px 0 8px 0;
+    font-size: 1.2em;}
+
+/* Ссылки - ЧЁРНЫЙ ЦВЕТ, 24px РАЗМЕР */
+.section a {
+    color: #000000;
+    text-decoration: none;
+    display: block;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 24px;
+    font-weight: 500;
+    word-break: break-all;
+}
+
+.section a:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+/* Кнопка "наверх" - просто стрелочка */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(44, 62, 80, 0.8);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: none;
+    font-size: 20px;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+    text-align: center;
+    line-height: 40px;
+}
+
+.back-to-top.visible {
+    display: block;
+}
+
+.back-to-top:hover {
+    opacity: 1;
+}
+
+/* Подвал */
+footer {
+    background: #2c3e50;
+    color: white;    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 1.3em;
+    }
+    
+    main {
+        padding: 15px;
+    }
+    
+    .section {
+        padding: 15px;
+    }
+    
+    .section a {
+        font-size: 20px;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- 
+    ШАПКА САЙТА
+    Можно изменить название сайта здесь
+-->
+<header>
+    <h1>33EG Resources</h1>
+</header>
+
+<!-- 
+    НАВИГАЦИОННОЕ МЕНЮ
+    Для добавления нового раздела:
+    1. Добавьте option в этот select
+    2. Создайте соответствующий div.section с тем же id
+-->
+<nav>
+    <select id="menuSelect" onchange="showSection(this.value)">
+        <option value="">— Выберите раздел —</option>
+        <option value="email">Email сервисы</option>
+        <option value="temp">Временная почта</option>
+        <option value="weather">Погода</option>
+        <option value="cloud">Облачные хранилища</option>
+        <option value="cryptpad">Cryptpad</option>
+        <option value="image">Хранение изображений</option>        <option value="stock">Стоковые фото</option>
+        <option value="sendfile">Отправка файлов</option>
+        <option value="freesites">Бесплатные сайты</option>
+        <option value="sitetools">Инструменты для сайтов</option>
+        <option value="maps">Карты</option>
+        <option value="video">Видеохостинги</option>
+        <option value="messengers">Мессенджеры</option>
+        <option value="browsers">Браузеры</option>
+        <option value="ai">Искусственный интеллект</option>
+        <option value="dpi">DPI обход</option>
+        <option value="nostr">Nostr</option>
+        <option value="pgp">PGP шифрование</option>
+        <option value="speech">Speech to Text</option>
+        <option value="pdf">PDF инструменты</option>
+        <option value="qr">QR коды</option>
+        <option value="iplocation">IP локация</option>
+        <option value="soft">Софт</option>
+        <option value="python">Python</option>
+        <option value="useful">Полезное</option>
+        <option value="xxpp">Проекты</option>
+    </select>
+</nav>
+
+<!-- 
+    ОСНОВНОЙ КОНТЕНТ
+    Каждый раздел имеет свой id для переключения через меню
+-->
+<main>
+
+<!-- РАЗДЕЛ: Email сервисы -->
+<div id="email" class="section">
+    <h2>Email сервисы</h2>
+    <h3>Send email</h3>
+    <a href="http://anonymouse.org/anonemail.html" target="_blank">http://anonymouse.org/anonemail.html</a>
+    <a href="https://anonymousemail.me/" target="_blank">https://anonymousemail.me/</a>
+    <a href="https://www.5ymail.com/" target="_blank">https://www.5ymail.com/</a>
+    <a href="https://www.5ymail.com/en_US/anonymous-users/anonymous-email-sent-messages.html" target="_blank">https://www.5ymail.com/en_US/anonymous-users/anonymous-email-sent-messages.html</a>
+    <a href="https://tempmail.ninja/send-anonymous-email/" target="_blank">https://tempmail.ninja/send-anonymous-email/</a>
+    <a href="https://mailspre.com/" target="_blank">https://mailspre.com/</a>
+    <a href="https://www.proxynova.com/tools/send-anonymous-email" target="_blank">https://www.proxynova.com/tools/send-anonymous-email</a>
+    <a href="https://sendity.org/" target="_blank">https://sendity.org/#sendemail</a>
+    <a href="https://tempmail.zone/" target="_blank">https://tempmail.zone/</a>
+    <a href="https://tempr.email/" target="_blank">https://tempr.email/</a>
+    <a href="https://yopmail.com/ru/wm" target="_blank">https://yopmail.com/ru/wm</a>
+    <a href="https://inboxkitten.com/" target="_blank">https://inboxkitten.com/</a>
+    <a href="https://yopmail.com/ru/alternate-domains" target="_blank">https://yopmail.com/ru/alternate-domains</a>
+    <a href="https://mailnesia.com/" target="_blank">https://mailnesia.com/</a>
+    <a href="https://maildrop.cc/" target="_blank">https://maildrop.cc/</a>
+    <a href="https://inboxes.com/" target="_blank">https://inboxes.com/</a>
+    <a href="https://www.dispostable.com/" target="_blank">https://www.dispostable.com/</a>    <a href="https://www.emailondeck.com/" target="_blank">https://www.emailondeck.com/</a>
+    <a href="https://www.emailondeck.com/recover_email_address.php" target="_blank">https://www.emailondeck.com/recover_email_address.php</a>
+    <a href="https://maildax.com/" target="_blank">https://maildax.com/</a>
+    <a href="https://harakirimail.com/" target="_blank">https://harakirimail.com/</a>
+    <a href="https://tempail.com/en/" target="_blank">https://tempail.com/en/</a>
+    <a href="https://www.mohmal.com/en" target="_blank">https://www.mohmal.com/en</a>
+    <a href="https://temp-mail.io/" target="_blank">https://temp-mail.io/</a>
+    <a href="https://tempmailo.com/" target="_blank">https://tempmailo.com/</a>
+    <a href="https://tempfastmail.com/" target="_blank">https://tempfastmail.com/   *</a>
+    <a href="https://mails.org/ru/" target="_blank">https://mails.org/ru/</a>
+    
+    <h3>Почтовые сервисы</h3>
+    <a href="https://app.simplelogin.io/auth/register" target="_blank">https://app.simplelogin.io/auth/register</a>
+    <a href="https://app.simplelogin.io/auth/login" target="_blank">https://app.simplelogin.io/auth/login</a>
+    <a href="https://addy.io/" target="_blank">https://addy.io/</a>
+    <a href="https://app.addy.io/login" target="_blank">https://app.addy.io/login</a>
+    <a href="https://erine.email/" target="_blank">https://erine.email/</a>
+    <a href="https://www.33mail.com/dashboard/" target="_blank">https://www.33mail.com/dashboard/</a>
+    <a href="https://account.proton.me/ru/mail/signup" target="_blank">https://account.proton.me/ru/mail/signup</a>
+    <a href="https://account.proton.me/ru/mail" target="_blank">https://account.proton.me/ru/mail</a>
+    <a href="https://account.proton.me/drive" target="_blank">https://account.proton.me/drive</a>
+    <a href="https://signup.live.com/signup" target="_blank">https://signup.live.com/signup</a>
+    <a href="https://outlook.office365.com/owa/" target="_blank">https://outlook.office365.com/owa/</a>
+    <a href="https://mail.ru/" target="_blank">https://mail.ru/</a>
+    <a href="https://light.mail.ru/login" target="_blank">https://light.mail.ru/login</a>
+    <a href="https://account.mail.ru/login" target="_blank">https://account.mail.ru/login</a>
+    <a href="https://www.inbox.lv/" target="_blank">https://www.inbox.lv/</a>
+    
+    <h3>Проверка IP</h3>
+    <a href="https://nordvpn.com/ru/what-is-my-ip/" target="_blank">https://nordvpn.com/ru/what-is-my-ip/</a>
+    <a href="https://www.expressvpn.com/what-is-my-ip" target="_blank">https://www.expressvpn.com/what-is-my-ip</a>
+    <a href="https://www.myip.com/" target="_blank">https://www.myip.com/</a>
+    <a href="https://2ip.ru/" target="_blank">https://2ip.ru/</a>
+    <a href="https://whoer.net/ru" target="_blank">https://whoer.net/ru</a>
+    
+    <h3>Конвертеры EML</h3>
+    <a href="https://products.emailerize.app/converter/eml-to-jpg" target="_blank">https://products.emailerize.app/converter/eml-to-jpg</a>
+    <a href="https://www.aconvert.com/pdf/eml-to-pdf/" target="_blank">https://www.aconvert.com/pdf/eml-to-pdf/</a>
+    <a href="https://products.groupdocs.app/ru/conversion/eml-to-jpg" target="_blank">https://products.groupdocs.app/ru/conversion/eml-to-jpg</a>
+    <a href="https://www.zamzar.com/convert/eml-to-jpg/" target="_blank">https://www.zamzar.com/convert/eml-to-jpg/</a>
+    <a href="https://products.convertise.app/ru/eml-to-jpeg/" target="_blank">https://products.convertise.app/ru/eml-to-jpeg/</a>
+    <a href="https://i-converter.com/files/eml-to-jpg" target="_blank">https://i-converter.com/files/eml-to-jpg</a>
+</div>
+
+<!-- РАЗДЕЛ: Временная почта -->
+<div id="temp" class="section">
+    <h2>Временная почта</h2>
+   
+
+ <a href="https://tempfastmail.com/" target="_blank">https://tempfastmail.com/   * </a>
+
+
+
+ <a href="https://yopmail.com/ru/" target="_blank">https://yopmail.com/ru/</a>
+    <a href="https://temporarymail.com/en/" target="_blank">https://temporarymail.com/en/</a>
+    <a href="https://tempmailo.com/" target="_blank">https://tempmailo.com/</a>    <a href="https://www.disposablemail.com/" target="_blank">https://www.disposablemail.com/</a>
+    <a href="https://temp-mail.io/ru" target="_blank">https://temp-mail.io/ru</a>
+    <a href="https://www.temporary-mail.net/" target="_blank">https://www.temporary-mail.net/</a>
+    <a href="https://temp-mail.org/" target="_blank">https://temp-mail.org/</a>
+    <a href="https://adguard.com/en/adguard-temp-mail/overview.html" target="_blank">https://adguard.com/en/adguard-temp-mail/overview.html</a>
+    <a href="https://tempail.com/en/" target="_blank">https://tempail.com/en/</a>
+    <a href="https://www.guerrillamail.com/" target="_blank">https://www.guerrillamail.com/</a>
+    <a href="https://www.emailnator.com/" target="_blank">https://www.emailnator.com/</a>
+    <a href="https://tmail.gg/en" target="_blank">https://tmail.gg/en</a>
+    <a href="https://emailtemp.org/en" target="_blank">https://emailtemp.org/en</a>
+    <a href="https://10minutemail.net/m/?lang=ru" target="_blank">https://10minutemail.net/m/?lang=ru</a>
+    <a href="https://10minutemail.com/" target="_blank">https://10minutemail.com/</a>
+    <a href="https://mytemp-mail.com/en" target="_blank">https://mytemp-mail.com/en</a>
+    <a href="https://maildrop.cc/" target="_blank">https://maildrop.cc/</a>
+    <a href="https://www.mohmal.com/en/inbox" target="_blank">https://www.mohmal.com/en/inbox</a>
+    <a href="https://en.tempm.com/" target="_blank">https://en.tempm.com/</a>
+    <a href="https://www.moakt.com/" target="_blank">https://www.moakt.com/</a>
+    <a href="https://10minutesemail.net/" target="_blank">https://10minutesemail.net/</a>
+    <a href="https://www.tempimail.org/" target="_blank">https://www.tempimail.org/</a>
+    <a href="https://noopmail.org/" target="_blank">https://noopmail.org/</a>
+    <a href="https://tmailor.com/" target="_blank">https://tmailor.com/</a>
+    <a href="https://tmailor.com/en" target="_blank">https://tmailor.com/en</a>
+    <a href="https://10minemail.com/" target="_blank">https://10minemail.com/</a>
+    <a href="https://www.emailondeck.com/eod.php" target="_blank">https://www.emailondeck.com/eod.php</a>
+    <a href="https://email-fake.com/" target="_blank">https://email-fake.com/</a>
+
+
+</div>
+
+<!-- РАЗДЕЛ: Погода -->
+<div id="weather" class="section">
+    <h2>Погода</h2>
+    <a href="https://meteoinfo.ru/pogoda/russia/sverdlovsk-area/ekaterinburg" target="_blank">https://meteoinfo.ru/pogoda/russia/sverdlovsk-area/ekaterinburg</a>
+    <a href="https://yandex.ru/pogoda/maps/nowcast?via=mnc&ll=60.597465000000014_56.83801099999256&z=9" target="_blank">https://yandex.ru/pogoda/maps/</a>
+    <a href="https://www.foreca.com/" target="_blank">https://www.foreca.com/</a>
+    <a href="https://www.forecaweather.com/101486209/Yekaterinburg-Sverdlovskaya-Oblast-Russia" target="_blank">https://www.forecaweather.com/101486209/Yekaterinburg-Sverdlovskaya-Oblast</a>
+    <a href="https://www.google.com/maps/@58.9993585,60.9987415,5z?source=lnms" target="_blank">https://www.google.com/maps/@58.9993585,60.9987415,5z?source=lnms</a>
+</div>
+
+<!-- РАЗДЕЛ: Облачные хранилища -->
+<div id="cloud" class="section">
+    <h2>Облачные хранилища</h2>
+    <a href="https://jottacloud.com/signup/free" target="_blank">https://jottacloud.com/signup/free</a>
+    <a href="https://www.jottacloud.com/login" target="_blank">https://www.jottacloud.com/login</a>
+    <a href="https://app.koofr.net/signup" target="_blank">https://app.koofr.net/signup</a>
+    <a href="https://koofr.eu/login" target="_blank">https://koofr.eu/login</a>
+    <a href="https://icedrive.net/plans" target="_blank">https://icedrive.net/plans</a>
+    <a href="https://icedrive.net/login" target="_blank">https://icedrive.net/login</a>
+    <a href="https://account.box.com/signup/n/personal" target="_blank">https://account.box.com/signup/n/personal</a>
+    <a href="https://account.box.com/login" target="_blank">https://account.box.com/login</a>
+    <a href="https://www.dropbox.com/login" target="_blank">https://www.dropbox.com/login</a>
+    <a href="https://my.pcloud.com/#page=login" target="_blank">https://my.pcloud.com/#page=login</a>
+    <a href="https://www.mediafire.com/upgrade/registration.php?pid=free" target="_blank">https://www.mediafire.com/upgrade/registration.php?pid=free</a>    <a href="https://www.mediafire.com/login/" target="_blank">https://www.mediafire.com/login/</a>
+    <a href="https://mega.nz/login" target="_blank">https://mega.nz/login</a>
+    <a href="https://accounts.mobisystems.com/ru/register" target="_blank">https://accounts.mobisystems.com/ru/register</a>
+    <a href="https://accounts.mobisystems.com/ru/login" target="_blank">https://accounts.mobisystems.com/ru/login</a>
+
+   <a href="https://nordlocker.com/" target="_blank">https://nordlocker.com/</a>
+
+
+
+    <a href="https://play.google.com/store/apps/details?id=com.nordlocker.android.encrypt.cloud" target="_blank">https://play.google.com/store/apps/details?id=com.nordlocker.android.encrypt.cloud</a>
+
+
+
+</div>
+
+<!-- РАЗДЕЛ: Cryptpad -->
+<div id="cryptpad" class="section">
+    <h2>Cryptpad</h2>
+    <a href="https://cryptpad.org/" target="_blank">https://cryptpad.org/</a>
+    <a href="https://github.com/cryptpad/cryptpad" target="_blank">https://github.com/cryptpad/cryptpad</a>
+    <a href="https://cryptpad.fr/" target="_blank">https://cryptpad.fr/</a>
+    <a href="https://notes.dunst.be/" target="_blank">https://notes.dunst.be/ 5 GB</a>
+    <a href="https://cryptpad.private.coffee/" target="_blank">https://cryptpad.private.coffee/ 5GB</a>
+    <a href="https://cryptpad.malacher.fr/" target="_blank">https://cryptpad.malacher.fr/ 2 GB</a>
+    <a href="https://pad.4d2.org/" target="_blank">https://pad.4d2.org/ 1 GB</a>
+    <a href="https://cryptpad.cz/" target="_blank">https://cryptpad.cz/</a>
+    <a href="https://cryptpad.disroot.org/" target="_blank">https://cryptpad.disroot.org/</a>
+    <a href="https://cryptpad.piratenpartei.de/" target="_blank">https://cryptpad.piratenpartei.de/</a>
+    <a href="https://pad.envs.net/" target="_blank">https://pad.envs.net/</a>
+    <a href="https://cryptpad.bolha.tools/" target="_blank">https://cryptpad.bolha.tools/</a>
+    
+    <h3>KeePassDX</h3>
+    <a href="https://www.keepassdx.com/" target="_blank">https://www.keepassdx.com/</a>
+    <a href="https://github.com/Kunzisoft/KeePassDX/releases" target="_blank">https://github.com/Kunzisoft/KeePassDX/releases</a>
+    <a href="https://www.f-droid.org/packages/com.kunzisoft.keepass.libre/" target="_blank">https://www.f-droid.org/packages/com.kunzisoft.keepass.libre/</a>
+    <a href="https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.free" target="_blank">https://play.google.com/store/apps/details?id=com.kunzisoft.keepass.free</a>
+</div>
+
+<!-- РАЗДЕЛ: Хранение изображений -->
+<div id="image" class="section">
+    <h2>Хранение изображений</h2>
+    <a href="https://postimg.cc/" target="_blank">https://postimg.cc/</a>
+    <a href="https://imgfy.ru/" target="_blank">https://imgfy.ru/   webp!!! </a>
+    <a href="https://ru.imgbb.com/" target="_blank">https://ru.imgbb.com/  * 5' - never</a>
+    <a href="https://fotohosting.pro/" target="_blank">https://fotohosting.pro/   *</a>
+
+    <a href="https://ibb.co/" target="_blank">https://ibb.co/  *</a>
+    <a href="https://yapx.ru/" target="_blank">https://yapx.ru/  not del!!! </a>
+    <a href="https://save-photos.com/" target="_blank">https://save-photos.com/</a>
+    <a href="https://imgdrop.io/" target="_blank">https://imgdrop.io/</a>
+    <a href="https://gekkk.co/" target="_blank">https://gekkk.co/</a>
+    <a href="https://ltdfoto.ru/" target="_blank">https://ltdfoto.ru/</a>
+    <a href="https://imageresizer.com/" target="_blank">https://imageresizer.com/</a>
+    <a href="https://www.resizepixel.com/ru/resize-image" target="_blank">https://www.resizepixel.com/ru/resize-image</a>
+</div>
+
+<!-- РАЗДЕЛ: Стоковые фото -->
+<div id="stock" class="section">
+    <h2>Стоковые фото</h2>    <a href="https://picjumbo.com/" target="_blank">https://picjumbo.com/</a>
+    <a href="https://pixabay.com/" target="_blank">https://pixabay.com/</a>
+    <a href="http://gratisography.com/" target="_blank">http://gratisography.com/</a>
+    <a href="https://www.pexels.com/" target="_blank">https://www.pexels.com/</a>
+    <a href="http://magdeleine.co/" target="_blank">http://magdeleine.co/</a>
+    <a href="https://negativespace.co/" target="_blank">https://negativespace.co</a>
+    <a href="https://tinypng.com/" target="_blank">https://tinypng.com/</a>
+</div>
+
+<!-- РАЗДЕЛ: Отправка файлов -->
+<div id="sendfile" class="section">
+    <h2>Отправка файлов</h2>
+    
+ <a href="https://transfer.it/" target="_blank">https://transfer.it/ (MEGA) </a>
+
+<a href="https://www.filexl.com/" target="_blank">https://www.filexl.com/</a>
+    <a href="https://www.sendgb.org/" target="_blank">https://www.sendgb.org/</a>
+    <a href="https://www.sendgb.com/" target="_blank">https://www.sendgb.com/</a>
+    <a href="https://filetransfer.io/" target="_blank">https://filetransfer.io/</a>
+    <a href="https://dropmefiles.com/" target="_blank">https://dropmefiles.com/</a>
+    <a href="http://emaillargefile.com/" target="_blank">http://emaillargefile.com/</a>
+    <a href="https://transfiles.ru/" target="_blank">https://transfiles.ru/</a>
+    <a href="https://www.transfernow.net/" target="_blank">https://www.transfernow.net/</a>
+    <a href="https://www.sendspace.com/" target="_blank">https://www.sendspace.com/</a>
+    <a href="https://transfer.pcloud.com/" target="_blank">https://transfer.pcloud.com/</a>
+</div>
+
+<!-- РАЗДЕЛ: Бесплатные сайты -->
+<div id="freesites" class="section">
+    <h2>Бесплатные сайты</h2>
+    <a href="https://telegra.ph/" target="_blank">https://telegra.ph/</a>
+    <a href="https://graph.org/" target="_blank">https://graph.org/</a>
+    <a href="https://www.livejournal.com/create" target="_blank">https://www.livejournal.com/create</a>
+    <a href="https://www.livejournal.com/" target="_blank">https://www.livejournal.com/</a>
+    <a href="https://dash.infinityfree.com/login" target="_blank">https://dash.infinityfree.com/login</a>
+    <a href="https://dash.infinityfree.com/register" target="_blank">https://dash.infinityfree.com/register</a>
+    <a href="https://wordpress.com/start" target="_blank">https://wordpress.com/start</a>
+    <a href="https://wordpress.com/log-in/" target="_blank">https://wordpress.com/log-in/</a>
+    <a href="https://wordpress.com/sites" target="_blank">https://wordpress.com/sites</a>
+    <a href="https://www.mozello.com/ru/session/signup/" target="_blank">https://www.mozello.com/ru/session/signup/</a>
+    <a href="https://www.mozello.com/ru/session/login/" target="_blank">https://www.mozello.com/ru/session/login/</a>
+    <a href="https://tilda.cc/registration/" target="_blank">https://tilda.cc/registration/</a>
+    <a href="https://tilda.cc/login/" target="_blank">https://tilda.cc/login/</a>
+    <a href="https://taplink.ru/profile/auth/signup/" target="_blank">https://taplink.ru/profile/auth/signup/</a>
+    <a href="https://taplink.ru/profile/auth/signin/" target="_blank">https://taplink.ru/profile/auth/signin/</a>
+    <a href="https://mssg.me/" target="_blank">https://mssg.me/</a>
+    <a href="https://justpaste.it/" target="_blank">https://justpaste.it/</a>
+    <a href="https://hashb.in/" target="_blank">https://hashb.in/</a>
+    <a href="https://zerobin.net/" target="_blank">https://zerobin.net/</a>
+    <a href="http://wepaste.es/" target="_blank">http://wepaste.es/</a>
+    <a href="https://rentry.co/" target="_blank">https://rentry.co/</a>
+    <a href="https://write.as/" target="_blank">https://write.as/</a>
+    <a href="https://pastelink.net/submit" target="_blank">https://pastelink.net/submit</a>    <a href="https://pastejustit.com/" target="_blank">https://pastejustit.com/</a>
+    <a href="https://pastefree.net/" target="_blank">https://pastefree.net/</a>
+    <a href="https://binshare.net/" target="_blank">https://binshare.net/</a>
+    <a href="https://paste-bin.xyz/" target="_blank">https://paste-bin.xyz/</a>
+    <a href="https://www.paste4btc.com/" target="_blank">https://www.paste4btc.com/</a>
+    <a href="https://controlc.com/" target="_blank">https://controlc.com/</a>
+    <a href="https://0bin.net/" target="_blank">https://0bin.net/</a>
+    <a href="https://snippet.host/" target="_blank">https://snippet.host/</a>
+    <a href="https://hastebin.skyra.pw/" target="_blank">https://hastebin.skyra.pw/</a>
+    <a href="https://bearblog.dev/accounts/login/" target="_blank">https://bearblog.dev/accounts/login/</a>
+    <a href="https://pastebin.com/" target="_blank">https://pastebin.com/</a>
+    <a href="https://www.jotform.com/" target="_blank">https://www.jotform.com/</a>
+    <a href="https://www.jotform.com/signup/" target="_blank">https://www.jotform.com/signup/</a>
+    <a href="https://www.jotform.com/myforms/" target="_blank">https://www.jotform.com/myforms/</a>
+
+             <a href="https://iris.to" target="_blank" class="link-item">iris.to</a>
+
+</div>
+
+<!-- РАЗДЕЛ: Инструменты для сайтов -->
+<div id="sitetools" class="section">
+    <h2>Инструменты для сайтов</h2>
+    <a href="https://www.virustotal.com/gui/home/upload" target="_blank">https://www.virustotal.com/gui/home/upload</a>
+    <a href="https://seranking.com/ru/" target="_blank">https://seranking.com/ru/</a>
+    <a href="https://online.seranking.com/" target="_blank">https://online.seranking.com/</a>
+    <a href="https://sitechecker.pro/ru/page-counter/" target="_blank">https://sitechecker.pro/ru/page-counter/</a>
+    <a href="https://sitechecker.pro/app/" target="_blank">https://sitechecker.pro/app/</a>
+    <a href="https://iplogger.org/ru/" target="_blank">https://iplogger.org/ru/</a>
+    <a href="https://grabify.link/" target="_blank">https://grabify.link/</a>
+    <a href="https://webtopdf.com/" target="_blank">https://webtopdf.com/</a>
+    <a href="https://allinpdf.com/pdf-converter" target="_blank">https://allinpdf.com/pdf-converter</a>
+    <a href="https://www.ilovepdf.com/html-to-pdf" target="_blank">https://www.ilovepdf.com/html-to-pdf</a>
+    <a href="https://tools.pdf24.org/ru/webpage-to-pdf" target="_blank">https://tools.pdf24.org/ru/webpage-to-pdf</a>
+    <a href="https://www.freeconvert.com/webpage-to-pdf" target="_blank">https://www.freeconvert.com/webpage-to-pdf</a>
+    <a href="https://www.freeconvert.com/" target="_blank">https://www.freeconvert.com/</a>
+    <a href="https://www.web2pdfconvert.com/" target="_blank">https://www.web2pdfconvert.com/</a>
+    <a href="https://www.web2pdfconvert.com/to/img/" target="_blank">https://www.web2pdfconvert.com/to/img/</a>
+    <a href="https://setpdf.com/web-to-pdf" target="_blank">https://setpdf.com/web-to-pdf</a>
+    <a href="https://www.freeconvert.com/webp-to-jpg/" target="_blank">https://www.freeconvert.com/webp-to-jpg/</a>
+    <a href="https://cloudconvert.com/website-jpg-screenshot" target="_blank">https://cloudconvert.com/website-jpg-screenshot</a>
+    <a href="https://www.aspose.app/" target="_blank">https://www.aspose.app/</a>
+    <a href="https://tinywow.com/web/to-jpg" target="_blank">https://tinywow.com/web/to-jpg</a>
+    <a href="https://www.iloveimg.com/" target="_blank">https://www.iloveimg.com/</a>
+    <a href="https://github.com/romanvht/ByeByeDPI" target="_blank">https://github.com/romanvht/ByeByeDPI</a>
+    <a href="https://github.com/duckduckgo/Android/releases" target="_blank">https://github.com/duckduckgo/Android/releases</a>
+</div>
+
+<!-- РАЗДЕЛ: Карты -->
+<div id="maps" class="section">
+    <h2>Карты</h2>
+    <a href="https://yandex.com/maps/" target="_blank">https://yandex.com/maps/</a>
+    <a href="http://www.bing.com/maps/" target="_blank">Bing Maps</a>
+    <a href="https://maps.google.co.uk/" target="_blank">Google Maps</a>    <a href="https://www.openstreetmap.org/" target="_blank">https://www.openstreetmap.org</a>
+    <a href="https://opentopomap.org/" target="_blank">https://opentopomap.org</a>
+    <a href="http://www.opensnowmap.org/" target="_blank">http://www.opensnowmap.org/</a>
+    <a href="https://www.arcgis.com/" target="_blank">https://www.arcgis.com/</a>
+    <a href="https://nakarte.me/" target="_blank">https://nakarte.me/</a>
+    <a href="https://www.marshruty.ru/Maps/Maps.aspx" target="_blank">https://www.marshruty.ru/Maps/Maps.aspx</a>
+    <a href="https://www.thunderforest.com/maps/" target="_blank">https://www.thunderforest.com/maps/</a>
+    <a href="https://1map.com/ru/map-embed" target="_blank">https://1map.com/ru/map-embed</a>
+    <a href="https://elfsight.com/ru/google-maps-widget/iframe/#demo" target="_blank">https://elfsight.com/ru/google-maps-widget/iframe/#demo</a>
+    <a href="http://wikimapia.org/" target="_blank">http://wikimapia.org/</a>
+    <a href="https://2gis.ru/" target="_blank">https://2gis.ru/</a>
+    <a href="http://tripline.net/" target="_blank">Tripline</a>
+    <a href="https://www.zeemaps.com/" target="_blank">ZeeMaps</a>
+    <a href="https://s3.tripgeo.com/dirmap/map.htm" target="_blank">https://s3.tripgeo.com/</a>
+    <a href="https://www.travellerspoint.com/" target="_blank">https://www.travellerspoint.com/</a>
+    <a href="https://xn--80affsilddij.xn--p1ai/kadmap/" target="_blank">Публичная кадастровая карта Росреестра</a>
+    <a href="https://rosreestr.center/" target="_blank">https://rosreestr.center/</a>
+    <a href="https://egrnst.ru/map" target="_blank">https://egrnst.ru/map</a>
+    <a href="http://fias.nalog.ru/" target="_blank">http://fias.nalog.ru/</a>
+    <a href="https://m.satmaps.info/" target="_blank">https://m.satmaps.info/</a>
+    <a href="https://satmaps.info/genshtab.php" target="_blank">https://satmaps.info/genshtab.php</a>
+    <a href="https://varvar.ru/top/" target="_blank">https://varvar.ru/top/</a>
+    <a href="http://www.etomesto.ru/" target="_blank">http://www.etomesto.ru</a>
+    <a href="http://www.etomesto.ru/map-atlas_topo-5km/" target="_blank">http://www.etomesto.ru/map-atlas_topo-5km/</a>
+    <a href="https://t.me/etomestoru" target="_blank">https://t.me/etomestoru</a>
+    <a href="https://www.maps4u.lt/ru" target="_blank">https://www.maps4u.lt/ru</a>
+    <a href="http://sasgis.ru/" target="_blank">http://sasgis.ru/</a>
+    <a href="http://gptl.ru/" target="_blank">Роскосмос</a>
+    <a href="https://www.mapchart.net/index.html" target="_blank">https://www.mapchart.net/index.html</a>
+    <a href="http://www.scribblemaps.com/" target="_blank">Scribble Maps</a>
+    <a href="https://www.google.com/intl/en_uk/earth/about/versions" target="_blank">https://www.google.com/intl/en_uk/earth/about/versions</a>
+    <a href="https://browser.dataspace.copernicus.eu/" target="_blank">https://browser.dataspace.copernicus.eu</a>
+    <a href="https://livingatlas.arcgis.com/wayback" target="_blank">https://livingatlas.arcgis.com/wayback</a>
+    <a href="https://www.arcgis.com/apps/mapviewer" target="_blank">https://www.arcgis.com/apps/mapviewer</a>
+    <a href="https://maps.apple.com/" target="_blank">https://maps.apple.com</a>
+    <a href="https://www.mapcoordinates.net/en" target="_blank">https://www.mapcoordinates.net/en</a>
+    <a href="https://www.latlong.net/" target="_blank">https://www.latlong.net/</a>
+    <a href="https://geotree.ru/coordinates" target="_blank">https://geotree.ru/coordinates</a>
+    <a href="https://magmaps.ru/" target="_blank">https://magmaps.ru/</a>
+</div>
+
+<!-- РАЗДЕЛ: Видеохостинги -->
+<div id="video" class="section">
+    <h2>Видеохостинги</h2>
+    <a href="https://www.veed.io/login" target="_blank">https://www.veed.io/login</a>
+    <a href="https://wave.video/" target="_blank">https://wave.video/</a>
+    <a href="https://www.kapwing.com/signin" target="_blank">https://www.kapwing.com/signin</a>
+    <a href="https://rumble.com/" target="_blank">https://rumble.com/</a>
+    <a href="https://rutube.ru/" target="_blank">https://rutube.ru/</a>
+    <a href="https://vimeo.com/watch" target="_blank">https://vimeo.com/watch</a>    <a href="https://www.soundclick.com/login/signup.cfm" target="_blank">https://www.soundclick.com/login/signup.cfm</a>
+    <a href="https://www.soundclick.com/login/login.cfm" target="_blank">https://www.soundclick.com/login/login.cfm</a>
+    <a href="https://bandcamp.com/signup?from=menubar" target="_blank">https://bandcamp.com/signup?from=menubar</a>
+    <a href="https://bandcamp.com/login" target="_blank">https://bandcamp.com/login</a>
+    <a href="https://bandcamp.com/signup" target="_blank">https://bandcamp.com/signup</a>
+    <a href="https://turboscribe.ai/ru/downloader/youtube/video" target="_blank">https://turboscribe.ai/ru/downloader/youtube/video</a>
+    <a href="https://videohighlight.com/account/register?source=direct" target="_blank">https://videohighlight.com/account/register?source=direct</a>
+    <a href="https://play.google.com/store/apps/details?id=com.pandavideocompressor" target="_blank">https://play.google.com/store/apps/details?id=com.pandavideocompressor</a>
+</div>
+
+<!-- РАЗДЕЛ: Мессенджеры -->
+<div id="messengers" class="section">
+    <h2>Мессенджеры</h2>
+    <h3>Bastyon</h3>
+    <a href="https://play.google.com/store/apps/details?id=pocketnet.app" target="_blank">https://play.google.com/store/apps/details?id=pocketnet.app</a>
+    <a href="https://bastyon.com/applications" target="_blank">https://bastyon.com/applications</a>
+    <a href="https://github.com/pocketnetteam/" target="_blank">https://github.com/pocketnetteam/</a>
+    <a href="https://github.com/pocketnetteam/pocketnet.gui/releases/download/v0.9.107/Bastyon.apk" target="_blank">https://github.com/pocketnetteam/pocketnet.gui/releases/download/v0.9.107/Bastyon.apk</a>
+    <a href="https://apkpure.com/bastyon/pocketnet.app" target="_blank">https://apkpure.com/bastyon/pocketnet.app</a>
+    <a href="https://bastyon.com/index" target="_blank">https://bastyon.com/index</a>
+    
+    <h3>TeleGuard</h3>
+    <a href="https://play.google.com/store/apps/details?id=ch.swisscows.messenger.teleguardapp" target="_blank">https://play.google.com/store/apps/details?id=ch.swisscows.messenger.teleguardapp</a>
+    <a href="https://pub.teleguard.com/teleguard-latest.apk" target="_blank">https://pub.teleguard.com/teleguard-latest.apk</a>
+    <a href="https://teleguard.com/ru" target="_blank">https://teleguard.com/ru</a>
+    
+    <h3>Element</h3>
+    <a href="https://play.google.com/store/apps/details?id=im.vector.app" target="_blank">https://play.google.com/store/apps/details?id=im.vector.app</a>
+    <a href="https://f-droid.org/ru/packages/im.vector.app/" target="_blank">https://f-droid.org/ru/packages/im.vector.app/</a>
+    <a href="https://apkpure.net/ru/element-secure-messenger/im.vector.app/download" target="_blank">https://apkpure.net/ru/element-secure-messenger/im.vector.app/download</a>
+    <a href="https://element.ru.uptodown.com/android" target="_blank">https://element.ru.uptodown.com/android</a>
+    <a href="https://element.io/" target="_blank">https://element.io/</a>
+    
+    <h3>Zangi</h3>
+    <a href="https://play.google.com/store/apps/details?id=com.beint.zangi" target="_blank">https://play.google.com/store/apps/details?id=com.beint.zangi</a>
+    <a href="https://zangi.ru.uptodown.com/android" target="_blank">https://zangi.ru.uptodown.com/android</a>
+    <a href="https://apkpure.com/ru/zangi-private-messenger/com.beint.zangi" target="_blank">https://apkpure.com/ru/zangi-private-messenger/com.beint.zangi</a>
+    <a href="https://trashbox.ru/files30/1971788/com.beint.zangi-1773.apk/" target="_blank">https://trashbox.ru/files30/1971788/com.beint.zangi-1773.apk/</a>
+    <a href="https://zangi-private-messenger.softonic.ru/android" target="_blank">https://zangi-private-messenger.softonic.ru/android</a>
+    <a href="https://zangi.com/" target="_blank">https://zangi.com/</a>
+    
+    <h3>WireMin</h3>
+    <a href="https://play.google.com/store/apps/details?id=com.wiremin.im" target="_blank">https://play.google.com/store/apps/details?id=com.wiremin.im</a>
+    <a href="https://files.wiremin.org/wiremin_android_arm64.apk" target="_blank">https://files.wiremin.org/wiremin_android_arm64.apk</a>
+    <a href="https://wiremin.org/main/" target="_blank">https://wiremin.org/main/</a>
+</div>
+
+<!-- РАЗДЕЛ: Браузеры -->
+<div id="browsers" class="section">
+    <h2>Браузеры</h2>    <a href="https://github.com/duckduckgo/Android/releases" target="_blank">https://github.com/duckduckgo/Android/releases</a>
+    <a href="https://brave.com/" target="_blank">https://brave.com</a>
+    <a href="https://duckduckgo.com/" target="_blank">https://duckduckgo.com</a>
+    <a href="https://coveryourtracks.eff.org/" target="_blank">https://coveryourtracks.eff.org</a>
+</div>
+
+<!-- РАЗДЕЛ: Искусственный интеллект -->
+<div id="ai" class="section">
+    <h2>Искусственный интеллект</h2>
+    <h3>Чат-боты</h3>
+    <a href="https://app.geospy.ai/" target="_blank">https://app.geospy.ai/</a>
+    <a href="https://chatinfo.ru/" target="_blank">https://chatinfo.ru/</a>
+    <a href="https://grok.com/?referrer=website" target="_blank">https://grok.com/?referrer=website</a>
+    <a href="https://chat.deepseek.com/" target="_blank">https://chat.deepseek.com/</a>
+    <a href="http://chat.qwenlm.ai/" target="_blank">http://chat.qwenlm.ai/</a>
+    <a href="https://chat.qwen.ai/auth?action=signin" target="_blank">https://chat.qwen.ai/auth?action=signin</a>
+    <a href="https://chat.qwenlm.ai/auth?action=signin" target="_blank">https://chat.qwenlm.ai/auth?action=signin</a>
+    <a href="https://accounts.x.ai/sign-in?redirect=grok-com&theme=dark" target="_blank">https://accounts.x.ai/sign-in?redirect=grok-com&theme=dark</a>
+    <a href="https://copilot.microsoft.com/" target="_blank">https://copilot.microsoft.com/</a>
+    <a href="https://chat.deepseek.com/sign_in" target="_blank">https://chat.deepseek.com/sign_in</a>
+    <a href="https://auth.mistral.ai/ui/login" target="_blank">https://auth.mistral.ai/ui/login</a>
+    <a href="https://chat.mistral.ai/chat" target="_blank">https://chat.mistral.ai/chat</a>
+    <a href="http://chat.mistral.ai/" target="_blank">http://chat.mistral.ai/</a>
+    <a href="https://console.mistral.ai/" target="_blank">https://console.mistral.ai/</a>
+    <a href="https://scira.ai/" target="_blank">https://scira.ai/</a>
+    <a href="https://www.krea.ai/chat" target="_blank">https://www.krea.ai/chat</a>
+    <a href="https://bexi.ai/ru" target="_blank">https://bexi.ai/ru</a>
+    <a href="https://www.perplexity.ai/?login-source=oneTapHome" target="_blank">https://www.perplexity.ai/?login-source=oneTapHome</a>
+    <a href="https://kompas.ai/dashboard/landing" target="_blank">https://kompas.ai/dashboard/landing</a>
+    <a href="https://swiftnotes.ai/" target="_blank">https://swiftnotes.ai</a>
+    <a href="https://www.bohrium.com/" target="_blank">https://www.bohrium.com/</a>
+    <a href="https://arena.ai/" target="_blank">https://arena.ai/</a>
+
+
+    
+    <h3>Генерация контента</h3>
+    <a href="https://gamma.app/signin" target="_blank">https://gamma.app/signin</a>
+    <a href="https://dream-machine.lumalabs.ai/" target="_blank">https://dream-machine.lumalabs.ai/</a>
+    <a href="https://www.midjourney.com/imagine" target="_blank">https://www.midjourney.com/imagine</a>
+    <a href="https://dewatermark.ai/" target="_blank">https://dewatermark.ai/</a>
+    <a href="https://preview.reve.art/app/explore" target="_blank">https://preview.reve.art/app/explore</a>
+    <a href="https://sfxengine.com/" target="_blank">https://sfxengine.com/</a>
+    <a href="https://www.riffusion.com/" target="_blank">https://www.riffusion.com/</a>
+    <a href="https://prezo.ai/" target="_blank">https://prezo.ai/</a>
+    <a href="http://magichour.ai/" target="_blank">http://magichour.ai/</a>
+    
+    <h3>Перевод</h3>
+    <a href="https://laratranslate.com/" target="_blank">https://laratranslate.com/</a>
+    <a href="https://www.transmonkey.ai/ru" target="_blank">https://www.transmonkey.ai/ru</a>
+    <a href="https://anythingtranslate.com/translators/" target="_blank">https://anythingtranslate.com/translators/</a>
+    
+    <h3>YouTube</h3>
+    <a href="https://youtubetotranscript.com/" target="_blank">https://youtubetotranscript.com</a>    <a href="https://grasp.info/ru/tools/youtube-summarizer" target="_blank">https://grasp.info/ru/tools/youtube-summarizer</a>
+    <a href="https://tubetextify.com/" target="_blank">https://tubetextify.com/</a>
+    <a href="https://turboscribe.ai/ru/u/transcribe-youtube-video" target="_blank">https://turboscribe.ai/ru/u/transcribe-youtube-video</a>
+    <a href="https://turboscribe.ai/ru/downloader/youtube/video" target="_blank">https://turboscribe.ai/ru/downloader/youtube/video</a>
+    <a href="https://www.socialplug.io/free-tools/youtube-video-downloader" target="_blank">https://www.socialplug.io/free-tools/youtube-video-downloader</a>
+    <a href="https://ru.get-save.com/" target="_blank">https://ru.get-save.com/</a>
+    <a href="https://mapify.so/ru/tools/youtube-to-transcript" target="_blank">https://mapify.so/ru/tools/youtube-to-transcript</a>
+    <a href="https://snapany.com/ru/youtube" target="_blank">https://snapany.com/ru/youtube</a>
+    <a href="https://videohighlight.com/" target="_blank">https://videohighlight.com/</a>
+    <a href="https://speech2text.ru/online-transkribatsiya-video-v-tekst" target="_blank">https://speech2text.ru/online-transkribatsiya-video-v-tekst</a>
+    <a href="https://maestra.ai/tools/video-to-text/youtube-transcript-generator" target="_blank">https://maestra.ai/tools/video-to-text/youtube-transcript-generator</a>
+    
+    <h3>TikTok</h3>
+    <a href="https://tiktoksave.ru/" target="_blank">https://tiktoksave.ru/</a>
+    <a href="https://reeltica.com/ru" target="_blank">https://reeltica.com/ru</a>
+    <a href="https://www.vmeg.ai/ru/tools/tiktok-transcript-generator/" target="_blank">https://www.vmeg.ai/ru/tools/tiktok-transcript-generator/</a>
+    <a href="https://www.tokitranscript.com/ru" target="_blank">https://www.tokitranscript.com/ru</a>
+    <a href="https://anytranscribe.com/niche-tools/tiktok-to-text-converter/" target="_blank">https://anytranscribe.com/niche-tools/tiktok-to-text-converter/</a>
+    
+    <h3>Text</h3>
+    <a href="https://freetts.ru/" target="_blank">https://freetts.ru/</a>
+    <a href="https://voxworker.com/ru" target="_blank">https://voxworker.com/ru</a>
+    <a href="https://zvukogram.com/speech/" target="_blank">https://zvukogram.com/speech/</a>
+    <a href="https://speechma.com/russian" target="_blank">https://speechma.com/russian</a>
+    <a href="https://speech2text.ru/online-perevesti-golos-v-tekst" target="_blank">https://speech2text.ru/online-perevesti-golos-v-tekst</a>
+    <a href="https://converter.app/ru/audio-text/" target="_blank">https://converter.app/ru/audio-text/</a>
+    <a href="https://clideo.com/ru/audio-to-text" target="_blank">https://clideo.com/ru/audio-to-text</a>
+    <a href="https://any2text.ru/" target="_blank">https://any2text.ru/</a>
+    <a href="https://products.aspose.app/cells/web-converter/web-to-txt" target="_blank">https://products.aspose.app/cells/web-converter/web-to-txt</a>
+    <a href="https://qudata.com/ru/text-to-speech/" target="_blank">https://qudata.com/ru/text-to-speech/</a>
+    <a href="https://www.freefileconvert.com/" target="_blank">https://www.freefileconvert.com/</a>
+    
+    <h3>Calculators</h3>
+    <a href="https://planetcalc.ru/" target="_blank">https://planetcalc.ru/</a>
+    <a href="https://calculator888.ru/" target="_blank">https://calculator888.ru/</a>
+    <a href="https://oncalc.ru/" target="_blank">https://oncalc.ru/</a>
+    <a href="https://calculatorov.ru/" target="_blank">https://calculatorov.ru/</a>
+    <a href="https://24calc.ru/" target="_blank">https://24calc.ru/</a>
+    <a href="https://33eg.rf.gd/epps.html" target="_blank">https://33eg.rf.gd/epps.html</a>
+    
+    <h3>Другое</h3>
+    <a href="https://lawchatgpt.com/login" target="_blank">https://lawchatgpt.com/login</a>
+    <a href="https://www.greenbot.com/rizz-ai-generator/" target="_blank">https://www.greenbot.com/rizz-ai-generator/</a>
+    <a href="https://www.allaitools.dev/tools" target="_blank">https://www.allaitools.dev/tools</a>
+    <a href="https://plz.ai/ru" target="_blank">https://plz.ai/ru</a>
+</div>
+
+<!-- РАЗДЕЛ: DPI обход -->
+<div id="dpi" class="section">
+    <h2>DPI обход</h2>    <a href="https://invizible.net/ru/" target="_blank">https://invizible.net/ru/</a>
+    <a href="https://bastyon.com/index?s=204c14c1ea33abfb4673610f41489e2a27e749cf07e19c719a7371b7255acaf8&mpost=true" target="_blank">https://bastyon.com/index</a>
+    <a href="https://github.com/Gedsh/InviZible/releases" target="_blank">https://github.com/Gedsh/InviZible/releases</a>
+    <a href="https://github.com/hxehex/russia-mobile-internet-whitelist?tab=readme-ov-file" target="_blank">https://github.com/hxehex/russia-mobile-internet-whitelist</a>
+    <a href="https://github.com/romanvht/ByeByeDPI" target="_blank">https://github.com/romanvht/ByeByeDPI</a>
+    <a href="https://github.com/romanvht/ByeByeDPI/releases" target="_blank">https://github.com/romanvht/ByeByeDPI/releases</a>
+</div>
+
+<!-- РАЗДЕЛ: Nostr -->
+<div id="nostr" class="section">
+    <h2>Nostr</h2>
+    <a href="https://nostrapps.com/" target="_blank">https://nostrapps.com/</a>
+    <a href="https://zapstore.dev/apps/" target="_blank">https://zapstore.dev/apps/</a>
+    
+    <h3>Amethyst</h3>
+    <a href="https://play.google.com/store/apps/details?id=com.vitorpamplona.amethyst" target="_blank">https://play.google.com/store/apps/details?id=com.vitorpamplona.amethyst</a>
+    <a href="https://github.com/vitorpamplona/amethyst" target="_blank">https://github.com/vitorpamplona/amethyst</a>
+    <a href="https://github.com/vitorpamplona/amethyst/releases" target="_blank">https://github.com/vitorpamplona/amethyst/releases</a>
+    
+    <h3>Yakihonne</h3>
+    <a href="https://play.google.com/store/apps/details?id=com.yakihonne.yakihonne" target="_blank">https://play.google.com/store/apps/details?id=com.yakihonne.yakihonne</a>
+    
+    <h3>0xchat</h3>
+    <a href="https://nostrapps.com/0xchat" target="_blank">https://nostrapps.com/0xchat</a>
+    <a href="https://0xchat.com/" target="_blank">https://0xchat.com/</a>
+    <a href="https://play.google.com/store/apps/details?id=com.oxchat.nostr" target="_blank">https://play.google.com/store/apps/details?id=com.oxchat.nostr</a>
+    <a href="https://github.com/0xchat-app/0xchat-app-main/releases" target="_blank">https://github.com/0xchat-app/0xchat-app-main/releases</a>
+</div>
+
+<!-- РАЗДЕЛ: PGP шифрование -->
+<div id="pgp" class="section">
+    <h2>PGP шифрование</h2>
+    <h3>PGP-Tool</h3>
+    <a href="https://github.com/Porvil/PGP-Tool?tab=readme-ov-file" target="_blank">https://github.com/Porvil/PGP-Tool</a>
+    <a href="https://github.com/Porvil/PGP-Tool/releases" target="_blank">https://github.com/Porvil/PGP-Tool/releases</a>
+    <a href="https://apkpure.net/aescrypt-for-android-androidc/com.dewdrop623.androidcrypt/download" target="_blank">AESCrypt for Android</a>
+    
+    <h3>AndroidCrypt</h3>
+    <a href="https://f-droid.org/ru/packages/com.dewdrop623.androidcrypt/" target="_blank">https://f-droid.org/ru/packages/com.dewdrop623.androidcrypt/</a>
+    
+    <h3>CipherApp</h3>
+    <a href="https://play.google.com/store/apps/details?id=com.outbox.cipher" target="_blank">https://play.google.com/store/apps/details?id=com.outbox.cipher</a>
+</div>
+
+<!-- РАЗДЕЛ: Speech to Text -->
+<div id="speech" class="section">
+    <h2>Speech to Text</h2>
+    <a href="https://www.audio2edit.com/ru/speech-to-text" target="_blank">https://www.audio2edit.com/ru/speech-to-text</a>
+    <a href="https://www.audio2edit.com/ru/text-to-speech" target="_blank">https://www.audio2edit.com/ru/text-to-speech</a>
+    <a href="https://speech2text.ru/online-perevesti-golos-v-tekst" target="_blank">https://speech2text.ru/online-perevesti-golos-v-tekst</a>    <a href="https://speechnotes.co/" target="_blank">https://speechnotes.co/</a>
+    <a href="https://converter.app/" target="_blank">https://converter.app/</a>
+    <a href="https://www.textfromtospeech.com/ru/voice-to-text/" target="_blank">https://www.textfromtospeech.com/ru/voice-to-text/</a>
+    <a href="https://vizard.ai/tools/transcribe-audio-to-text" target="_blank">https://vizard.ai/tools/transcribe-audio-to-text</a>
+    <a href="https://products.aspose.ai/total/ru/speech-to-text/" target="_blank">https://products.aspose.ai/total/ru/speech-to-text/</a>
+    <a href="https://speechtotext.ru/" target="_blank">https://speechtotext.ru/</a>
+    <a href="https://transkriptor.com/" target="_blank">https://transkriptor.com/</a>
+    <a href="https://qudata.com/ru/text-to-speech/" target="_blank">https://qudata.com/ru/text-to-speech/</a>
+</div>
+
+<!-- РАЗДЕЛ: PDF инструменты -->
+<div id="pdf" class="section">
+    <h2>PDF инструменты</h2>
+    <h3>PDF</h3>
+    <a href="https://tools.pdf24.org/ru/" target="_blank">https://tools.pdf24.org/ru/</a>
+    <a href="https://tools.pdf24.org/en" target="_blank">https://tools.pdf24.org/en</a>
+    <a href="https://www.onlinedoctranslator.com/ru/" target="_blank">https://www.onlinedoctranslator.com/ru/</a>
+    <a href="https://convertio.co/ru/" target="_blank">https://convertio.co/ru/</a>
+    <a href="https://smallpdf.com/ru/translate-pdf" target="_blank">https://smallpdf.com/ru/translate-pdf</a>
+    <a href="https://translate.yandex.ru/doc" target="_blank">https://translate.yandex.ru/doc</a>
+    <a href="https://pdft.ai/ru/" target="_blank">https://pdft.ai/ru/</a>
+    <a href="https://www.deepl.com/en/translator/files" target="_blank">https://www.deepl.com/en/translator/files</a>
+    <a href="https://products.groupdocs.app/translation/ru/pdf" target="_blank">https://products.groupdocs.app/translation/ru/pdf</a>
+    <a href="https://www.onlinedoctranslator.com/ru/" target="_blank">https://www.onlinedoctranslator.com/ru/</a>
+
+
+
+    
+    <h3>EML</h3>
+    <a href="https://www.aconvert.com/pdf/eml-to-pdf/" target="_blank">https://www.aconvert.com/pdf/eml-to-pdf/</a>
+</div>
+
+<!-- РАЗДЕЛ: QR коды -->
+<div id="qr" class="section">
+    <h2>QR коды</h2>
+    <a href="https://www.qrcode-monkey.com/#text" target="_blank">https://www.qrcode-monkey.com/#text</a>
+    <a href="https://www.qrcode-tiger.com/qr-code-generator/text" target="_blank">https://www.qrcode-tiger.com/qr-code-generator/text</a>
+    <a href="https://qr.io/" target="_blank">https://qr.io/</a>
+    <a href="https://get-qr.com/ru/" target="_blank">https://get-qr.com/ru/</a>
+</div>
+
+<!-- РАЗДЕЛ: IP локация -->
+<div id="iplocation" class="section">
+    <h2>IP локация</h2>
+    <a href="https://www.iplocation.net/find-ip-address" target="_blank">https://www.iplocation.net/find-ip-address</a>
+    <a href="https://whatismyipaddress.com/ip" target="_blank">https://whatismyipaddress.com/ip</a>
+    <a href="https://showip.net/check_ip.php" target="_blank">https://showip.net/check_ip.php</a>
+    <a href="https://meipaddress.com/ip-lookup" target="_blank">https://meipaddress.com/ip-lookup</a>
+    <a href="https://mylocationmap.com/ru/ip-location-finder/" target="_blank">https://mylocationmap.com/ru/ip-location-finder/</a>
+    <a href="https://mylocationmap.com/ru/" target="_blank">https://mylocationmap.com/ru/</a>
+    <a href="https://www.iplocation.net/where-am-i" target="_blank">https://www.iplocation.net/where-am-i</a>
+    <a href="https://2ip.io/ru/geoip/" target="_blank">https://2ip.io/ru/geoip/</a>
+    <a href="https://iplocation.io/" target="_blank">https://iplocation.io/</a>
+    <a href="https://www.geolocation.com/" target="_blank">https://www.geolocation.com/</a></div>
+
+<!-- РАЗДЕЛ: Софт -->
+<div id="soft" class="section">
+    <h2>Софт</h2>
+    <h3>Article Publisher</h3>
+    <a href="https://play.google.com/store/apps/details?id=com.completeapps.telegraphpublisher" target="_blank">https://play.google.com/store/apps/details?id=com.completeapps.telegraphpublisher</a>
+    <a href="https://www.appbrain.com/app/article-publisher/com.completeapps.telegraphpublisher" target="_blank">https://www.appbrain.com/app/article-publisher/com.completeapps.telegraphpublisher</a>
+    <a href="https://m.apkpure.com/ru/article-publisher/com.completeapps.telegraphpublisher/download/1.8" target="_blank">https://m.apkpure.com/ru/article-publisher/com.completeapps.telegraphpublisher/download/1.8</a>
+    <a href="https://drive.google.com/file/d/1iyMCTK0O-44sPrVqPfnCfpQ1J_nAcd8g/view?usp=drivesdk" target="_blank">https://drive.google.com/file/d/1iyMCTK0O-44sPrVqPfnCfpQ1J_nAcd8g/view</a>
+    <a href="https://disk.yandex.ru/d/UZaLUyr8IOiWtg" target="_blank">https://disk.yandex.ru/d/UZaLUyr8IOiWtg</a>
+</div>
+
+<!-- РАЗДЕЛ: Python -->
+<div id="python" class="section">
+    <h2>Python</h2>
+    <a href="https://www.python.org/" target="_blank">https://www.python.org/</a>
+    <a href="https://education.yandex.ru/handbook/python" target="_blank">https://education.yandex.ru/handbook/python</a>
+    <a href="https://okpython.net/python/python_uchebnik/python_uchebnik.html" target="_blank">https://okpython.net/python/python_uchebnik/python_uchebnik.html</a>
+    <a href="https://code.mu/ru/python/book/prime/" target="_blank">https://code.mu/ru/python/book/prime/</a>
+    <a href="https://pymanual.github.io/" target="_blank">https://pymanual.github.io/</a>
+    <a href="https://ravesli.com/intro-python/" target="_blank">https://ravesli.com/intro-python/</a>
+    <a href="https://stepik.org/login" target="_blank">https://stepik.org/login</a>
+    <a href="https://stepik.org/course/58852" target="_blank">https://stepik.org/course/58852</a>
+    <a href="https://replit.com/languages/python3" target="_blank">https://replit.com/languages/python3</a>
+    <a href="https://www.w3schools.com/python/" target="_blank">https://www.w3schools.com/python/</a>
+    <a href="https://wiki.python.org/moin/BeginnersGuide/Programmers" target="_blank">https://wiki.python.org/moin/BeginnersGuide/Programmers</a>
+    <a href="https://www.pythonanywhere.com/" target="_blank">https://www.pythonanywhere.com/</a>
+    <a href="https://www.pythonanywhere.com/login/" target="_blank">https://www.pythonanywhere.com/login/</a>
+    <a href="https://github.com/apps/login/" target="_blank">https://github.com/apps/login/</a>
+    <a href="https://gitlab.com/users/sign_in" target="_blank">https://gitlab.com/users/sign_in</a>
+    <a href="https://jekyllrb.com/" target="_blank">https://jekyllrb.com/</a>
+    <a href="https://pages.github.com/" target="_blank">https://pages.github.com/</a>
+    <a href="https://pydarslik.pythonanywhere.com/media/resource_file/00000E_metiz___Izuchaem_Python_Progra.pdf" target="_blank">Учебник Python (PDF)</a>
+    <a href="https://elar.urfu.ru/bitstream/10995/28769/1/978-5-7996-1198-9_2014.pdf" target="_blank">Учебник УрФУ (PDF)</a>
+    <a href="http://server.aesc.msu.ru/materials/PYTHON/pythonworldru.pdf" target="_blank">Python World (PDF)</a>
+    <a href="https://dl.booksee.org/genesis/86000/558a33f1bff72d9db1c5934db3c7a3bc/_as/[]_YAzuek_programmirovaniya_Python(BookSee.org).pdf" target="_blank">Язык программирования Python (PDF)</a>
+</div>
+
+<!-- РАЗДЕЛ: Полезное -->
+<div id="useful" class="section">
+    <h2>Полезное</h2>
+    <a href="https://telegra.ph/" target="_blank">https://telegra.ph/</a>
+    <a href="https://graph.org/" target="_blank">https://graph.org/</a>
+    <a href="http://saidso.me/" target="_blank">http://saidso.me/</a>
+    <a href="http://writexo.com/" target="_blank">http://writexo.com/</a>
+    <a href="https://write.as/" target="_blank">https://write.as/</a>
+    <a href="https://teletype.in/" target="_blank">https://teletype.in/</a>
+    <a href="https://notepin.co/write" target="_blank">https://notepin.co/write</a>
+    <a href="https://novni.com/signup" target="_blank">https://novni.com/signup</a>    <a href="http://Justpaste.it/" target="_blank">http://Justpaste.it</a>
+    <a href="http://pastejustit.com/" target="_blank">http://pastejustit.com/</a>
+    <a href="https://txt.fyi/" target="_blank">https://txt.fyi/</a>
+    <a href="https://telescope.ac/" target="_blank">https://telescope.ac/</a>
+    <a href="https://bearblog.dev/" target="_blank">https://bearblog.dev/</a>
+    <a href="https://tiiny.host/" target="_blank">https://tiiny.host/</a>
+    <a href="https://www.i2img.com/ru/remove-image-metadata" target="_blank">https://www.i2img.com/ru/remove-image-metadata</a>
+    <a href="http://archive.org/" target="_blank">http://archive.org/</a>
+    <a href="http://web.archive.org/" target="_blank">http://web.archive.org/</a>
+    <a href="http://web-arhive.ru/" target="_blank">http://web-arhive.ru/</a>
+    <a href="https://hacker-basement.com/" target="_blank">https://hacker-basement.com/</a>
+    <a href="https://hacker-basement.com/osint-list/" target="_blank">https://hacker-basement.com/osint-list/</a>
+    <a href="https://www.virustotal.com/gui/home/upload" target="_blank">https://www.virustotal.com/gui/home/upload</a>
+    <a href="https://award-vpn.com/download" target="_blank">https://award-vpn.com/download</a>
+    <a href="https://award-vpn.com/your-pin" target="_blank">https://award-vpn.com/your-pin</a>
+</div>
+
+<!-- РАЗДЕЛ: Проекты -->
+<div id="xxpp" class="section">
+    <h2>Проекты</h2>
+    <h3>Сайты</h3>
+    <a href="https://volhv.rf.gd/" target="_blank">volhv.rf.gd</a>
+    <a href="https://33eg.infy.uk/" target="_blank">33eg.infy.uk</a>
+    <a href="https://33eg.rf.gd/" target="_blank">33eg.rf.gd</a>
+    <a href="https://EG.infy.uk/" target="_blank">EG.infy.uk</a>
+    <a href="http://eg.gt.tc/" target="_blank">eg.gt.tc</a>
+    <a href="https://eg.ct.ws/" target="_blank">eg.ct.ws</a>
+    <a href="https://eg.fwh.is/" target="_blank">eg.fwh.is</a>
+    <a href="https://rr.infy.uk/" target="_blank">rr.infy.uk</a>
+    <a href="https://eag.ct.ws/" target="_blank">eag.ct.ws</a>
+    <a href="https://gusev.rf.gd/" target="_blank">gusev.rf.gd</a>
+    <a href="https://gusev.infy.uk/" target="_blank">gusev.infy.uk</a>
+    <a href="https://evgenii.infy.uk/" target="_blank">evgenii.infy.uk</a>
+    <a href="https://evgenii.rf.gd/" target="_blank">evgenii.rf.gd</a>
+    <a href="https://evgenii.000.pe/" target="_blank">evgenii.000.pe</a>
+    <a href="https://gea.infy.uk/" target="_blank">gea.infy.uk</a>
+    <a href="https://hram.rf.gd/" target="_blank">hram.rf.gd</a>
+    <a href="https://77.infy.uk/" target="_blank">77.infy.uk</a>
+    <a href="https://pohuizm.rf.gd/" target="_blank">pohuizm.rf.gd</a>
+    <a href="https://poh.rf.gd/" target="_blank">poh.rf.gd</a>
+    <a href="https://pf.infy.uk/" target="_blank">pf.infy.uk</a>
+    <a href="https://hunt.rf.gd/" target="_blank">hunt.rf.gd</a>
+    <a href="https://ega.infy.uk/" target="_blank">ega.infy.uk</a>
+    <a href="https://ea.infy.uk/" target="_blank">ea.infy.uk</a>
+    <a href="https://eap.rf.gd/" target="_blank">eap.rf.gd</a>
+    <a href="https://vv.rf.gd/" target="_blank">vv.rf.gd</a>
+    <a href="https://Kkk.rf.gd/" target="_blank">Kkk.rf.gd</a>
+    <a href="https://kk.000.pe/" target="_blank">kk.000.pe</a>
+    <a href="https://ovc.rf.gd/" target="_blank">ovc.rf.gd</a>
+    <a href="https://ira.kesug.com/" target="_blank">ira.kesug.com</a>    <a href="https://inform.rf.gd/" target="_blank">inform.rf.gd</a>
+    <a href="https://rf.infy.uk/" target="_blank">rf.infy.uk</a>
+    <a href="http://120.great-site.net/" target="_blank">120.great-site.net</a>
+    <a href="http://xyx.great-site.net/" target="_blank">xyx.great-site.net</a>
+    <a href="http://stepanov.infy.uk/" target="_blank">stepanov.infy.uk</a>
+    
+    <h3>Хостинги</h3>
+    <a href="https://dash.infinityfree.com/login" target="_blank">https://dash.infinityfree.com/login</a>
+    <a href="https://dash.infinityfree.com/register" target="_blank">https://dash.infinityfree.com/register</a>
+    <a href="https://app.simplelogin.io/auth/login" target="_blank">https://app.simplelogin.io/auth/login</a>
+    <a href="https://app.simplelogin.io/auth/register" target="_blank">https://app.simplelogin.io/auth/register</a>
+    <a href="https://tempfastmail.com/" target="_blank">https://tempfastmail.com/</a>
+    
+    <h3>Проверка анонимности</h3>
+    <a href="https://nordvpn.com/ru/what-is-my-ip/" target="_blank">https://nordvpn.com/ru/what-is-my-ip/</a>
+    <a href="https://whatismyipaddress.com/" target="_blank">https://whatismyipaddress.com/</a>
+    <a href="https://www.showmyip.com/" target="_blank">https://www.showmyip.com/</a>
+    <a href="https://www.myip.com/" target="_blank">https://www.myip.com/</a>
+    <a href="https://2ip.ua/ru" target="_blank">https://2ip.ua/ru</a>
+    <a href="https://thisismyip.com/" target="_blank">https://thisismyip.com/</a>
+    <a href="https://whatsmyip.com/" target="_blank">https://whatsmyip.com/</a>
+    <a href="https://www.iplocation.net/myip" target="_blank">https://www.iplocation.net/myip</a>
+    <a href="https://ipinfo.io/what-is-my-ip" target="_blank">https://ipinfo.io/what-is-my-ip</a>
+    <a href="https://undetectable.io/ru/pixelscan/" target="_blank">https://undetectable.io/ru/pixelscan/</a>
+    <a href="https://scenum.io/check-anonim/" target="_blank">https://scenum.io/check-anonim/</a>
+    <a href="https://whoer.net/ru" target="_blank">https://whoer.net/ru</a>
+    <a href="https://browserleaks.com/" target="_blank">https://browserleaks.com/</a>
+    <a href="https://browserleaks.com/ip" target="_blank">https://browserleaks.com/ip</a>
+    <a href="https://browserleaks.com/javascript" target="_blank">https://browserleaks.com/javascript</a>
+    <a href="https://pixelscan.net/" target="_blank">https://pixelscan.net/</a>
+    <a href="https://coveryourtracks.eff.org/" target="_blank">https://coveryourtracks.eff.org/</a>
+    <a href="https://amiunique.org/fingerprint" target="_blank">https://amiunique.org/fingerprint</a>
+    <a href="https://audiofingerprint.openwpm.com/" target="_blank">https://audiofingerprint.openwpm.com/</a>
+    <a href="https://traffnews.com/tools/cheker-anonimnosti/" target="_blank">https://traffnews.com/tools/cheker-anonimnosti/</a>
+    <a href="https://cpa.live/instrumenty/cheker-anonymnosti/" target="_blank">https://cpa.live/instrumenty/cheker-anonymnosti/</a>
+    <a href="https://trafficcardinal.com/post/5-servisov-dlya-proverki-anonimnosti" target="_blank">https://trafficcardinal.com/post/5-servisov-dlya-proverki-anonimnosti</a>
+    <a href="https://abrahamjuliot.github.io/creepjs/" target="_blank">https://abrahamjuliot.github.io/creepjs/</a>
+    <a href="https://iphey.com/" target="_blank">https://iphey.com/</a>
+    <a href="https://ipdata.co/" target="_blank">https://ipdata.co/</a>
+    <a href="https://pixelscan.net/fingerprint-check" target="_blank">https://pixelscan.net/fingerprint-check</a>
+    <a href="https://fv.pro/check-privacy/general" target="_blank">https://fv.pro/check-privacy/general</a>
+    <a href="https://webbrowsertools.com/" target="_blank">https://webbrowsertools.com/</a>
+    <a href="https://leaksradar.com/" target="_blank">https://leaksradar.com/</a>
+    <a href="https://www.browserscan.net/" target="_blank">https://www.browserscan.net/</a>
+    <a href="https://www.deviceinfo.me/" target="_blank">https://www.deviceinfo.me/</a>
+    <a href="https://privacytests.org/private.html" target="_blank">https://privacytests.org/private.html</a>
+    <a href="https://webkay.robinlinus.com/" target="_blank">https://webkay.robinlinus.com/</a>
+    <a href="https://thesafety.us/ru/check-ip" target="_blank">https://thesafety.us/ru/check-ip</a>
+</div>
+</main>
+
+<!-- 
+    КНОПКА "НАВЕРХ" - просто стрелочка
+    Появляется при прокрутке страницы
+-->
+<a href="#" class="back-to-top" id="backToTop">↑</a>
+
+<!-- 
+    ПОДВАЛ САЙТА
+    Копирайт 2025-2026
+-->
+<footer>
+    <p>33EG Resources 2025-2026</p>
+    <p>Каталог полезных онлайн-сервисов</p>
+</footer>
+
+<!-- 
+    СКРИПТЫ САЙТА
+    Логика переключения разделов и кнопки "наверх"
+-->
+<script>
+// Функция показа раздела
+function showSection(sectionId) {
+    // Скрываем все разделы
+    var sections = document.querySelectorAll('.section');
+    for (var i = 0; i < sections.length; i++) {
+        sections[i].classList.remove('active');
+    }
+    
+    // Показываем выбранный раздел
+    if (sectionId) {
+        document.getElementById(sectionId).classList.add('active');
+        // Прокрутка к началу раздела
+        document.getElementById(sectionId).scrollIntoView({behavior: 'smooth'});
+    }
+}
+
+// Кнопка "наверх"
+window.onscroll = function() {
+    var backToTop = document.getElementById('backToTop');
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        backToTop.classList.add('visible');
+    } else {
+        backToTop.classList.remove('visible');
+    }
+};
+
+// Плавная прокрутка наверх
+document.getElementById('backToTop').onclick = function(e) {    e.preventDefault();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+};
+</script>
+
+</body>
+</html>
