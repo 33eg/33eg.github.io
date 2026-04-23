@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Очистка метаданных</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; color: #222; background: #f8f9fa; }
+h1 { font-size: 24px; margin-bottom: 10px; }
+.controls { display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap; align-items: center; }
+.controls label { display: flex; flex-direction: column; font-size: 14px; }
+select, input[type="range"] { padding: 8px; border: 1px solid #ccc; border-radius: 6px; background: #fff; }
+#dropZone { border: 2px dashed #aaa; padding: 60px 20px; text-align: center; border-radius: 10px; cursor: pointer; background: #fff; transition: all 0.2s; }
+#dropZone:hover, #dropZone.dragover { border-color: #0066cc; background: #eef4ff; }
+input[type="file"] { display: none; }
+#log { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-top: 20px; min-height: 100px; white-space: pre-wrap; font-family: monospace; font-size: 13px; color: #444; }
+.btn { padding: 10px 20px; background: #0066cc; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.btn:hover { background: #0052a3; }
+</style>
+</head>
+<body>
+<h1>Удаление метаданных из файлов</h1>
+<p>Перетащите изображения в область или нажмите для выбора. Обработка выполняется локально, без отправки данных в сеть.</p>
+
+<div class="controls">
+<label>Формат сохранения
+<select id="formatSelect">
+<option value="image/jpeg">JPEG</option>
+<option value="image/png">PNG</option>
+<option value="image/webp">WEBP</option>
+</select>
+</label>
+<label>Качество (для JPEG/WEBP)
+<input type="range" id="qualityRange" min="0.1" max="1.0" step="0.05" value="0.92">
+</label>
+<span id="qualityVal">0.92</span>
+</div>
+
+<div id="dropZone">Нажмите или перетащите файлы сюда</div>
+<input type="file" id="fileInput" multiple accept="image/*">
+<div id="log">Готов к работе.</div>
+
+<script>
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const formatSelect = document.getElementById('formatSelect');
+const qualityRange = document.getElementById('qualityRange');
+const qualityVal = document.getElementById('qualityVal');
+const log = document.getElementById('log');
+
+let processing = false;
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+fileInput.addEventListener('change', e => handleFiles(e.target.files));
+qualityRange.addEventListener('input', e => qualityVal.textContent = e.target.value);
+
+function logMsg(msg) {
+log.textContent += msg + '\n';
+log.scrollTop = log.scrollHeight;
+}
+
+async function handleFiles(files) {
+if (!files.length) return;
+if (processing) { logMsg('Дождитесь окончания текущей обработки.'); return; }
+processing = true;
+log.textContent = 'Начало обработки...\n';
+const mime = formatSelect.value;
+const quality = parseFloat(qualityRange.value);
+const ext = mime.split('/')[1] === 'jpeg' ? '.jpg' : '.' + mime.split('/')[1];
+
+for (const file of files) {
+if (!file.type.startsWith('image/')) {
+logMsg('Пропущено: ' + file.name + ' (поддерживаются только изображения)');
+continue;
+}
+try {
+await processImage(file, mime, quality, ext);
+} catch (err) {
+logMsg('Ошибка: ' + file.name + ' - ' + err.message);
+}
+}
+logMsg('Обработка завершена.');
+processing = false;
+fileInput.value = '';
+}
+
+function processImage(file, mime, quality, ext) {
+return new Promise((resolve, reject) => {
+const reader = new FileReader();
+reader.onload = e => {
+const img = new Image();
+img.onload = () => {
+const canvas = document.createElement('canvas');
+canvas.width = img.width;
+canvas.height = img.height;
+const ctx = canvas.getContext('2d');
+ctx.drawImage(img, 0, 0);
+canvas.toBlob(blob => {
+if (!blob) { reject(new Error('Не удалось экспортировать')); return; }
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+const nameBase = file.name.replace(/\.[^/.]+$/, '');
+a.download = nameBase + ext;
+document.body.appendChild(a);
+a.click();
+setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 100);
+logMsg('Сохранено: ' + a.download);
+resolve();
+}, mime, quality);
+};
+img.onerror = () => reject(new Error('Не удалось загрузить изображение'));
+img.src = e.target.result;
+};
+reader.onerror = () => reject(new Error('Ошибка чтения файла'));
+reader.readAsDataURL(file);
+});
+}
+</script>
+</body>
+</html>
