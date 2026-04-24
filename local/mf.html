@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+ 
+
+    <title>EG</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EG</h1>
+        </header>
+ <section class="contacts">
+ <h2>Екатеринбург, Калиновский лесопарк<br>
+Озеро Щучье
+<br/>
+Мистер Фишер<br>
+ </h2>
+<br>
+<iframe width=100% height="350" src="https://www.openstreetmap.org/export/embed.html?bbox=60.67718647420408%2C56.91307699868285%2C60.68104885518551%2C56.914775486251926&amp;layer=mapnik&amp;marker=56.913926252127176%2C60.679117664694786" style="border: 1px solid black"></iframe><br/>
+
+<iframe width=100% height="350" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2455.174320371594!2d60.679051!3d56.9140556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0:0x0!2d60.679051!3d56.9140556!5e0!3m2!1sru!2sru!4v1625599999999!5m2!1sru!2sru" style="border: 1px solid black"></iframe><br/>
+
+
+
+<br/>
+<iframe width="100%" height="350" src="https://yandex.ru/map-widget/v1/?ll=60.679051%2C56.914060&pt=60.679051%2C56.914060&z=19&l=map&lang=ru" style="border: 1px solid black"></iframe><br>
+
+<br/>
+                    <a href="https://www.google.ru/maps/place/56%C2%B054'50.6%22N+60%C2%B040'44.6%22E/@56.91406,60.679051,18z/data=!3m1!1e3!4m4!3m3!8m2!3d56.9140556!4d60.6790556?g_ep=Eg1tbF8yMDI1MDczMF8wIJvbDyoASAJQAQ%3D%3D" target="_blank" class="contact-btn">56°54'50.6"N 60°40'44.6"E<br/>56.914060, 60.679051<br/>Google Maps</a>
+                    <a href="https://yandex.ru/maps/?ll=60.679051%2C56.914060&pt=60.679051%2C56.914060&z=19&l=map" target="_blank" class="contact-btn">56.914060, 60.679051<br/>Яндекс.Карты</a>
+                    <a href="https://www.bing.com/maps?cp=56.914060~60.679051&lvl=19&style=x" target="_blank" class="contact-btn">56.914060, 60.679051<br/>Bing Maps</a>
+                    <a href="https://2gis.ru/ekaterinburg/geo/56.914060,60.679051?m=60.679051%2C56.914060%2F19" target="_blank" class="contact-btn">56.914060, 60.679051<br/>2GIS</a>
+<center><a href="mf.jpg"><img style="width: 100%;" src="mf.jpg"/></a></center>
+</section>
+        <section class="contacts">
+            <h2>Контакты</h2>
+            <ul class="contact-list">
+                <li>
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:eg@frm.aleeas.com" class="contact-btn">eg@frm.aleeas.com</a>
+                </li>
+                <li>
+                    <i class="fab fa-telegram"></i>
+                    <a href="https://t.me/EvgeniiAlexan" target="_blank" class="contact-btn">Telegram</a>
+                </li>
+                <li>
+                    <i class="fab fa-whatsapp"></i>
+                    <a href="https://wa.me/message/GEDYZ3IQQLGBM1" target="_blank" class="contact-btn">WhatsApp</a>
+                </li>
+                <li>
+                    <i class="fas fa-shield-alt"></i>
+                    <a href="https://bastyon.com/evgeniiag" target="_blank" class="contact-btn">Bastyon</a>
+                </li>
+            </ul>
+        </section>
+        <section class="contact-form">
+            <h2>Свяжитесь со мной</h2>
+            <form id="myForm" action="https://formspree.io/f/mgvkglkz" method="POST">
+                <div class="form-group">
+                    <label for="name">Имя:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Сообщение:</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit">Отправить</button>
+            </form>
+            <div id="success-message" class="hidden">Сообщение успешно отправлено!</div>
+        </section>
+    </div>
+</body>
+</html>
