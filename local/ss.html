@@ -16,15 +16,110 @@
             padding: 10px;
             word-wrap: break-word;
             overflow-wrap: break-word;
+            overflow-x: hidden;
         }
         .container { max-width: 100%; margin: 0 auto; }
+        
+        .menu-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1100;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .menu-toggle:active { transform: scale(0.95); }
+        
+        .side-nav {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100vh;
+            background: #2c3e50;
+            z-index: 1000;
+            padding: 70px 20px 20px;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            box-shadow: -2px 0 15px rgba(0,0,0,0.3);
+        }
+        .side-nav.active { right: 0; }
+        .side-nav a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .side-nav a:hover,
+        .side-nav a:active {
+            background: rgba(255,255,255,0.25);
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: rgba(44, 62, 80, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top:active { transform: scale(0.95); }
+        
         header {
             text-align: center;
-            padding:20px 20px;
+            padding: 20px 20px;
             background: #2c3e50;
             color: white;
             border-radius: 10px;
             margin-bottom: 25px;
+            margin-top: 10px;
         }
         header h1 { font-size: 28px; margin-bottom: 8px; }
         header p { opacity: 0.95; font-size: 22px; }
@@ -34,6 +129,7 @@
             padding: 20px 15px;
             margin-bottom: 20px;
             box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+            scroll-margin-top: 70px;
         }
         .section h2 {
             color: #2c3e50;
@@ -104,44 +200,57 @@
             .link-item { font-size: 21px; padding: 16px 14px; }
             header h1 { font-size: 26px; }
             .section h2 { font-size: 24px; }
+            .menu-toggle { padding: 9px 13px; font-size: 19px; }
+            .side-nav { width: 260px; padding: 65px 16px 16px; }
+            .side-nav a { font-size: 17px; padding: 13px 14px; }
+            .scroll-top { width: 40px; height: 40px; font-size: 20px; bottom: 16px; right: 16px; }
         }
     </style>
 </head>
 <body>
+    <button class="menu-toggle" id="menuToggle">☰</button>
+    
+    <nav class="side-nav" id="sideNav">
+        <a href="#infy">Infy</a>
+        <a href="#github">GitHub</a>
+        <a href="#hosting">Хостинг</a>
+        <a href="#ipcheck">IP</a>
+        <a href="#fingerprint">Отпечатки</a>
+        <a href="#tools">Инструменты</a>
+        <a href="#other">Прочее</a>
+    </nav>
+    
+    <div class="overlay" id="overlay"></div>
+    
+    <button class="scroll-top" id="scrollTop">↑</button>
+
     <div class="container">
         <header>
             <h1>LINK SS</h1>
         </header>
 
-        <div class="section">
-            <h2>Infy </h2>
+        <div class="section" id="infy">
+            <h2>Infy</h2>
             <div class="links-grid">
                 <a href="http://volhv.great-site.net/" target="_blank" class="link-item">volhv.great-site.net</a>
                 <a href="https://volhv.rf.gd/" target="_blank" class="link-item">volhv.rf.gd</a>
-
                 <a href="https://33eg.infy.uk/" target="_blank" class="link-item">33eg.infy.uk</a>
                 <a href="https://33eg.rf.gd/" target="_blank" class="link-item">33eg.rf.gd</a>
                 <a href="https://EG.infy.uk/" target="_blank" class="link-item">EG.infy.uk</a>
-
                 <a href="http://eg.rf.gd/" target="_blank" class="link-item">eg.rf.gd</a>
                 <a href="http://eg.gt.tc/" target="_blank" class="link-item">eg.gt.tc</a>
- 
                 <a href="https://eg.ct.ws/" target="_blank" class="link-item">eg.ct.ws</a>
                 <a href="https://eg.fwh.is/" target="_blank" class="link-item">eg.fwh.is</a>
-
-              <a href="http://eg.infinityfreeapp.com/" target="_blank" class="link-item">eg.infinityfreeapp.com</a>
-
+                <a href="http://eg.infinityfreeapp.com/" target="_blank" class="link-item">eg.infinityfreeapp.com</a>
                 <a href="https://rr.infy.uk/" target="_blank" class="link-item">rr.infy.uk</a>
                 <a href="https://eag.ct.ws/" target="_blank" class="link-item">eag.ct.ws</a>
                 <a href="https://gusev.rf.gd/" target="_blank" class="link-item">gusev.rf.gd</a>
                 <a href="https://gusev.infy.uk/" target="_blank" class="link-item">gusev.infy.uk</a>
                 <a href="https://evgenii.infy.uk/" target="_blank" class="link-item">evgenii.infy.uk</a>
                 <a href="https://evgenii.rf.gd/" target="_blank" class="link-item">evgenii.rf.gd</a>
-               <a href="http://evgenii.free.nf/" target="_blank" class="link-item">evgenii.free.nf</a>
-             <a href="https://evgenii.great-site.net/" target="_blank" class="link-item">evgenii.great-site.net</a>
-
-
-               <a href="https://evgenii.000.pe/" target="_blank" class="link-item">evgenii.000.pe</a>
+                <a href="http://evgenii.free.nf/" target="_blank" class="link-item">evgenii.free.nf</a>
+                <a href="https://evgenii.great-site.net/" target="_blank" class="link-item">evgenii.great-site.net</a>
+                <a href="https://evgenii.000.pe/" target="_blank" class="link-item">evgenii.000.pe</a>
                 <a href="https://gea.infy.uk/" target="_blank" class="link-item">gea.infy.uk</a>
                 <a href="https://hram.rf.gd/" target="_blank" class="link-item">hram.rf.gd</a>
                 <a href="https://77.infy.uk/" target="_blank" class="link-item">77.infy.uk</a>
@@ -153,116 +262,63 @@
                 <a href="https://ea.infy.uk/" target="_blank" class="link-item">ea.infy.uk</a>
                 <a href="https://eap.rf.gd/" target="_blank" class="link-item">eap.rf.gd</a>
                 <a href="https://cpa.great-site.net/" target="_blank" class="link-item">cpa.great-site.net</a>
-
-
-
                 <a href="https://vv.rf.gd/" target="_blank" class="link-item">vv.rf.gd</a>
                 <a href="https://Kkk.rf.gd/" target="_blank" class="link-item">Kkk.rf.gd</a>
                 <a href="https://kk.000.pe/" target="_blank" class="link-item">kk.000.pe</a>
                 <a href="https://ovc.rf.gd/" target="_blank" class="link-item">ovc.rf.gd</a>
-
-
                 <a href="https://ira.infinityfreeapp.com/" target="_blank" class="link-item">ira.infinityfreeapp.com</a>
-
                 <a href="https://inform.rf.gd/" target="_blank" class="link-item">inform.rf.gd</a>
                 <a href="https://rf.infy.uk/" target="_blank" class="link-item">rf.infy.uk</a>
                 <a href="http://120.great-site.net/" target="_blank" class="link-item">120.great-site.net</a>
                 <a href="http://xyx.great-site.net/" target="_blank" class="link-item">xyx.great-site.net</a>
                 <a href="http://maledictum.great-site.net/" target="_blank" class="link-item">maledictum.great-site.net</a>
-               <a href="http://shamans.great-site.net" target="_blank" class="link-item">shamans.great-site.net</a>
-               <a href="http://shaman.great-site.net" target="_blank" class="link-item">shaman.great-site.net</a>
-              <a href="http://MraziBastyona.rf.gd" target="_blank" class="link-item">MraziBastyona.rf.gd</a>
-
-              <a href="http://MraziBastyona.great-site.net" target="_blank" class="link-item">MraziBastyona.great-site.net</a>
-
-
-     <a href="http://stepanov.infy.uk/" target="_blank" class="link-item">stepanov.infy.uk</a>
-
-
-<br><br>
-
-
-
-               <a href="https://eg.infy.uk/grazh.html" target="_blank" class="link-item">eg.infy.uk/grazh.html</a>
-
-               <a href="https://eg.infy.uk/metadatarem.html" target="_blank" class="link-item">eg.infy.uk/metadatarem.html</a>
-
-               <a href="https://eg.infy.uk/exif.html" target="_blank" class="link-item">eg.infy.uk/exif.html</a>
-
-
-               <a href="https://eg.infy.uk/exifinfo.html" target="_blank" class="link-item">eg.infy.uk/exifinfo.html</a>
-               <a href="https://eg.infy.uk/exifred.html" target="_blank" class="link-item">eg.infy.uk/exifred.html</a>
-               <a href="https://eg.infy.uk/orgasm.html" target="_blank" class="link-item">eg.infy.uk/orgasm.html</a>
-
-
-               <a href="https://eg.infy.uk/sbpq.html" target="_blank" class="link-item">eg.infy.uk/sbpq.html</a>
-
+                <a href="http://shamans.great-site.net" target="_blank" class="link-item">shamans.great-site.net</a>
+                <a href="http://shaman.great-site.net" target="_blank" class="link-item">shaman.great-site.net</a>
+                <a href="http://MraziBastyona.rf.gd" target="_blank" class="link-item">MraziBastyona.rf.gd</a>
+                <a href="http://MraziBastyona.great-site.net" target="_blank" class="link-item">MraziBastyona.great-site.net</a>
+                <a href="http://stepanov.infy.uk/" target="_blank" class="link-item">stepanov.infy.uk</a>
+                <a href="https://eg.infy.uk/grazh.html" target="_blank" class="link-item">eg.infy.uk/grazh.html</a>
+                <a href="https://eg.infy.uk/metadatarem.html" target="_blank" class="link-item">eg.infy.uk/metadatarem.html</a>
+                <a href="https://eg.infy.uk/exif.html" target="_blank" class="link-item">eg.infy.uk/exif.html</a>
+                <a href="https://eg.infy.uk/exifinfo.html" target="_blank" class="link-item">eg.infy.uk/exifinfo.html</a>
+                <a href="https://eg.infy.uk/exifred.html" target="_blank" class="link-item">eg.infy.uk/exifred.html</a>
+                <a href="https://eg.infy.uk/orgasm.html" target="_blank" class="link-item">eg.infy.uk/orgasm.html</a>
+                <a href="https://eg.infy.uk/sbpq.html" target="_blank" class="link-item">eg.infy.uk/sbpq.html</a>
                 <a href="https://eg.infy.uk/xyz.html" target="_blank" class="link-item">eg.infy.uk/xyz.html</a>
-
                 <a href="https://eg.infy.uk/mb.html" target="_blank" class="link-item">eg.infy.uk/mb.html</a>
-
-
                 <a href="https://eg.infy.uk/places.html" target="_blank" class="link-item">eg.infy.uk/places.html</a>
-
                 <a href="https://eg.infy.uk/local/places.html" target="_blank" class="link-item">eg.infy.uk/local/places.html</a>
-
                 <a href="https://eg.rf.gd/local/places.html" target="_blank" class="link-item">eg.rf.gd/local/places.html</a>
-
-
-                  <a href="https://eg.infy.uk/crypt/index.html" target="_blank" class="link-item">crypt</a> 
-
-                  <a href="https://eg.infy.uk/website/index.html" target="_blank" class="link-item">crypt old (website) </a> 
-
-<br><br>
-     <h2>GitHub</h2>
-
-             <a href="https://egmsg.github.io/" target="_blank" class="link-item">egmsg.github.io </a>
-
-             <a href="https://famereplica.github.io/" target="_blank" class="link-item">famereplica.github.io </a>
-
-             <a href="https://crasav.github.io/" target="_blank" class="link-item">crasav.github.io </a>
-
-             <a href="http://eagusev.github.io" target="_blank" class="link-item">eagusev.github.io </a>
-
-             <a href="https://rastva.github.io" target="_blank" class="link-item">rastva.github.io </a>
-
-             <a href="https://77ip.github.io/" target="_blank" class="link-item">77ip.github.io </a>
-
-             <a href="https://33eg.github.io/" target="_blank" class="link-item">33eg.github.io </a>
-
-             <a href="https://evgeniihram.github.io/" target="_blank" class="link-item">evgeniihram.github.io </a>
-
-             <a href="https://ebals.github.io/" target="_blank" class="link-item">ebals.github.io </a>
-
-             <a href="https://pohuism.github.io/" target="_blank" class="link-item">pohuism.github.io </a>
-
-
-             <a href="https://evolhv.github.io/" target="_blank" class="link-item">evolhv.github.io </a>
-
-
-
-
-
-
-
-
-           
+                <a href="https://eg.infy.uk/crypt/index.html" target="_blank" class="link-item">crypt</a> 
+                <a href="https://eg.infy.uk/website/index.html" target="_blank" class="link-item">crypt old (website) </a> 
             </div>
         </div>
 
+        <div class="section" id="github">
+            <h2>GitHub</h2>
+            <div class="links-grid">
+                <a href="https://egmsg.github.io/" target="_blank" class="link-item">egmsg.github.io</a>
+                <a href="https://famereplica.github.io/" target="_blank" class="link-item">famereplica.github.io</a>
+                <a href="https://crasav.github.io/" target="_blank" class="link-item">crasav.github.io</a>
+                <a href="http://eagusev.github.io" target="_blank" class="link-item">eagusev.github.io</a>
+                <a href="https://rastva.github.io" target="_blank" class="link-item">rastva.github.io</a>
+                <a href="https://77ip.github.io/" target="_blank" class="link-item">77ip.github.io</a>
+                <a href="https://33eg.github.io/" target="_blank" class="link-item">33eg.github.io</a>
+                <a href="https://evgeniihram.github.io/" target="_blank" class="link-item">evgeniihram.github.io</a>
+                <a href="https://ebals.github.io/" target="_blank" class="link-item">ebals.github.io</a>
+                <a href="https://pohuism.github.io/" target="_blank" class="link-item">pohuism.github.io</a>
+                <a href="https://evolhv.github.io/" target="_blank" class="link-item">evolhv.github.io</a>
+            </div>
+            <br><br>
+            <h2>Трекинговые ссылки</h2>
+            <div class="links-grid">
+                <a href="https://iplogger.org/logger/RErW5ZINqE0z" target="_blank" class="link-item">iplogger.org Mrazi Bastiona</a>
+                <a href="https://iplogger.org/logger/B4Qg5zxijVoc" target="_blank" class="link-item">iplogger.org stepanov</a>
+                <a href="https://grabify.link/track/YYHIO5" target="_blank" class="link-item">grabify.link stepanov</a>
+            </div>
+        </div>
 
-              <a href="https://iplogger.org/logger/RErW5ZINqE0z" target="_blank" class="link-item">iplogger.org Mrazi Bastiona</a>
-
-             <a href="https://iplogger.org/logger/B4Qg5zxijVoc" target="_blank" class="link-item">iplogger.org stepanov </a>
-
-
-             <a href="https://grabify.link/track/YYHIO5" target="_blank" class="link-item">grabify.link stepanov </a>
-
-              
-
-
-
-        <div class="section">
+        <div class="section" id="hosting">
             <h2>Хостинг и сервисы</h2>
             <div class="links-grid">
                 <a href="https://dash.infinityfree.com/login" target="_blank" class="link-item">InfinityFree — вход</a>
@@ -277,7 +333,7 @@
             </div>
         </div>
 
-        <div class="section">
+        <div class="section" id="ipcheck">
             <h2>Проверка IP</h2>
             <div class="links-grid">
                 <a href="https://nordvpn.com/ru/what-is-my-ip/" target="_blank" class="link-item">NordVPN — мой IP</a>
@@ -289,19 +345,12 @@
                 <a href="https://whatsmyip.com/" target="_blank" class="link-item">WhatsMyIP</a>
                 <a href="https://www.iplocation.net/myip" target="_blank" class="link-item">IPLocation</a>
                 <a href="https://ipinfo.io/what-is-my-ip" target="_blank" class="link-item">IPInfo.io</a>
-              <a href="https://mail.ru/" target="_blank" class="link-item">mail.ru</a>
-             <a href="https://ya.ru/" target="_blank" class="link-item">ya.ru</a>
-      
+                <a href="https://mail.ru/" target="_blank" class="link-item">mail.ru</a>
+                <a href="https://ya.ru/" target="_blank" class="link-item">ya.ru</a>
             </div>
         </div>
 
-
-
-
-
-
-
-        <div class="section">
+        <div class="section" id="fingerprint">
             <h2>Отпечатки браузера</h2>
             <div class="links-grid">
                 <a href="https://undetectable.io/ru/pixelscan/" target="_blank" class="link-item">PixelScan RU</a>
@@ -322,7 +371,7 @@
             </div>
         </div>
 
-        <div class="section">
+        <div class="section" id="tools">
             <h2>Дополнительные инструменты</h2>
             <div class="links-grid">
                 <a href="https://traffnews.com/tools/cheker-anonimnosti/" target="_blank" class="link-item">TraffNews чекер</a>
@@ -338,27 +387,17 @@
             </div>
         </div>
 
-        <div class="section">
+        <div class="section" id="other">
             <h2>Прочее</h2>
             <div class="links-grid">
-             <a href="https://telegra.ph/" target="_blank" class="link-item">Telegra.ph</a>
+                <a href="https://telegra.ph/" target="_blank" class="link-item">Telegra.ph</a>
                 <a href="https://www.mozello.com/ru/session/login/" target="_blank" class="link-item">mozello.com/login</a>
-  
-               <a href="https://dash.infinityfree.com/login" target="_blank" class="link-item">infinityfree.com/login</a>
-
-             <a href="https://iris.to" target="_blank" class="link-item">iris.to</a>
-
-
-
-                  <a href="https://eg.infy.uk/crypt/index.html" target="_blank" class="link-item">crypt</a> 
-
-                  <a href="https://eg.infy.uk/website/index.html" target="_blank" class="link-item">crypt old (website) </a> 
-
-                 <a href="https://chat.qwen.ai/auth?action=signin" target="_blank" class="link-item">qwen ai</a> 
-                 <a href="https://88zz.wordpress.com/" target="_blank" class="link-item">88ZZ </a> 
-  
-
-
+                <a href="https://dash.infinityfree.com/login" target="_blank" class="link-item">infinityfree.com/login</a>
+                <a href="https://iris.to" target="_blank" class="link-item">iris.to</a>
+                <a href="https://eg.infy.uk/crypt/index.html" target="_blank" class="link-item">crypt</a> 
+                <a href="https://eg.infy.uk/website/index.html" target="_blank" class="link-item">crypt old (website)</a> 
+                <a href="https://chat.qwen.ai/auth?action=signin" target="_blank" class="link-item">qwen ai</a> 
+                <a href="https://88zz.wordpress.com/" target="_blank" class="link-item">88ZZ</a> 
             </div>
         </div>
 
@@ -366,5 +405,69 @@
             <p>2026 | Все ссылки в новой вкладке</p>
         </footer>
     </div>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const sideNav = document.getElementById('sideNav');
+        const overlay = document.getElementById('overlay');
+        const scrollTopBtn = document.getElementById('scrollTop');
+        
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        function openMenu() {
+            sideNav.classList.add('active');
+            overlay.classList.add('active');
+        }
+        function closeMenu() {
+            sideNav.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+        
+        menuToggle.addEventListener('click', openMenu);
+        overlay.addEventListener('click', closeMenu);
+        
+        sideNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+        
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const edgeZone = 30;
+            
+            if (touchStartX > window.innerWidth - edgeZone && touchEndX < touchStartX - swipeThreshold) {
+                if (!sideNav.classList.contains('active')) {
+                    openMenu();
+                }
+            }
+            
+            if (sideNav.classList.contains('active')) {
+                if (touchStartX < touchEndX - swipeThreshold || touchStartX < edgeZone) {
+                    closeMenu();
+                }
+            }
+        }
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+        
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
 </body>
 </html>
