@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погода в Екатеринбурге</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        :root {
+            --primary-color: #002B5B;
+            --secondary-color: #001F4D;
+            --accent-color: #003377;
+            --background-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #a0b8d4;
+            --shadow-color: rgba(0, 43, 91, 0.15);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 100%;
+            padding: 10px;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.2rem 1rem;
+            text-align: center;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            margin-bottom: 15px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .solar-section {
+            margin: 15px 0;
+            text-align: center;
+        }
+        .solar-section h2 {
+            color: var(--primary-color);
+            margin: 0 0 12px 0;
+            font-size: 1.3rem;
+        }
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .image-gallery .img-item {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        .image-gallery img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 3px 10px var(--shadow-color);
+        }
+        .widget-wrapper {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .widget-wrapper iframe,
+        .widget-wrapper img,
+        .widget-wrapper object,
+        .widget-wrapper embed {
+            max-width: 100%;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .realmeteo-wrapper {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .realmeteo-wrapper img {
+            width: 200px;
+            height: 200px;
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 14px var(--shadow-color);
+        }
+        .iframe-wrapper {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            border-radius: 8px;
+            margin: 12px 0;
+            border: 1px solid var(--border-color);
+            background: #fff;
+        }
+        .iframe-wrapper iframe {
+            min-width: 100%;
+            width: 100%;
+            height: 500px;
+            border: 0;
+            display: block;
+        }
+        .scroll-wide {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            border-radius: 8px;
+            margin: 12px 0;
+            border: 1px solid var(--border-color);
+            background: #fff;
+        }
+        .scroll-wide img {
+            width: 1000px;
+            height: auto;
+            display: block;
+        }
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .weather-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 14px var(--shadow-color);
+            padding: 18px;
+            border: 1px solid var(--border-color);
+        }
+        .weather-card h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+            margin: 0 0 12px 0;
+            font-size: 1.15rem;
+        }
+        .section-title {
+            text-align: center;
+            color: var(--primary-color);
+            margin: 35px 0 20px;
+            font-size: 1.5rem;
+            position: relative;
+            font-weight: 600;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-color), var(--primary-color));
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+        .weather-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .weather-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+            min-height: 44px;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+        .weather-link:hover, .weather-link:focus {
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+        .weather-link:active, .weather-link:visited {
+            background: linear-gradient(135deg, var(--secondary-color), #001538);
+            color: #c8d8e8;
+            transform: translateY(0);
+            opacity: 0.95;
+        }
+        .meteogram {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .meteogram img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 3px 12px var(--shadow-color);
+        }
+        .contact-buttons {
+            max-width: 100%;
+            margin: 15px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 8px;
+        }
+        .contact-buttons a {
+            text-decoration: none;
+        }
+        .contact-buttons button {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+            border: none;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            min-height: 44px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .contact-buttons button:hover, .contact-buttons button:focus {
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+        .contact-buttons button:active {
+            background: linear-gradient(135deg, var(--secondary-color), #001538);
+            color: #c8d8e8;
+            transform: scale(0.98);
+            opacity: 0.95;
+        }
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.3rem; }
+            .section-title { font-size: 1.3rem; }
+            .weather-links, .contact-buttons { grid-template-columns: 1fr; }
+            .weather-link, .contact-buttons button { min-height: 48px; font-size: 0.9rem; }
+            .iframe-wrapper iframe { height: 400px; }
+            .realmeteo-wrapper img { width: 180px; height: 180px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Погода в Екатеринбурге</h1>
+        <link href="https://api.rusmeteo.net/service/informers/css/widget-line.min.css" rel="stylesheet" type="text/css">
+        <a href="https://rusmeteo.net/weather/ekaterinburg/" class="rus-widget-line" id="fdf461408ba93644219cce93aeb18331" style="color:rgb(255, 255, 255)">Погода в Екатеринбурге</a>
+        <script async src="https://rusmeteo.net/api/informerV2/fdf461408ba93644219cce93aeb18331/" type="text/javascript"></script>
+    </header>
+
+    <div class="container">
+        <section class="solar-section">
+            <h2>Солнечная и магнитная активность</h2>
+            <div class="widget-wrapper">
+                <iframe src="https://api.meteoagent.com/widgets/v1/kindex" style="border: 0; width: 100%; height: 500px;"></iframe>
+            </div>
+            <div class="image-gallery">
+                <div class="img-item"><img src="https://xras.ru/image/kp_RHN2.png" alt="К-индекс 3д"></div>
+                <div class="img-item"><img src="https://xras.ru/image/kpm_RHN2.png" alt="К-индекс месяц"></div>
+                <div class="img-item"><img src="http://services.swpc.noaa.gov/images/swx-overview-large.gif" alt="NOAA SWX"></div>
+                <div class="img-item"><img src="https://services.swpc.noaa.gov/images/station-k-index.png" alt="NOAA K-index"></div>
+                <div class="img-item"><img src="http://serv.izmiran.ru/cmo.png" alt="ИЗМИРАН"></div>
+            </div>
+        </section>
+
+        <div class="realmeteo-wrapper">
+            <a href="https://realmeteo.ru/ekaterinburg/2/current" target="_blank">
+                <img src="https://realmeteo.ru/ekaterinburg/2/realmeteo1.png" title="Погода в Екатеринбурге" onerror="this.src='http://realmeteo.ru/spb/1/realmeteo1.png'"/>
+            </a>
+        </div>
+
+        <div class="widget-wrapper">
+            <a class="weatherwidget-io" href="https://forecast7.com/ru/56d8360d56/gorod-yekaterinburg/" data-label_1="YEKATERINBURG" data-label_2="WEATHER" data-theme="pure">YEKATERINBURG WEATHER</a>
+            <script>
+            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+            </script>
+        </div>
+
+        <h2 class="section-title">Сводка</h2>
+        <div class="iframe-wrapper">
+            <iframe src="https://meteoinfo.ru/pogoda/russia/sverdlovsk-area/ekaterinburg" loading="lazy">
+                <a href="https://meteoinfo.ru/pogoda/russia/sverdlovsk-area/ekaterinburg" target="_blank">Открыть в новом окне</a>
+            </iframe>
+        </div>
+
+        <div class="iframe-wrapper">
+            <iframe src="https://rusmeteo.net/weather/ekaterinburg/" loading="lazy"></iframe>
+        </div>
+
+        <div class="weather-links">
+            <a href="http://rp5.ru/Архив_погоды_в_Екатеринбурге" target="_blank" class="weather-link">Архив RP5</a>
+            <a href="https://narodmon.ru/D28434" target="_blank" class="weather-link">Народный мониторинг</a>
+            <a href="https://realmeteo.ru/ekaterinburg/2/current" target="_blank" class="weather-link">RealMeteo</a>
+            <a href="https://rp5.ru/Погода_в_Екатеринбурге" target="_blank" class="weather-link">RP5 прогноз</a>
+            <a href="http://www.pogodaiklimat.ru/monitor.php?id=28440" target="_blank" class="weather-link">Pogodaiklimat</a>
+            <a href="https://www.meteoblue.com/ru/погода/прогноз/multimodel/Екатеринбург_Россия_1486209" target="_blank" class="weather-link">Meteoblue</a>
+            <a href="https://kachelmannwetter.com/de/sat/c09671cb0dd6db16914f304d5e786f0f/satellit-nature-15min/20260527-1230z.html" target="_blank" class="weather-link">Спутник</a>
+            <a href="https://meteoinfo.ru/nowcasting" target="_blank" class="weather-link">Радар</a>
+            <a href="https://yandex.ru/pogoda/ru/maps/nowcast?lat=56.84&lon=60.61&ll=60.61_56.84&z=9" target="_blank" class="weather-link">Яндекс осадки</a>
+            <a href="https://www.wetterzentrale.de/de/show_diagrams.php?model=aifs&lid=ENS&var=202&bw=&geoid=111778" target="_blank" class="weather-link">AIFS ансамбль</a>
+            <a href="https://meteologix.com/ru/model-charts/euro-ai/sverdlovsk/temperature-flexscale/20260527-1800z.html" target="_blank" class="weather-link">AIFS карта</a>
+            <a href="https://www.ventusky.com/ru#p=56.84;60.61;8" target="_blank" class="weather-link">VentuSky</a>
+            <a href="https://kachelmannwetter.com/de/vorhersage/1486209-ekaterinburg/xltrend/deu-hd" target="_blank" class="weather-link">ICON модель</a>
+            <a href="https://kachelmannwetter.com/de/vorhersage/1486209-ekaterinburg/ensemble/icon-eu-range/niederschlag" target="_blank" class="weather-link">ICON ансамбль</a>
+        </div>
+
+        <h2 class="section-title">Ансамбль AIFS</h2>
+        <div id="wetterzentrale" style="width: 100%; max-width: 100%; overflow: auto; border: 1px solid var(--border-color); border-radius: 8px; background: #fff;"></div>
+        <script>
+          const today = new Date();
+          today.setDate(today.getDate() - 1);
+          const yyyy = today.getFullYear();
+          const mm = String(today.getMonth() + 1).padStart(2, '0');
+          const dd = String(today.getDate()).padStart(2, '0');
+          const formattedDate = `${yyyy}-${mm}-${dd}`;
+          const url = `https://www.wetterzentrale.de/de/ens_image.php?geoid=111778&var=202&run=0&date=${formattedDate}&model=aifs&member=ENS&bw=`;
+          const img = document.createElement('img');
+          img.src = url;
+          img.alt = 'Прогноз';
+          img.style.maxWidth = '100%';
+          img.style.height = 'auto';
+          document.getElementById('wetterzentrale').appendChild(img);
+        </script>
+
+        <h4 class="section-title" style="font-size: 1.1rem;">Комплексный прогноз</h4>
+        <div class="scroll-wide">
+            <img src="https://method.meteorf.ru/ansambl/meteogram/EKATERINBURG.png" alt="Прогноз" />
+        </div>
+
+        <h2 class="section-title">Аномалии температуры</h2>
+        <div class="weather-grid">
+            <div class="weather-card">
+                <h2>10 дней</h2>
+                <div class="meteogram">
+                    <img src="https://meteoinfo.ru/images/vasiliev/anom01.gif" width="921" height="662" alt="Аномалии 10д" border="0">
+                </div>
+            </div>
+            <div class="weather-card">
+                <h2>5 суток</h2>
+                <div class="meteogram">
+                    <img src="https://meteoinfo.ru/images/vasiliev/anom2_6/anom2_6.gif" width="921" height="662" alt="Аномалии 5д" border="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="widget-wrapper">
+            <link type="text/css" rel="stylesheet" href="https://www.meteoprog.com/css/winformer.min.css?id=100">
+            <div class="meteoprog-informer" style="width: 100%; max-width: 320px; margin: 0 auto;" data-params='{"city_ids":"1542","domain":"https://www.meteoprog.com/ru/","id":"67da44a85a08ed18c00660a2","lang":"ru"}'>
+                <a title="Погода Екатеринбург" target="_blank" href="https://www.meteoprog.com/ru/weather/Ekaterinburg/">
+                    <img style="margin: 0 auto; display: block" src="https://www.meteoprog.com/images/preloader.gif" alt="Loading...">
+                </a>
+                <a target="_blank" class="constructor__met2wlink" href="https://www.meteoprog.com/ru/review/Ekaterinburg/">Погода на 2 недели</a>
+                <a class="constructor__metlink" target="_blank" href="https://www.meteoprog.com/ru/">
+                    <img style="display: block; margin: 0 auto;" alt="Meteoprog" src="https://www.meteoprog.com/images/meteoprog-inf.png">
+                </a>
+            </div>
+            <script type="text/javascript" src="https://www.meteoprog.com/js/winformer.min.js?id=100"></script>
+        </div>
+
+        <div class="widget-wrapper">
+            <div id="_MI_67832b9130ba6148bbc390e7aacb3f58"><a href="https://ru.meteotrend.com/">Погода</a></div>
+            <script type='text/javascript'>(function(d,w,t,k){function l(){if(typeof(w._MIOB_)=='undefined'){w._MIOB_={};}var m=w._MIOB_[t]=k;var s=d.createElement('script');m.p=('https:'==d.location.protocol?'https:':'http:');s.type='text/javascript';s.async=true;s.src=m.p+'//info.meteotrend.com/mt/'+m.t+'.js';d.body.appendChild(s);}if(d.readyState=='complete')l();else{if(w.attachEvent)w.attachEvent('onload',l);else w.addEventListener('load',l,false);}})(document,window,'67832b9130ba6148bbc390e7aacb3f58',{t:'full5d',css:['{p}//info.meteotrend.com/mt/{t}.css','{p}//info.meteotrend.com/cs/bb7d998288c8a71115a9a8610219f29d8104e5e9.css'],source:'meteotrend'});</script>
+        </div>
+
+        <div class="widget-wrapper">
+            <div id="_MI_553bc7de2bee7786542d51e93702e765"><a href="https://ru.meteocast.net/">Прогноз</a></div>
+            <script type='text/javascript'>(function(d,w,t,k){function l(){if(typeof(w._MIOB_)=='undefined'){w._MIOB_={};}var m=w._MIOB_[t]=k;var s=d.createElement('script');m.p=('https:'==d.location.protocol?'https:':'http:');s.type='text/javascript';s.async=true;s.src=m.p+'//info.meteocast.net/mt/'+m.t+'.js';d.body.appendChild(s);}if(d.readyState=='complete')l();else{if(w.attachEvent)w.attachEvent('onload',l);else w.addEventListener('load',l,false);}})(document,window,'553bc7de2bee7786542d51e93702e765',{t:'current',sw:{"iorder":"3","tblank":1},css:['{p}//info.meteocast.net/mt/{t}.css','{p}//info.meteocast.net/cs/9dbf72ab31e4d7fb805c94c5a3ee26d916df280b.css'],source:'meteocast'});</script>
+        </div>
+
+        <div class="widget-wrapper">
+            <link href="https://api.rusmeteo.net/service/informers/css/widget-kit-2.min.css" rel="stylesheet" type="text/css">
+            <a href="https://rusmeteo.net/weather/ekaterinburg/" class="rm-kit-informer" id="7ce7ddf7f8aa2d32fdc1cdbc4170a3d1" style="width:100%; max-width:349px">Погода</a>
+            <script async src="https://rusmeteo.net/api/informerV2/7ce7ddf7f8aa2d32fdc1cdbc4170a3d1/" type="text/javascript"></script>
+        </div>
+
+        <div class="widget-wrapper" style="text-align:center;">
+            <iframe src="http://forecabox.foreca.com/get/47258" width="300" height="250" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+        </div>
+
+        <h2 class="section-title">Ссылки</h2>
+        <div class="contact-buttons">
+            <a href="https://stellarium-web.org/" target="_blank"><button><i class="fa fa-star"></i> Stellarium</button></a>
+            <a href="https://theskylive.com/planetarium" target="_blank"><button><i class="fa fa-star"></i> SkyLive</button></a>
+            <a href="https://www.forecaweather.com/101486209/Yekaterinburg-Sverdlovskaya-Oblast%E2%80%99-Russia" target="_blank"><button><i class="fa fa-cloud"></i> ForecaWeather</button></a>
+
+           <a href="https://www.foreca.ru/Russia/Yekaterinburg" target="_blank"><button><i class="fa fa-cloud"></i> Foreca.ru</button></a>
+            <a href="https://www.foreca.com/101486209/Yekaterinburg-Sverdlovskaya-Oblast%E2%80%99-Russia" target="_blank"><button><i class="fa fa-globe"></i> Foreca.com</button></a>
+
+
+            <a href="https://yandex.ru/pogoda/ru/maps/nowcast?lat=56.84&lon=60.61&ll=60.61_56.84&z=9" target="_blank"><button><i class="fa fa-map"></i> Яндекс</button></a>
+            <a href="https://www.google.ru/maps/@56.8415545,60.6265811,10z/data=!3m1!1e3" target="_blank"><button><i class="fa fa-map-marker"></i> Google</button></a>
+            <a href="https://new.meteoweb.ru/user/login" target="_blank"><button><i class="fa fa-cloud"></i> Meteoweb</button></a>
+            <a href="http://meteocenter.net/USSS_current.htm" target="_blank"><button><i class="fa fa-cloud"></i> Meteocenter</button></a>
+            <a href="http://svgimet.ru/" target="_blank"><button><i class="fa fa-cloud"></i> Svgimet</button></a>
+ 
+            <a href="https://meteologix.com/ru/weather/1486209-yekaterinburg" target="_blank"><button><i class="fa fa-chart-line"></i> Meteologix</button></a>
+            <a href="https://m.rp5.ru/%D0%9F%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0_%D0%B2_%D0%95%D0%BA%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D0%BD%D0%B1%D1%83%D1%80%D0%B3%D0%B5" target="_blank"><button><i class="fa fa-database"></i> RP5</button></a>
+            <a href="https://xras.ru/magnetic_storms.html" target="_blank"><button><i class="fa fa-bolt"></i> Магнитные</button></a>
+            <a href="https://new.meteoweb.ru/solar-monitor" target="_blank"><button><i class="fa fa-sun"></i> Солнце</button></a>
+            <a href="https://www.windy.com/?56.844,60.652,5" target="_blank"><button><i class="fa fa-wind"></i> Windy</button></a>
+            <a href="https://zoom.earth/maps/satellite/#view=56.527,61.277,6.81z" target="_blank"><button><i class="fa fa-satellite"></i> ZoomEarth</button></a>
+            <a href="https://meteoinfo.ru/archive-pogoda/russia/sverdlovsk-area" target="_blank"><button><i class="fa fa-archive"></i> Архив</button></a>
+        </div>
+    </div>
+</body>
+</html>
