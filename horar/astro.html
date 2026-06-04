@@ -1,0 +1,973 @@
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Профессиональная натальная карта</title>
+<style>
+* { box-sizing: border-box; }
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background-color: #f4f6f7;
+color: #2c3e50;
+margin: 0;
+padding: 8px;
+line-height: 1.4;
+font-size: 14px;
+}
+.container {
+max-width: 1100px;
+margin: 0 auto;
+background: white;
+padding: 15px;
+border-radius: 8px;
+box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+h1 {
+color: #2c3e50;
+text-align: center;
+font-size: 1.3em;
+border-bottom: 2px solid #2c3e50;
+padding-bottom: 8px;
+margin: 10px 0 15px;
+}
+h2 {
+color: #2c3e50;
+text-align: center;
+font-size: 1.05em;
+margin: 20px 0 10px;
+}
+.controls {
+display: flex;
+flex-direction: column;
+gap: 10px;
+margin-bottom: 15px;
+padding: 12px;
+background: #ecf0f1;
+border-radius: 6px;
+border: 1px solid #dfe6e9;
+}
+.input-group {
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+label {
+font-weight: 600;
+font-size: 0.85em;
+color: #34495e;
+}
+input[type="text"], input[type="url"], textarea {
+padding: 8px;
+border: 1px solid #bdc3c7;
+border-radius: 4px;
+font-family: 'Consolas', 'Monaco', monospace;
+font-size: 0.8em;
+background: #fff;
+width: 100%;
+}
+textarea {
+min-height: 180px;
+resize: vertical;
+}
+.button-group {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+justify-content: center;
+margin-top: 8px;
+}
+button {
+padding: 8px 14px;
+background-color: #2c3e50;
+color: white;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+font-size: 0.85em;
+transition: background 0.2s;
+}
+button:hover { background-color: #34495e; }
+button.secondary { background-color: #7f8c8d; }
+button.secondary:hover { background-color: #95a5a6; }
+.status-msg {
+text-align: center;
+padding: 10px;
+margin: 10px 0;
+border-radius: 4px;
+font-weight: bold;
+display: none;
+}
+.status-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; display: block; }
+.status-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; display: block; }
+.image-container {
+text-align: center;
+margin: 15px 0;
+padding: 10px;
+background: #fff;
+border-radius: 8px;
+border: 1px solid #dfe6e9;
+}
+.image-container img {
+max-width: 100%;
+height: auto;
+border: 1px solid #bdc3c7;
+border-radius: 4px;
+}
+.table-wrapper {
+width: 100%;
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+margin-bottom: 15px;
+border: 1px solid #dfe6e9;
+border-radius: 6px;
+background: #fff;
+}
+.table-wrapper::-webkit-scrollbar { height: 8px; }
+.table-wrapper::-webkit-scrollbar-track { background: #ecf0f1; }
+.table-wrapper::-webkit-scrollbar-thumb { background: #2c3e50; border-radius: 4px; }
+table {
+border-collapse: collapse;
+font-size: 0.8em;
+min-width: 100%;
+white-space: nowrap;
+}
+th, td {
+border: 1px solid #dfe6e9;
+padding: 6px 10px;
+text-align: left;
+}
+th {
+background-color: #2c3e50;
+color: white;
+font-weight: 600;
+position: sticky;
+top: 0;
+z-index: 1;
+}
+tr:nth-child(even) { background-color: #f9fbfb; }
+.status-domicile { color: #2980b9; font-weight: bold; }
+.status-exaltation { color: #27ae60; font-weight: bold; }
+.status-fall { color: #c0392b; font-weight: bold; }
+.status-exile { color: #8e44ad; font-weight: bold; }
+.status-neutral { color: #7f8c8d; }
+.conflict-row { background-color: #fff5f5 !important; }
+.risk-row { background-color: #ffe6e6 !important; }
+.summary-row { background-color: #fff0e6 !important; }
+.zone-cell { white-space: normal !important; max-width: 300px; }
+.pairs-cell { white-space: normal !important; max-width: 400px; font-size: 0.9em; }
+@media (max-width: 600px) {
+body { padding: 4px; font-size: 13px; }
+.container { padding: 8px; }
+h1 { font-size: 1.1em; }
+h2 { font-size: 0.95em; }
+button { padding: 7px 10px; font-size: 0.8em; }
+textarea { min-height: 140px; font-size: 0.75em; }
+table { font-size: 0.75em; }
+th, td { padding: 4px 6px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Профессиональная натальная карта</h1>
+<div id="statusMessage" class="status-msg"></div>
+<div class="controls">
+<div class="input-group">
+<label for="personName">Имя персоны:</label>
+<input type="text" id="personName" placeholder="Например: Иван Иванов">
+</div>
+<div class="input-group">
+<label for="imageUrl">Ссылка на эталонное изображение карты:</label>
+<input type="url" id="imageUrl" placeholder="https://horoscopes.astro-seek.com/...">
+</div>
+<div class="input-group">
+<label for="astroData">Данные (вставьте текст или JSON):</label>
+<textarea id="astroData" placeholder="Sun in Aquarius 19°50’&#10;Mercury in Pisces 5°25’..."></textarea>
+</div>
+<div class="button-group">
+<input type="file" id="fileInput" accept=".json,.txt" style="display:none" onchange="handleFileUpload(this)">
+<button class="secondary" onclick="document.getElementById('fileInput').click()">Загрузить файл</button>
+<button onclick="parseAndRender()">Обновить / Рассчитать</button>
+<button class="secondary" onclick="saveToLocalStorage()">Сохранить в браузере</button>
+<button class="secondary" onclick="showSavedCharts()">Из браузера</button>
+<button class="secondary" onclick="exportToJSON()">Скачать JSON</button>
+<button class="secondary" onclick="copyForAI()">Копировать для AI</button>
+</div>
+</div>
+<div class="image-container" id="imageContainer" style="display:none;">
+<h2>Эталонное изображение карты</h2>
+<img id="referenceImage" src="" alt="Натальная карта" onerror="this.style.display='none'; document.getElementById('imgError').style.display='block';">
+<p id="imgError" style="display:none; color: #c0392b;">Не удалось загрузить изображение. Проверьте ссылку.</p>
+</div>
+<h2>Планеты и точки</h2>
+<div class="table-wrapper"><table id="planetsTable"><thead><tr><th>Объект</th><th>Знак</th><th>Градус</th><th>Дом</th><th>Ретро</th></tr></thead><tbody></tbody></table></div>
+<h2>Неподвижные звёзды (орбис до 1.5 градуса)</h2>
+<div class="table-wrapper"><table id="starsTable"><thead><tr><th>Звезда</th><th>Знак</th><th>Градус</th><th>Объект</th><th>Разница</th></tr></thead><tbody></tbody></table></div>
+<h2>Арабские точки (Парсы)</h2>
+<div class="table-wrapper">
+<table id="parsTable">
+<thead><tr><th>Парс</th><th>Знак</th><th>Градус</th><th>Дом</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<h2>Аспекты</h2>
+<div class="table-wrapper"><table id="aspectsTable"><thead><tr><th>Объект 1</th><th>Аспект</th><th>Объект 2</th><th>Орбис</th><th>Тип</th></tr></thead><tbody></tbody></table></div>
+<h2>Дома (Куспиды)</h2>
+<div class="table-wrapper"><table id="housesTable"><thead><tr><th>Дом</th><th>Куспид</th><th>Знак</th></tr></thead><tbody></tbody></table></div>
+<h2>Эссенциальные достоинства (Афетика)</h2>
+<div class="table-wrapper"><table id="dignitiesTable"><thead><tr><th>Статус</th><th>Планета</th><th>Градус</th><th>Знак</th><th>Управитель</th><th>Обитель</th><th>Экзальтация</th><th>Падение</th><th>Изгнание</th></tr></thead><tbody></tbody></table></div>
+<h2>Наличие внутренних психологических конфликтов</h2>
+<div class="table-wrapper">
+<table id="conflictsTable">
+<thead><tr><th>Планета 1</th><th>Аспект</th><th>Планета 2</th><th>Орбис</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<h2>Риск онкологии (строго аспект 45 градусов, орбис до 1 градуса)</h2>
+<div class="table-wrapper">
+<table id="riskTable">
+<thead><tr><th>Объект 1</th><th>Позиция 1</th><th>Зона 1</th><th>Аспект</th><th>Орбис</th><th>Объект 2</th><th>Позиция 2</th><th>Зона 2</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<h2>Сводка зон риска онкологии</h2>
+<div class="table-wrapper">
+<table id="riskSummaryTable">
+<thead><tr><th>Зона возможного поражения</th><th>Кол-во упоминаний</th><th>Между какими объектами</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+<script>
+const SIGNS_EN = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const SIGN_RU = {Aries:'Овен',Taurus:'Телец',Gemini:'Близнецы',Cancer:'Рак',Leo:'Лев',Virgo:'Дева',Libra:'Весы',Scorpio:'Скорпион',Sagittarius:'Стрелец',Capricorn:'Козерог',Aquarius:'Водолей',Pisces:'Рыбы'};
+const SIGN_RU_TO_EN = {'овен':'aries','телец':'taurus','близнецы':'gemini','рак':'cancer','лев':'leo','дева':'virgo','весы':'libra','скорпион':'scorpio','стрелец':'sagittarius','козерог':'capricorn','водолей':'aquarius','рыбы':'pisces'};
+const SIGN_DEG = {Aries:0,Taurus:30,Gemini:60,Cancer:90,Leo:120,Virgo:150,Libra:180,Scorpio:210,Sagittarius:240,Capricorn:270,Aquarius:300,Pisces:330};
+const SIGN_RULERS_RU = {
+'Aries': 'Марс', 'Taurus': 'Венера', 'Gemini': 'Меркурий', 'Cancer': 'Луна',
+'Leo': 'Солнце', 'Virgo': 'Меркурий', 'Libra': 'Венера', 'Scorpio': 'Марс',
+'Sagittarius': 'Юпитер', 'Capricorn': 'Сатурн', 'Aquarius': 'Сатурн', 'Pisces': 'Юпитер'
+};
+const DOMICILE_DAY = {'Sun':'Leo','Moon':'Cancer','Mercury':'Virgo','Venus':'Libra','Mars':'Aries','Jupiter':'Sagittarius','Saturn':'Capricorn','Uranus':'Aquarius','Neptune':'Pisces','Pluto':'Scorpio'};
+const DOMICILE_NIGHT = {'Sun':'Leo','Moon':'Cancer','Mercury':'Gemini','Venus':'Taurus','Mars':'Scorpio','Jupiter':'Pisces','Saturn':'Aquarius','Uranus':'Aquarius','Neptune':'Pisces','Pluto':'Aries'};
+const EXALTATION = {'Sun':{sign:'Aries',deg:19},'Moon':{sign:'Taurus',deg:3},'Mercury':{sign:'Virgo',deg:15},'Venus':{sign:'Pisces',deg:27},'Mars':{sign:'Capricorn',deg:28},'Jupiter':{sign:'Cancer',deg:15},'Saturn':{sign:'Libra',deg:20},'Uranus':{sign:'Scorpio',deg:0},'Neptune':{sign:'Aquarius',deg:0},'Pluto':{sign:'Leo',deg:0},'North Node':{sign:'Gemini',deg:3},'Node':{sign:'Gemini',deg:3}};
+const FALL = {'Sun':'Libra','Moon':'Scorpio','Mercury':'Pisces','Venus':'Virgo','Mars':'Cancer','Jupiter':'Capricorn','Saturn':'Aries','Uranus':'Taurus','Neptune':'Leo','Pluto':'Aquarius'};
+const EXILE = {'Sun':'Aquarius','Moon':'Capricorn','Mercury':'Sagittarius','Venus':'Aries','Mars':'Libra','Jupiter':'Gemini','Saturn':'Cancer','Uranus':'Leo','Neptune':'Virgo','Pluto':'Taurus'};
+
+const MEDICAL_ZONES_RU = {
+'Овен': 'голова, глаза, лицо, мозг',
+'Телец': 'уши, рот, шея, голосовые связки, зубы',
+'Близнецы': 'плечи, руки, кисти, пальцы, дыхательная система',
+'Рак': 'грудь, живот',
+'Лев': 'сердце, верхняя часть спины, позвоночник, желчный пузырь',
+'Дева': 'печень, поджелудочная железа, селезенка, верхний отдел кишечника',
+'Весы': 'почки, яичники',
+'Скорпион': 'толстая кишка, прямая кишка, анус, гениталии, мочевой пузырь, потовые железы, выделительная система',
+'Стрелец': 'бедра, седалищный нерв, двигательные нервы, мышечная система',
+'Козерог': 'колени, связки, сухожилия, ногти, кожа, костная система',
+'Водолей': 'икры, лодыжки, вены, кровеносная система',
+'Рыбы': 'стопы, лимфатическая система, иммунная система'
+};
+
+const FIXED_STARS = [
+{name:'Альдебаран', lon: 69.08}, {name:'Капелла', lon: 81.25}, {name:'Ригель', lon: 76.82},
+{name:'Бетельгейзе', lon: 88.17}, {name:'Поллукс', lon: 113.48}, {name:'Процион', lon: 115.87},
+{name:'Сириус', lon: 104.18}, {name:'Канопус', lon: 104.95}, {name:'Регул', lon: 149.98},
+{name:'Денебола', lon: 171.87}, {name:'Спика', lon: 203.90}, {name:'Арктур', lon: 204.10},
+{name:'Альфека', lon: 192.09}, {name:'Антарес', lon: 249.18}, {name:'Лямбда Скорпиона', lon: 264.19},
+{name:'Акрибикс', lon: 217.38}, {name:'Графиас', lon: 219.08}, {name:'Шаула', lon: 264.48},
+{name:'Каус Аустралис', lon: 245.18}, {name:'Нунки', lon: 252.08}, {name:'Вега', lon: 285.18},
+{name:'Альтаир', lon: 275.98}, {name:'Денеб', lon: 305.56}, {name:'Фомальгаут', lon: 333.89},
+{name:'Ахернар', lon: 345.18}, {name:'Альгениб', lon: 359.18}, {name:'Мирах', lon: 350.08},
+{name:'Альферац', lon: 14.18}, {name:'Хамаль', lon: 7.78}, {name:'Менкар', lon: 51.58},
+{name:'Электра', lon: 59.08}, {name:'Альнилам', lon: 82.38}, {name:'Минтака', lon: 82.23},
+{name:'Альнитак', lon: 84.38}, {name:'Полярная', lon: 83.48}, {name:'Маркаб', lon: 323.18},
+{name:'Шеат', lon: 313.18}, {name:'Лесат', lon: 260.56}, {name:'Альриша', lon: 29.58},
+{name:'Зета Рыб', lon: 23.18}, {name:'Омега Тельца', lon: 72.58}, {name:'Дзета Тельца', lon: 55.88},
+{name:'Эпсилон Близнецов', lon: 76.08}, {name:'Дельта Близнецов', lon: 94.58}, {name:'Гамма Льва', lon: 145.58},
+{name:'Дельта Льва', lon: 133.58}, {name:'Бета Девы', lon: 199.58}, {name:'Гамма Девы', lon: 209.58},
+{name:'Дельта Скорпиона', lon: 239.58}, {name:'Эпсилон Скорпиона', lon: 247.58}, {name:'Кастор', lon: 111.38},
+{name:'Альциона', lon: 72.28}, {name:'Майя', lon: 71.88}, {name:'Атлас', lon: 73.18},
+{name:'Тайгета', lon: 72.48}, {name:'Меропа', lon: 72.68}, {name:'Астеропа', lon: 72.98},
+{name:'Саиф', lon: 255.18}, {name:'Шератан', lon: 11.58}, {name:'Мезартим', lon: 11.88},
+{name:'Мира', lon: 43.58}, {name:'Беллатрикс', lon: 90.18}, {name:'Эльнат', lon: 94.88},
+{name:'Мейсса', lon: 96.58}, {name:'Хекла', lon: 95.88}, {name:'Пропус', lon: 97.18},
+{name:'Васат', lon: 104.58}, {name:'Мекбуда', lon: 115.18}, {name:'Расалас', lon: 148.58},
+{name:'Альгиеба', lon: 149.28}, {name:'Зосма', lon: 168.58}, {name:'Завиява', lon: 173.58},
+{name:'Виндемиатрикс', lon: 199.58}, {name:'Сирма', lon: 201.58}, {name:'Унук аль Хайя', lon: 229.58},
+{name:'Кор Серпенс', lon: 233.58}, {name:'Эта Змеи', lon: 235.58}, {name:'Сабик', lon: 263.58},
+{name:'Везен', lon: 266.58}, {name:'Альнилия', lon: 267.58}, {name:'Каус Бореалис', lon: 268.58},
+{name:'Каус Медиа', lon: 269.58}, {name:'Альбальдах', lon: 270.58}, {name:'Полима', lon: 271.58},
+{name:'Альшайн', lon: 303.58}, {name:'Тарф', lon: 118.58}, {name:'Аселлус Бореалис', lon: 123.58},
+{name:'Аселлус Аустралис', lon: 124.58}, {name:'Альфард', lon: 142.58}, {name:'Мирах', lon: 350.08},
+{name:'Денеб Аледж', lon: 318.58}, {name:'Эниф', lon: 337.58}, {name:'Альгенди', lon: 315.58}
+];
+let currentChart = { name:'', asc:0, mc:0, imageUrl:'', planets:[], houses:[], aspects:[], stars:[], pars:[], dignities:[], risks:[], riskSummary:[] };
+
+function cleanKeys(obj) {
+if (obj === null || typeof obj !== 'object') return obj;
+if (Array.isArray(obj)) return obj.map(cleanKeys);
+const newObj = {};
+for (const key in obj) {
+if (Object.prototype.hasOwnProperty.call(obj, key)) {
+const cleanKey = key.trim();
+newObj[cleanKey] = cleanKeys(obj[key]);
+}
+}
+return newObj;
+}
+
+function getSignInfo(signStr) {
+if (!signStr) return { en: 'Unknown', ru: 'Неизвестно', deg: 0 };
+const lower = signStr.toLowerCase().trim();
+const enSign = SIGN_RU_TO_EN[lower] || signStr;
+const capSign = enSign.charAt(0).toUpperCase() + enSign.slice(1).toLowerCase();
+return {
+en: SIGNS_EN.includes(capSign) ? capSign : enSign,
+ru: SIGN_RU[capSign] || signStr,
+deg: SIGN_DEG[capSign] || 0
+};
+}
+
+function showStatus(msg, isError = false) {
+const el = document.getElementById('statusMessage');
+el.textContent = msg;
+el.className = 'status-msg ' + (isError ? 'status-error' : 'status-success');
+}
+
+function handleFileUpload(input) {
+const file = input.files[0];
+if (!file) return;
+const reader = new FileReader();
+reader.onload = function(e) {
+document.getElementById('astroData').value = e.target.result;
+parseAndRender();
+};
+reader.readAsText(file);
+input.value = '';
+}
+
+function inferMissingPlanets() {
+const hasMoon = currentChart.planets.some(p => p.name.toLowerCase() === 'moon');
+if (!hasMoon) {
+const moonAspect = currentChart.aspects.find(a => 
+(a.p1.toLowerCase() === 'moon' || a.p2.toLowerCase() === 'moon') && 
+a.aspect.toLowerCase() === 'conjunction' && 
+a.type.toLowerCase() === 'applying'
+);
+if (moonAspect) {
+const sun = currentChart.planets.find(p => p.name.toLowerCase() === 'sun');
+if (sun) {
+const orb = moonAspect.orbDeg + (moonAspect.orbMin / 60);
+let moonAbsDeg;
+if (moonAspect.p2.toLowerCase() === 'moon') {
+moonAbsDeg = (sun.absDeg - orb + 360) % 360;
+} else {
+moonAbsDeg = (sun.absDeg + orb) % 360;
+}
+const signIdx = Math.floor(moonAbsDeg / 30);
+const signEn = SIGNS_EN[signIdx];
+const signRu = SIGN_RU[signEn] || signEn;
+const deg = Math.floor(moonAbsDeg % 30);
+const min = Math.round((moonAbsDeg % 1) * 60);
+currentChart.planets.push({
+name: 'Moon',
+sign: signEn,
+signRu: signRu,
+degree: deg,
+minute: min,
+absDeg: moonAbsDeg,
+house: null,
+retro: ''
+});
+}
+}
+}
+}
+
+function parseAndRender() {
+try {
+let text = document.getElementById('astroData').value.trim();
+const nameInput = document.getElementById('personName').value.trim();
+const urlInput = document.getElementById('imageUrl').value.trim();
+currentChart = { name: nameInput || 'Безымянная', asc:0, mc:0, imageUrl: urlInput, planets:[], houses:[], aspects:[], stars:[], pars:[], dignities:[], risks:[], riskSummary:[] };
+if (!text) {
+showStatus('Поле данных пустое. Вставьте текст или загрузите файл.', true);
+return;
+}
+text = text.replace(/’|‘|`/g, "'").replace(/"|"/g, '"').replace(/\u200B|\u200C|\u200D/g, '');
+if (text.startsWith('{') || text.startsWith('[')) {
+const rawJson = JSON.parse(text);
+const json = cleanKeys(rawJson);
+loadFromJSON(json);
+showStatus('Успешно загружено из JSON: ' + currentChart.planets.length + ' планет, ' + currentChart.houses.length + ' домов, ' + currentChart.aspects.length + ' аспектов.');
+} else {
+parseText(text);
+showStatus('Успешно распознано: ' + currentChart.planets.length + ' планет, ' + currentChart.houses.length + ' домов, ' + currentChart.aspects.length + ' аспектов.');
+}
+inferMissingPlanets();
+document.getElementById('personName').value = currentChart.name;
+document.getElementById('imageUrl').value = currentChart.imageUrl;
+generatePars();
+generateDignities();
+generateStars();
+generateRisks();
+generateRiskSummary();
+renderTables();
+renderImage();
+} catch (e) {
+console.error(e);
+showStatus('Ошибка обработки данных: ' + e.message, true);
+}
+}
+
+function parseText(text) {
+const lines = text.split('\n');
+const planetNames = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','North Node','Node','Lilith','Chiron','Fortune','Vertex','Ceres','Pallas','Juno','Vesta','Spirit','Eros','Wealth','Death'];
+lines.forEach(line => {
+line = line.trim();
+if (!line) return;
+let matchedPlanet = false;
+for (let pName of planetNames) {
+const regex = new RegExp(
+'^\\s*' + pName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +
+'\\s+in\\s+([A-Za-zА-Яа-я]+)\\s+(\\d{1,2})[°º](\\d{1,2})[^\\d]*(?:,\\s*(?:Retrograde|R))?(?:.*?(\\d{1,2})(?:st|nd|rd|th)?\\s*House)?',
+'i'
+);
+const match = line.match(regex);
+if (match) {
+const signInfo = getSignInfo(match[1]);
+let deg = parseInt(match[2]);
+let min = parseInt(match[3]);
+let isRetro = (line.toLowerCase().includes('retrograde') || /,\s*R\b/i.test(line)) ? 'R' : '';
+let house = match[4] ? parseInt(match[4]) : null;
+if (house !== null && (house < 1 || house > 12)) house = null;
+if (!currentChart.planets.find(p => p.name === pName)) {
+currentChart.planets.push({
+name: pName, sign: signInfo.en, signRu: signInfo.ru,
+degree: deg, minute: min, absDeg: signInfo.deg + deg + (min / 60),
+house: house, retro: isRetro
+});
+}
+matchedPlanet = true;
+break;
+}
+}
+if (matchedPlanet) return;
+const hMatch = line.match(/(\d{1,2})(?:st|nd|rd|th)?\s*House\s+in\s+([A-Za-zА-Яа-я]+)\s+(\d{1,2})[°º](\d{1,2})[^\d]*/i);
+if (hMatch) {
+let num = parseInt(hMatch[1]);
+const signInfo = getSignInfo(hMatch[2]);
+let deg = parseInt(hMatch[3]);
+let min = parseInt(hMatch[4]);
+let absDeg = signInfo.deg + deg + (min / 60);
+if (!currentChart.houses.find(h => h.num === num)) {
+currentChart.houses.push({ num, sign: signInfo.en, signRu: signInfo.ru, degree: deg, minute: min, absDeg });
+if (num === 1) currentChart.asc = absDeg;
+if (num === 10) currentChart.mc = absDeg;
+}
+return;
+}
+const aspectNames = ['Square','Conjunction','Sextile','Trine','Opposition','Semi-Sextile','Quintile','Octile','Tri-Octile','Bi-Quintile','Quincunx','Semi-Square'];
+for (let asp of aspectNames) {
+const aspRegex = new RegExp(
+'^\\s*(.+?)\\s+' + asp + '\\s+(.+?)\\s*\\(Orb:\\s*(\\d{1,2})[°º](\\d{1,2})[^0-9]*,\\s*(Applying|Separating)\\)',
+'i'
+);
+const aspMatch = line.match(aspRegex);
+if (aspMatch) {
+currentChart.aspects.push({
+p1: aspMatch[1].trim(), aspect: asp, p2: aspMatch[2].trim(),
+orbDeg: parseInt(aspMatch[3]), orbMin: parseInt(aspMatch[4]), type: aspMatch[5].trim()
+});
+return;
+}
+}
+});
+}
+
+function loadFromJSON(json) {
+currentChart.name = json.name || json.Person || json.title || currentChart.name;
+currentChart.imageUrl = json.imageUrl || json.image || json.url || currentChart.imageUrl;
+currentChart.asc = json.asc || 0;
+currentChart.mc = json.mc || 0;
+const pArray = json.planets || json.Planets || json.objects || [];
+pArray.forEach(p => {
+let name = (p.name || p.planet || p.object || 'Unknown').trim().replace(/^(st|nd|rd|th)\s*house\s*/i, '');
+if (!name || name === 'Unknown') return;
+const signInfo = getSignInfo(p.sign || p.zodiac || '');
+let deg = parseInt(p.degree) || 0;
+let min = parseInt(p.minute) || 0;
+let house = p.house !== undefined && p.house !== null ? parseInt(p.house) : null;
+if (house !== null && (house < 1 || house > 12)) house = null;
+currentChart.planets.push({
+name, sign: signInfo.en, signRu: signInfo.ru, degree: deg, minute: min,
+absDeg: parseFloat(p.absDeg) || (signInfo.deg + deg + (min / 60)),
+house: house,
+retro: (p.retro || p.retrograde || '').toString().trim()
+});
+});
+const hArray = json.houses || json.Houses || [];
+const seen = new Set();
+hArray.forEach(h => {
+let num = parseInt(h.num || h.house || h.cusp);
+if (seen.has(num)) return;
+seen.add(num);
+const signInfo = getSignInfo(h.sign || h.zodiac || '');
+let deg = parseInt(h.degree) || 0;
+let min = parseInt(h.minute) || 0;
+let absDeg = parseFloat(h.absDeg) || (signInfo.deg + deg + (min / 60));
+currentChart.houses.push({ num, sign: signInfo.en, signRu: signInfo.ru, degree: deg, minute: min, absDeg });
+if (num === 1) currentChart.asc = absDeg;
+if (num === 10) currentChart.mc = absDeg;
+});
+const aArray = json.aspects || json.Aspects || [];
+aArray.forEach(a => {
+currentChart.aspects.push({
+p1: (a.p1 || a.planet1 || '').trim(), aspect: (a.aspect || a.type || '').trim(),
+p2: (a.p2 || a.planet2 || '').trim(), orbDeg: parseInt(a.orbDeg || a.orb || 0),
+orbMin: parseInt(a.orbMin || 0), type: (a.type || a.mode || '').trim()
+});
+});
+}
+
+function generatePars() {
+currentChart.pars = [];
+const sun = currentChart.planets.find(x => x.name.toLowerCase() === 'sun');
+const isDay = sun && sun.house !== null && sun.house >= 7;
+const asc = currentChart.asc;
+if (asc === 0) return;
+const getPlanetDeg = (name) => {
+const p = currentChart.planets.find(x => x.name.toLowerCase() === name.toLowerCase());
+return p ? p.absDeg : null;
+};
+const calc = (p1Name, p2Name) => {
+const p1 = getPlanetDeg(p1Name);
+const p2 = getPlanetDeg(p2Name);
+if (p1 === null || p2 === null) return null;
+let deg = isDay ? (asc + p1 - p2) : (asc + p2 - p1);
+deg = ((deg % 360) + 360) % 360;
+return deg;
+};
+const getHouseForDeg = (deg) => {
+if (!currentChart.houses || currentChart.houses.length === 0) return null;
+for (let i = 0; i < 12; i++) {
+let h = currentChart.houses[i];
+let nextH = currentChart.houses[(i + 1) % 12];
+let start = h.absDeg;
+let end = nextH.absDeg;
+if (end < start) end += 360;
+let d = deg;
+if (d < start) d += 360;
+if (d >= start && d < end) return h.num;
+}
+return null;
+};
+const parsList = [
+{ name: 'Парс Фортуны', p1: 'Moon', p2: 'Sun' },
+{ name: 'Парс Духа', p1: 'Sun', p2: 'Moon' },
+{ name: 'Парс Эроса', p1: 'Venus', p2: 'Sun' },
+{ name: 'Парс Необходимости', p1: 'Saturn', p2: 'Mars' },
+{ name: 'Парс Мужества', p1: 'Mars', p2: 'Sun' },
+{ name: 'Парс Победы', p1: 'Jupiter', p2: 'Mars' },
+{ name: 'Парс Богатства', p1: 'Jupiter', p2: 'Sun' },
+{ name: 'Парс Долгов', p1: 'Saturn', p2: 'Sun' },
+{ name: 'Парс Наследства', p1: 'Saturn', p2: 'Jupiter' },
+{ name: 'Парс Торговли', p1: 'Mercury', p2: 'Sun' },
+{ name: 'Парс Отца', p1: 'Sun', p2: 'Saturn' },
+{ name: 'Парс Матери', p1: 'Venus', p2: 'Moon' },
+{ name: 'Парс Брака', p1: 'Venus', p2: 'Sun' },
+{ name: 'Парс Детей', p1: 'Jupiter', p2: 'Saturn' },
+{ name: 'Парс Путешествий', p1: 'Mercury', p2: 'Moon' },
+{ name: 'Парс Славы', p1: 'Jupiter', p2: 'Sun' },
+{ name: 'Парс Веры', p1: 'Moon', p2: 'Mercury' },
+{ name: 'Парс Науки', p1: 'Mercury', p2: 'Sun' },
+{ name: 'Парс Тайн', p1: 'Moon', p2: 'Saturn' },
+{ name: 'Парс Работы', p1: 'Mars', p2: 'Sun' },
+{ name: 'Парс Сельского хозяйства', p1: 'Sun', p2: 'Mars' },
+{ name: 'Парс Искусства', p1: 'Venus', p2: 'Moon' },
+{ name: 'Парс Судебных процессов', p1: 'Saturn', p2: 'Jupiter' },
+{ name: 'Парс Болезней', p1: 'Mars', p2: 'Saturn' },
+{ name: 'Парс Хирургии', p1: 'Mars', p2: 'Saturn' },
+{ name: 'Парс Врачей', p1: 'Sun', p2: 'Saturn' },
+{ name: 'Парс Хронических болезней', p1: 'Saturn', p2: 'Moon' },
+{ name: 'Парс Острых болезней', p1: 'Mars', p2: 'Sun' },
+{ name: 'Парс Несчастья', p1: 'Saturn', p2: 'Mars' },
+{ name: 'Парс Насилия', p1: 'Mars', p2: 'Saturn' },
+{ name: 'Парс Тюрьмы', p1: 'Saturn', p2: 'Mars' },
+{ name: 'Парс Врагов', p1: 'Saturn', p2: 'Mars' },
+{ name: 'Парс Предательств', p1: 'Saturn', p2: 'Mars' },
+{ name: 'Парс Опасностей', p1: 'Mars', p2: 'Saturn' },
+{ name: 'Парс Смерти', p1: 'Saturn', p2: 'Mars' },
+{ name: 'Парс Долгой жизни', p1: 'Jupiter', p2: 'Saturn' },
+{ name: 'Парс Короткой жизни', p1: 'Saturn', p2: 'Mars' },
+{ name: 'Парс Травм', p1: 'Mars', p2: 'Sun' },
+{ name: 'Парс Психических заболеваний', p1: 'Moon', p2: 'Saturn' },
+{ name: 'Парс Выздоровления', p1: 'Sun', p2: 'Mars' }
+];
+parsList.forEach(p => {
+const deg = calc(p.p1, p.p2);
+if (deg !== null) {
+const totalMin = Math.round((deg % 1) * 60);
+const relativeDegree = Math.floor(deg % 30);
+const signIdx = Math.floor(deg / 30);
+const signEn = SIGNS_EN[signIdx];
+const signRu = SIGN_RU[signEn] || signEn;
+const house = getHouseForDeg(deg);
+currentChart.pars.push({
+name: p.name,
+sign: signRu,
+degree: relativeDegree,
+minute: totalMin,
+house: house,
+absDeg: deg
+});
+}
+});
+}
+
+function generateDignities() {
+currentChart.dignities = [];
+const mainPlanets = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto'];
+currentChart.planets.forEach(p => {
+if (!mainPlanets.includes(p.name)) return;
+let sign = p.sign;
+let ruler = '—';
+if (SIGN_RULERS_RU[sign]) {
+ruler = SIGN_RULERS_RU[sign];
+}
+let domicile = '—';
+if (DOMICILE_DAY[p.name] === sign || DOMICILE_NIGHT[p.name] === sign) {
+let domSign = DOMICILE_DAY[p.name] === sign ? DOMICILE_DAY[p.name] : DOMICILE_NIGHT[p.name];
+domicile = SIGN_RU[domSign] || domSign;
+}
+let exalt = '—';
+if (EXALTATION[p.name] && EXALTATION[p.name].sign === sign) {
+exalt = (SIGN_RU[EXALTATION[p.name].sign] || EXALTATION[p.name].sign) + ' ' + EXALTATION[p.name].deg + '°';
+}
+let fall = '—';
+if (FALL[p.name] === sign) {
+fall = SIGN_RU[FALL[p.name]] || FALL[p.name];
+}
+let exile = '—';
+if (EXILE[p.name] === sign) {
+exile = SIGN_RU[EXILE[p.name]] || EXILE[p.name];
+}
+let status = 'Нейтрально', statusClass = 'status-neutral';
+if (domicile !== '—') { status = 'Обитель'; statusClass = 'status-domicile'; }
+else if (exalt !== '—') { status = 'Экзальтация'; statusClass = 'status-exaltation'; }
+else if (fall !== '—') { status = 'Падение'; statusClass = 'status-fall'; }
+else if (exile !== '—') { status = 'Изгнание'; statusClass = 'status-exile'; }
+currentChart.dignities.push({
+status, statusClass,
+planet: p.name,
+degree: p.degree + '°' + p.minute + "'",
+sign: p.signRu,
+ruler: ruler,
+domicile, exaltation: exalt, fall, exile
+});
+});
+}
+
+function generateStars() {
+currentChart.stars = [];
+FIXED_STARS.forEach(star => {
+let closest = null, minDiff = Infinity;
+currentChart.planets.forEach(p => {
+let diff = Math.abs(p.absDeg - star.lon);
+if (diff > 180) diff = 360 - diff;
+if (diff <= 1.5 && diff < minDiff) {
+minDiff = diff;
+closest = p;
+}
+});
+if (closest) {
+let starSign = SIGNS_EN[Math.floor(star.lon / 30)];
+currentChart.stars.push({
+star: star.name,
+starSign: SIGN_RU[starSign] || starSign,
+starDeg: Math.floor(star.lon % 30) + '°',
+object: closest.name,
+diff: minDiff.toFixed(2) + '°'
+});
+}
+});
+}
+
+function generateRisks() {
+currentChart.risks = [];
+const riskParsNames = [
+'Парс Фортуны', 'Парс Болезней', 'Парс Хирургии',
+'Парс Острых болезней', 'Парс Хронических болезней',
+'Парс Несчастья', 'Парс Опасностей', 'Парс Смерти', 'Парс Короткой жизни'
+];
+const targetCusps = [1, 4, 6, 7, 8, 10, 12];
+const riskObjects = [];
+currentChart.planets.forEach(p => {
+riskObjects.push({ name: p.name, absDeg: p.absDeg, type: 'Planet', signRu: p.signRu, degree: p.degree, minute: p.minute });
+});
+currentChart.pars.forEach(p => {
+if (riskParsNames.includes(p.name)) {
+riskObjects.push({ name: p.name, absDeg: p.absDeg, type: 'Pars', signRu: p.sign, degree: p.degree, minute: p.minute });
+}
+});
+currentChart.houses.forEach(h => {
+if (targetCusps.includes(h.num)) {
+riskObjects.push({ name: h.num + ' дом', absDeg: h.absDeg, type: 'Cusp', signRu: h.signRu, degree: h.degree, minute: h.minute });
+}
+});
+for (let i = 0; i < riskObjects.length; i++) {
+for (let j = i + 1; j < riskObjects.length; j++) {
+const obj1 = riskObjects[i];
+const obj2 = riskObjects[j];
+if (obj1.type === 'Pars' && obj2.type === 'Pars') continue;
+if (obj1.type === 'Cusp' && obj2.type === 'Cusp') continue;
+if ((obj1.type === 'Pars' && obj2.type === 'Cusp') || (obj1.type === 'Cusp' && obj2.type === 'Pars')) continue;
+let diff = Math.abs(obj1.absDeg - obj2.absDeg);
+if (diff > 180) diff = 360 - diff;
+const orbDeg = Math.abs(diff - 45);
+if (orbDeg <= 1.0) {
+const orbDegrees = Math.floor(orbDeg);
+const orbMinutes = Math.round((orbDeg - orbDegrees) * 60);
+const orbStr = orbDegrees + '°' + orbMinutes + "'";
+let zone1 = '—', zone2 = '—';
+let pos1 = '', pos2 = '';
+
+let sign1 = obj1.signRu;
+let sign2 = obj2.signRu;
+
+zone1 = MEDICAL_ZONES_RU[sign1] || 'Не определена';
+zone2 = MEDICAL_ZONES_RU[sign2] || 'Не определена';
+
+if (obj1.type === 'Planet') {
+pos1 = obj1.signRu + ' ' + obj1.degree + '°' + obj1.minute + "'";
+} else if (obj1.type === 'Pars') {
+pos1 = obj1.signRu + ' ' + obj1.degree + '°' + obj1.minute + "'";
+} else {
+pos1 = 'Куспид ' + obj1.name + ' (' + obj1.signRu + ' ' + obj1.degree + '°' + obj1.minute + "')";
+}
+
+if (obj2.type === 'Planet') {
+pos2 = obj2.signRu + ' ' + obj2.degree + '°' + obj2.minute + "'";
+} else if (obj2.type === 'Pars') {
+pos2 = obj2.signRu + ' ' + obj2.degree + '°' + obj2.minute + "'";
+} else {
+pos2 = 'Куспид ' + obj2.name + ' (' + obj2.signRu + ' ' + obj2.degree + '°' + obj2.minute + "')";
+}
+
+currentChart.risks.push({
+obj1: obj1.name, pos1: pos1, zone1: zone1,
+aspect: '45° (Полуквадрат)', orb: orbStr,
+obj2: obj2.name, pos2: pos2, zone2: zone2
+});
+}
+}
+}
+}
+
+function generateRiskSummary() {
+currentChart.riskSummary = [];
+const zoneMap = {};
+currentChart.risks.forEach(r => {
+if (r.zone1 && r.zone1 !== '—' && r.zone1 !== 'Не определена') {
+if (!zoneMap[r.zone1]) zoneMap[r.zone1] = { count: 0, pairs: [] };
+zoneMap[r.zone1].count++;
+zoneMap[r.zone1].pairs.push(r.obj1 + ' <-> ' + r.obj2);
+}
+if (r.zone2 && r.zone2 !== '—' && r.zone2 !== 'Не определена') {
+if (!zoneMap[r.zone2]) zoneMap[r.zone2] = { count: 0, pairs: [] };
+zoneMap[r.zone2].count++;
+zoneMap[r.zone2].pairs.push(r.obj1 + ' <-> ' + r.obj2);
+}
+});
+for (let zone in zoneMap) {
+currentChart.riskSummary.push({
+zone: zone,
+count: zoneMap[zone].count,
+pairs: [...new Set(zoneMap[zone].pairs)].join(', ')
+});
+}
+currentChart.riskSummary.sort((a, b) => b.count - a.count);
+}
+
+function renderTables() {
+try {
+const fill = (id, data, cols) => {
+const tbody = document.querySelector('#' + id + ' tbody');
+if (!tbody) return;
+tbody.innerHTML = '';
+if (!data || data.length === 0) {
+tbody.innerHTML = '<tr><td colspan="' + cols.length + '" style="text-align:center; padding: 15px;">Нет данных</td></tr>';
+return;
+}
+data.forEach(row => {
+let tr = tbody.insertRow();
+cols.forEach(col => {
+let td = tr.insertCell();
+let val = row[col];
+if (val === undefined || val === null || val === '' || (typeof val === 'number' && Number.isNaN(val))) {
+td.textContent = '—';
+} else {
+td.textContent = String(val);
+}
+if (row.statusClass && col === 'status') td.className = row.statusClass;
+});
+});
+};
+fill('planetsTable', currentChart.planets.map(p => ({'Объект': p.name + (p.retro ? ' (R)' : ''), 'Знак': p.signRu, 'Градус': p.degree + '°' + p.minute + "'", 'Дом': p.house, 'Ретро': p.retro})), ['Объект', 'Знак', 'Градус', 'Дом', 'Ретро']);
+fill('starsTable', currentChart.stars.map(s => ({'Звезда': s.star, 'Знак': s.starSign, 'Градус': s.starDeg, 'Объект': s.object, 'Разница': s.diff})), ['Звезда', 'Знак', 'Градус', 'Объект', 'Разница']);
+fill('parsTable', currentChart.pars.map(p => ({'Парс': p.name, 'Знак': p.sign, 'Градус': p.degree + '°' + p.minute + "'", 'Дом': p.house})), ['Парс', 'Знак', 'Градус', 'Дом']);
+fill('aspectsTable', currentChart.aspects.map(a => ({'Объект 1': a.p1, 'Аспект': a.aspect, 'Объект 2': a.p2, 'Орбис': a.orbDeg + '°' + a.orbMin + "'", 'Тип': a.type === 'Applying' ? 'Апплицирующий' : 'Сепарирующий'})), ['Объект 1', 'Аспект', 'Объект 2', 'Орбис', 'Тип']);
+fill('housesTable', currentChart.houses.map(h => ({'Дом': h.num, 'Куспид': h.degree + '°' + h.minute + "'", 'Знак': h.signRu})), ['Дом', 'Куспид', 'Знак']);
+fill('dignitiesTable', currentChart.dignities, ['status', 'planet', 'degree', 'sign', 'ruler', 'domicile', 'exaltation', 'fall', 'exile']);
+
+const cBody = document.querySelector('#conflictsTable tbody');
+cBody.innerHTML = '';
+const conflictPlanets = ['mars', 'saturn', 'uranus', 'pluto'];
+const conflictAspects = ['opposition', 'square', 'conjunction'];
+const aspectNamesRu = {'opposition': 'Оппозиция (180°)', 'square': 'Квадратура (90°)', 'conjunction': 'Соединение (0°)'};
+const conflicts = currentChart.aspects.filter(a => {
+return conflictPlanets.includes(a.p1.toLowerCase()) &&
+conflictPlanets.includes(a.p2.toLowerCase()) &&
+conflictAspects.includes(a.aspect.toLowerCase());
+});
+let tableRows = [];
+conflicts.forEach(c => {
+let aspName = aspectNamesRu[c.aspect.toLowerCase()] || c.aspect;
+let typeRu = c.type === 'Applying' ? 'Апплицирующий' : 'Сепарирующий';
+tableRows.push('<td>' + c.p1 + '</td><td>' + aspName + '</td><td>' + c.p2 + '</td><td>' + c.orbDeg + '°' + c.orbMin + "' (" + typeRu + ')</td>');
+});
+
+const sun = currentChart.planets.find(p => p.name.toLowerCase() === 'sun');
+const moon = currentChart.planets.find(p => p.name.toLowerCase() === 'moon');
+if (sun && moon) {
+let distToSun = (sun.absDeg - moon.absDeg + 360) % 360;
+if (distToSun >= 0 && distToSun <= 13) {
+const sunPos = sun.signRu + ' ' + sun.degree + '°' + sun.minute + "'";
+const moonPos = moon.signRu + ' ' + moon.degree + '°' + moon.minute + "'";
+tableRows.push('<td style="color: #c0392b; font-weight: bold;">ГЕКАТА!</td><td>Сходящееся соединение</td><td>Луна (' + moonPos + ') догоняет Солнце (' + sunPos + ')</td><td>' + distToSun.toFixed(2) + '° до точного аспекта</td>');
+}
+}
+
+if (tableRows.length === 0) {
+cBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 15px;">Конфликтных аспектов (0°, 90°, 180°) между Марсом, Сатурном, Ураном и Плутоном не найдено, и Луна не в последнем лунном дне.</td></tr>';
+} else {
+tableRows.forEach(rowHtml => {
+let row = cBody.insertRow();
+row.className = 'conflict-row';
+row.innerHTML = rowHtml;
+});
+}
+
+const rBody = document.querySelector('#riskTable tbody');
+rBody.innerHTML = '';
+if (currentChart.risks.length === 0) {
+rBody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 15px;">Аспектов 45° с орбисом до 1°00\' между планетами, целевыми парсами и куспидами домов не найдено</td></tr>';
+} else {
+currentChart.risks.forEach(r => {
+let row = rBody.insertRow();
+row.className = 'risk-row';
+row.innerHTML = '<td>' + r.obj1 + '</td><td>' + r.pos1 + '</td><td>' + r.zone1 + '</td><td>' + r.aspect + '</td><td>' + r.orb + '</td><td>' + r.obj2 + '</td><td>' + r.pos2 + '</td><td>' + r.zone2 + '</td>';
+});
+}
+
+const sBody = document.querySelector('#riskSummaryTable tbody');
+sBody.innerHTML = '';
+if (currentChart.riskSummary.length === 0) {
+sBody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 15px;">Нет данных для сводки зон поражения</td></tr>';
+} else {
+currentChart.riskSummary.forEach(s => {
+let row = sBody.insertRow();
+row.className = 'summary-row';
+row.innerHTML = '<td class="zone-cell">' + s.zone + '</td><td style="text-align:center; font-weight:bold;">' + s.count + '</td><td class="pairs-cell">' + s.pairs + '</td>';
+});
+}
+} catch (e) {
+console.error('Render error:', e);
+showStatus('Ошибка отрисовки таблиц: ' + e.message, true);
+}
+}
+
+function renderImage() {
+const container = document.getElementById('imageContainer');
+const img = document.getElementById('referenceImage');
+const err = document.getElementById('imgError');
+const url = currentChart.imageUrl || document.getElementById('imageUrl').value.trim();
+currentChart.imageUrl = url;
+if (url) {
+img.src = url;
+img.style.display = 'block';
+err.style.display = 'none';
+container.style.display = 'block';
+} else {
+container.style.display = 'none';
+}
+}
+
+function saveToLocalStorage() {
+if (!currentChart.name) { alert('Введите имя персоны.'); return; }
+let charts = JSON.parse(localStorage.getItem('natalCharts') || '{}');
+charts[currentChart.name] = currentChart;
+localStorage.setItem('natalCharts', JSON.stringify(charts));
+alert('Карта "' + currentChart.name + '" сохранена в браузере.');
+}
+
+function showSavedCharts() {
+let charts = JSON.parse(localStorage.getItem('natalCharts') || '{}');
+let names = Object.keys(charts);
+if (!names.length) { alert('Нет сохранённых карт.'); return; }
+let name = prompt('Доступные карты:\n' + names.join('\n') + '\nВведите имя для загрузки:');
+if (name && charts[name]) {
+currentChart = charts[name];
+document.getElementById('astroData').value = JSON.stringify(currentChart, null, 2);
+parseAndRender();
+} else if (name) {
+alert('Карта не найдена.');
+}
+}
+
+function exportToJSON() {
+if (!currentChart.name) { alert('Введите имя персоны.'); return; }
+try {
+const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentChart, null, 2));
+const a = document.createElement('a');
+a.setAttribute("href", dataStr);
+a.setAttribute("download", currentChart.name.replace(/\s+/g,'_') + "_natal.json");
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+alert('Файл ' + currentChart.name + '_natal.json успешно скачан!');
+} catch (e) {
+alert('Ошибка при скачивании: ' + e.message);
+}
+}
+
+function copyForAI() {
+let text = 'Карта: ' + currentChart.name + '\nПланеты:\n';
+currentChart.planets.forEach(p => text += '- ' + p.name + ': ' + p.signRu + ' ' + p.degree + '°' + p.minute + "', Дом " + (p.house !== null ? p.house : 'Неизвестно') + ' ' + p.retro + '\n');
+if (currentChart.pars.length > 0) {
+text += '\nАрабские точки (Парсы):\n';
+currentChart.pars.forEach(p => text += '- ' + p.name + ': ' + p.sign + ' ' + p.degree + '°' + p.minute + "', Дом " + (p.house !== null ? p.house : 'Неизвестно') + '\n');
+}
+text += '\nДома:\n';
+if (currentChart.houses.length > 0) {
+currentChart.houses.forEach(h => text += '- ' + h.num + ' дом: ' + h.signRu + ' ' + h.degree + '°' + h.minute + "'\n");
+} else {
+text += '- Нет данных (неизвестное время рождения)\n';
+}
+text += '\nАспекты:\n';
+currentChart.aspects.forEach(a => text += '- ' + a.p1 + ' ' + a.aspect + ' ' + a.p2 + ' (' + a.orbDeg + '°' + a.orbMin + "', " + a.type + ')\n');
+text += '\nДостоинства:\n';
+currentChart.dignities.forEach(d => text += '- ' + d.planet + ' в ' + d.sign + ': ' + d.status + ' (Управитель: ' + d.ruler + ')\n');
+if (currentChart.riskSummary.length > 0) {
+text += '\nСводка зон риска онкологии (строго 45°, орбис до 1°00\'):\n';
+currentChart.riskSummary.forEach(s => text += '- ' + s.zone + ': ' + s.count + ' упоминаний (' + s.pairs + ')\n');
+}
+navigator.clipboard.writeText(text).then(() => alert('Данные скопированы в буфер обмена.'));
+}
+</script>
+</body>
+</html>
