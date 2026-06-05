@@ -1,639 +1,1032 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профессиональная натальная карта</title>
-    <script src="astronomy.js"></script>
-    <style>
-        * { box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; margin: 0; padding: 10px; background-color: #f5f5f5; color: #2c3e50; font-size: 14px; }
-        .container { max-width: 750px; margin: 0 auto; }
-        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        h1, h2, h3 { text-align: center; color: #2c3e50; margin-top: 0; }
-        h1 { font-size: 1.3em; }
-        h2 { font-size: 1.1em; margin-bottom: 10px; }
-        h3 { font-size: 0.95em; color: #555; text-align: left; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-bottom: 8px; }
-        .input-group { display: flex; flex-direction: column; gap: 10px; }
-        input[type="text"], input[type="number"], input[type="datetime-local"], select, button { padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; width: 100%; color: #2c3e50; }
-        button { background-color: #2c3e50; color: white; border: none; cursor: pointer; font-weight: bold; transition: background 0.2s; }
-        button:hover { background-color: #34495e; }
-        button:disabled { background-color: #95a5a6; cursor: not-allowed; }
-        .canvas-wrapper { display: flex; justify-content: center; margin: 10px 0; overflow-x: auto; }
-        canvas { max-width: 100%; height: auto; border: 1px solid #ddd; background: #fff; }
-        table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
-        th, td { border: 1px solid #ddd; padding: 6px; text-align: center; color: #2c3e50; }
-        th { background-color: #2c3e50; color: white; }
-        .error-box { background: #ffebee; color: #c62828; padding: 12px; border-radius: 4px; margin-bottom: 15px; display: none; border-left: 5px solid #c62828; font-size: 13px; font-weight: bold; }
-        .table-wrapper { overflow-x: auto; }
-        .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; background: #f9f9f9; padding: 10px; border-radius: 4px; border: 1px solid #eee; margin-bottom: 10px; }
-        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; color: #2c3e50; }
-        .checkbox-item input { width: auto; margin: 0; }
-        .separator-row td { background-color: #f0f0f0; font-weight: bold; color: #555; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        @media (max-width: 500px) {
-            body { padding: 5px; font-size: 13px; }
-            .card { padding: 10px; }
-            table { font-size: 11px; }
-            th, td { padding: 4px; }
-            .checkbox-grid { grid-template-columns: 1fr 1fr; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Натальная астрологическая карта</title>
+<script src="astronomy.js"></script>
+<style>
+* { box-sizing: border-box; }
+body { font-family: Arial, sans-serif; margin: 0; padding: 10px; background-color: #f5f5f5; color: #2c3e50; font-size: 14px; }
+.container { max-width: 600px; margin: 0 auto; }
+.card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
+h1, h2, h3 { text-align: center; color: #2c3e50; margin-top: 0; }
+h1 { font-size: 1.3em; }
+h2 { font-size: 1.1em; }
+.input-group { display: flex; flex-direction: column; gap: 10px; }
+input, select, button { padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; width: 100%; color: #2c3e50; }
+button { background-color: #2c3e50; color: white; border: none; cursor: pointer; font-weight: bold; }
+button:active { background-color: #34495e; }
+.canvas-wrapper { display: flex; justify-content: center; margin: 10px 0; overflow-x: auto; }
+canvas { max-width: 100%; height: auto; border: 1px solid #ddd; background: #fff; }
+table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
+th, td { border: 1px solid #ddd; padding: 6px; text-align: center; color: #2c3e50; }
+th { background-color: #2c3e50; color: white; }
+.error-box { background: #ffebee; color: #c62828; padding: 12px; border-radius: 4px; margin-bottom: 15px; display: none; border-left: 5px solid #c62828; font-size: 13px; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 10px 0; font-size: 12px; color: #2c3e50; }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-color { width: 20px; height: 3px; }
+.table-wrapper { overflow-x: auto; }
+.checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; font-size: 13px; }
+.checkbox-group label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.checkbox-group input { width: auto; }
+.unknown-time-label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #2c3e50; font-weight: normal; margin-top: -5px; }
+.unknown-time-label input { width: auto; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <h1>Натальная карта</h1>
-            <div id="error-display" class="error-box"></div>
-            <div class="input-group">
-                <input type="datetime-local" id="datetime" required>
-                <label class="checkbox-item" style="margin-top: -5px; font-size: 14px;">
-                    <input type="checkbox" id="unknown-time" onchange="toggleUnknownTime()">                    Время рождения неизвестно
-                </label>
-                
-                <input type="text" id="location" placeholder="Город (например: Yekaterinburg, Stockholm)" required>
-                <input type="number" id="timezone" value="5" step="0.5" placeholder="Часовой пояс (GMT+)" required>
-                <small style="color: #666; margin-top: -5px;">* Для других городов измените часовой пояс вручную</small>
-                
-                <select id="house-system">
-                    <option value="koch">Koch</option>
-                    <option value="placidus">Placidus</option>
-                    <option value="regiomontanus">Regiomontanus</option>
-                    <option value="porphyry">Porphyry</option>
-                    <option value="equal_asc">Equal (от ASC)</option>
-                    <option value="equal_mc">Equal (от MC)</option>
-                    <option value="whole_asc">Whole Sign (от ASC)</option>
-                    <option value="whole_sun">Whole Sign (от знака Солнца)</option>
-                    <option value="whole_aries">Whole Sign (от 0° Овна)</option>
-                </select>
+<div class="container">
+<div class="card">
+<h1>Натальная карта</h1>
+<div id="error-display" class="error-box"></div>
+<div class="input-group">
+<input type="text" id="chart-name" placeholder="Имя или название карты (необязательно)">
+<input type="datetime-local" id="datetime" required>
+<label class="unknown-time-label">
+<input type="checkbox" id="unknown-time"> Неизвестно время рождения
+</label>
+<input type="text" id="location" placeholder="Город (например: Yekaterinburg)" required>
+<input type="number" id="timezone" value="5" step="0.5" placeholder="GMT+" required>
+<select id="house-system">
+<option value="placidus">Placidus</option>
+<option value="regiomontanus">Regiomontanus</option>
+</select>
+<input type="file" id="json-file-input" accept=".json" style="display: none;" onchange="loadFromJSON(this)">
+<button type="button" onclick="document.getElementById('json-file-input').click()">Загрузить из JSON</button>
+<button onclick="calculateChart()">Рассчитать</button>
+</div>
+</div>
+<div class="card" id="chart-card" style="display: none;">
+<h2>Натальная карта</h2>
+<div class="canvas-wrapper">
+<canvas id="natal-chart" width="400" height="400"></canvas>
+</div>
+<div class="legend">
+<div class="legend-item"><div class="legend-color" style="background: blue;"></div>Соединение</div>
+<div class="legend-item"><div class="legend-color" style="background: green;"></div>Секстиль</div>
+<div class="legend-item"><div class="legend-color" style="background: green;"></div>Трин</div>
+<div class="legend-item"><div class="legend-color" style="background: red;"></div>Квадрат</div>
+<div class="legend-item"><div class="legend-color" style="background: red;"></div>Оппозиция</div>
+</div>
+</div>
+<div class="card" id="ruler-card" style="display: none;">
+<h2>Тридцатиградусная шкала</h2>
+<div class="canvas-wrapper">
+<canvas id="degree-ruler" width="400" height="100"></canvas>
+</div>
+</div>
+<div class="card" id="data-card" style="display: none;">
+<h2>Планеты</h2>
+<div class="table-wrapper">
+<table id="planets-table">
+<thead><tr><th>Планета</th><th>Знак</th><th>Градус</th><th>Дом</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<h2>Дома</h2>
+<div class="table-wrapper">
+<table id="houses-table">
+<thead><tr><th>Дом</th><th>Куспид</th><th>Знак</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<h2>Эссенциальные достоинства</h2>
+<div class="table-wrapper">
+<table id="dignities-table">
+<thead><tr><th>Планета</th><th>Знак</th><th>Достоинство</th><th>Диспозитор</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<h2>Аспекты</h2>
+<div class="table-wrapper">
+<table id="aspects-table">
+<thead><tr><th>Планета 1</th><th>Аспект</th><th>Планета 2</th><th>Орбис</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<h2>Минорные аспекты</h2>
+<div class="checkbox-group">
+<label><input type="checkbox" id="minor-quintile" checked> Квинтиль (72°)</label>
+<label><input type="checkbox" id="minor-semisextile" checked> Полусекстиль (30°)</label>
+<label><input type="checkbox" id="minor-semisquare" checked> Полуквадрат (45°)</label>
+<label><input type="checkbox" id="minor-sesquiquadrate" checked> Сескиквадрат (135°)</label>
+<label><input type="checkbox" id="minor-quincunx" checked> Квиконс (150°)</label>
+<label><input type="checkbox" id="minor-biquintile" checked> Биквинтиль (144°)</label>
+</div>
+<button onclick="calculateMinorAspects()" style="margin-bottom: 15px;">Рассчитать минорные аспекты</button>
+<div class="table-wrapper">
+<table id="minor-aspects-table">
+<thead><tr><th>Планета 1</th><th>Аспект</th><th>Планета 2</th><th>Орбис</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<h2>Неподвижные звёзды</h2>
+<button onclick="calculateFixedStars()" style="margin-bottom: 15px;">Рассчитать неподвижные звёзды</button>
+<div class="table-wrapper">
+<table id="fixed-stars-table">
+<thead><tr><th>Планета</th><th>Звезда</th><th>Знак</th><th>Градус</th><th>Орбис</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<h2>Арабские точки (Парсы)</h2>
+<button onclick="calculateArabicParts()" style="margin-bottom: 15px;">Рассчитать арабские точки</button>
+<div class="table-wrapper">
+<table id="arabic-parts-table">
+<thead><tr><th>Название</th><th>Планета 1</th><th>Планета 2</th><th>Знак</th><th>Градус</th><th>Дом</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<div class="input-group" style="margin-top: 15px;">
+<button onclick="copyData()">Копировать данные для AI</button>
+<button onclick="saveToJSON()">Сохранить расчёты в JSON</button>
+</div>
+</div>
+</div>
+<script>
+const signs = ["Овен", "Телец", "Близнецы", "Рак", "Лев", "Дева", "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы"];
+const signSymbols = ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"];
+const planetNames = ["Sun", "Moon", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto", "SSB", "EMB"];
+const planetSymbols = ["☉", "☽", "☿", "♀", "🜨", "♂", "♃", "♄", "♅", "♆", "♇", "⊙", "⊗"];
+const planetRussian = ["Солнце", "Луна", "Меркурий", "Венера", "Земля", "Марс", "Юпитер", "Сатурн", "Уран", "Нептун", "Плутон", "Барицентр СС", "Барицентр З-Л"];
+const aspectDefs = [
+{ name: "Соединение", symbol: "☌", angle: 0, orb: 8, color: "blue" },
+{ name: "Секстиль", symbol: "⚹", angle: 60, orb: 6, color: "green" },
+{ name: "Квадрат", symbol: "□", angle: 90, orb: 8, color: "red" },
+{ name: "Трин", symbol: "△", angle: 120, orb: 8, color: "green" },
+{ name: "Оппозиция", symbol: "☍", angle: 180, orb: 8, color: "red" }
+];
+const signRulers = { 0: "Mars", 1: "Venus", 2: "Mercury", 3: "Moon", 4: "Sun", 5: "Mercury", 6: "Venus", 7: "Mars", 8: "Jupiter", 9: "Saturn", 10: "Saturn", 11: "Jupiter" };
+const dignityData = {
+"Sun": { ruler: 4, exalt: 0, detriment: 10, fall: 6 },
+"Moon": { ruler: 3, exalt: 1, detriment: 9, fall: 7 },
+"Mercury": { ruler: [2, 5], exalt: 5, detriment: [8, 11], fall: 11 },
+"Venus": { ruler: [1, 6], exalt: 11, detriment: [7, 0], fall: 5 },
+"Mars": { ruler: [0, 7], exalt: 9, detriment: [6, 1], fall: 3 },
+"Jupiter": { ruler: [8, 11], exalt: 3, detriment: [2, 5], fall: 9 },
+"Saturn": { ruler: [9, 10], exalt: 6, detriment: [3, 4], fall: 0 }
+};
+let currentData = null;
 
-                <select id="ruler-system">
-                    <option value="classical">Управители: Классические (7 планет)</option>
-                    <option value="modern">Управители: Современные (10 планет)</option>
-                    <option value="sect">Управители: Секторные (День/Ночь)</option>
-                </select>
+function showError(msg) {
+const errBox = document.getElementById('error-display');
+errBox.innerHTML = msg;
+errBox.style.display = 'block';
+}
+function getSign(longitude) { return signs[Math.floor(longitude / 30)]; }
+function getSignSymbol(longitude) { return signSymbols[Math.floor(longitude / 30)]; }
+function getDegree(longitude) { return (longitude % 30).toFixed(2); }
+function getSignIndex(longitude) { return Math.floor(longitude / 30); }
+function getDignity(planetName, signIndex) {
+const d = dignityData[planetName];
+if (!d) return "Перегрин";
+const isRuler = Array.isArray(d.ruler) ? d.ruler.includes(signIndex) : d.ruler === signIndex;
+const isExalt = d.exalt === signIndex;
+const isDetriment = Array.isArray(d.detriment) ? d.detriment.includes(signIndex) : d.detriment === signIndex;
+const isFall = d.fall === signIndex;
+if (isRuler) return "Обитель";
+if (isExalt) return "Экзальтация";
+if (isDetriment) return "Изгнание";
+if (isFall) return "Падение";
+return "Перегрин";
+}
+function getDispositor(signIndex) {
+const rulerKey = signRulers[signIndex];
+const rulerIndex = planetNames.indexOf(rulerKey);
+return rulerIndex !== -1 ? planetRussian[rulerIndex] : "Неизвестно";
+}
+function getCanvasAngle(longitude, ascLon) {
+let diff = (longitude - ascLon + 360) % 360;
+return Math.PI - (diff * Math.PI / 180);
+}
+function getRegiomontanusHouses(lat, ramc, eps) {
+const houses = [];
+const offsets = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
+const cuspOrder = [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+const epsRad = eps * Math.PI / 180;
+const latRad = lat * Math.PI / 180;
+for (let i = 0; i < 12; i++) {
+const ra = (ramc + offsets[i]) * Math.PI / 180;
+let pole = 0;
+if (i === 0 || i === 6) { pole = 0; }
+else { pole = Math.atan(Math.tan(latRad) * Math.sin(offsets[i] * Math.PI / 180)); }
+const sinRa = Math.sin(ra);
+const cosRa = Math.cos(ra);
+const denom = cosRa * Math.cos(epsRad) - Math.tan(pole) * Math.sin(epsRad);
+let L = Math.atan2(sinRa, denom) * 180 / Math.PI;
+if (L < 0) L += 360;
+houses.push({ cusp: cuspOrder[i], longitude: L });
+}
+houses.sort((a, b) => a.cusp - b.cusp);
+return houses;
+}
+function getPlacidusHouses(lat, ramc, eps) {
+const houses = [];
+const latRad = lat * Math.PI / 180;
+const epsRad = eps * Math.PI / 180;
+const ramcRad = ramc * Math.PI / 180;
+let mc = Math.atan2(Math.sin(ramcRad), Math.cos(ramcRad) * Math.cos(epsRad)) * 180 / Math.PI;
+if (mc < 0) mc += 360;
+houses.push({ cusp: 10, longitude: mc });
+houses.push({ cusp: 4, longitude: (mc + 180) % 360 });
+let asc = Math.atan2(Math.cos(ramcRad), -Math.sin(ramcRad) * Math.cos(epsRad) - Math.tan(latRad) * Math.sin(epsRad)) * 180 / Math.PI;
+if (asc < 0) asc += 360;
+houses.push({ cusp: 1, longitude: asc });
+houses.push({ cusp: 7, longitude: (asc + 180) % 360 });
+const cuspsToCalc = [11, 12, 2, 3];
+const offsets = [30, 60, 120, 150];
+for (let i = 0; i < 4; i++) {
+let cuspNum = cuspsToCalc[i];
+let targetRA = (ramc + offsets[i]) % 360;
+let ra = targetRA;
+for (let iter = 0; iter < 15; iter++) {
+let raRad = ra * Math.PI / 180;
+let num = Math.cos(raRad);
+let den = -Math.sin(raRad) * Math.cos(epsRad) - Math.tan(latRad) * Math.sin(epsRad);
+let lon = Math.atan2(num, den) * 180 / Math.PI;
+if (lon < 0) lon += 360;
+let lonRad = lon * Math.PI / 180;
+let newRa = Math.atan2(Math.sin(lonRad) * Math.cos(epsRad), Math.cos(lonRad)) * 180 / Math.PI;
+if (newRa < 0) newRa += 360;
+let diff = targetRA - newRa;
+if (diff > 180) diff -= 360;
+if (diff < -180) diff += 360;
+ra = (ra + diff) % 360;
+if (Math.abs(diff) < 0.0001) break;
+}
+let raRad = ra * Math.PI / 180;
+let num = Math.cos(raRad);
+let den = -Math.sin(raRad) * Math.cos(epsRad) - Math.tan(latRad) * Math.sin(epsRad);
+let lon = Math.atan2(num, den) * 180 / Math.PI;
+if (lon < 0) lon += 360;
+houses.push({ cusp: cuspNum, longitude: lon });
+}
+const cusp11 = houses.find(h => h.cusp === 11);
+const cusp12 = houses.find(h => h.cusp === 12);
+const cusp2 = houses.find(h => h.cusp === 2);
+const cusp3 = houses.find(h => h.cusp === 3);
+if (cusp11) houses.push({ cusp: 5, longitude: (cusp11.longitude + 180) % 360 });
+if (cusp12) houses.push({ cusp: 6, longitude: (cusp12.longitude + 180) % 360 });
+if (cusp2) houses.push({ cusp: 8, longitude: (cusp2.longitude + 180) % 360 });
+if (cusp3) houses.push({ cusp: 9, longitude: (cusp3.longitude + 180) % 360 });
+houses.sort((a, b) => a.cusp - b.cusp);
+return houses;
+}
+async function calculateChart() {
+document.getElementById('error-display').style.display = 'none';
+if (typeof Astronomy === 'undefined' || typeof Astronomy.GeoVector !== 'function') {
+showError("КРИТИЧЕСКАЯ ОШИБКА: Файл astronomy.js не загрузился.");
+return;
+}
+const datetimeStr = document.getElementById('datetime').value;
+const locationStr = document.getElementById('location').value;
+const timezone = parseFloat(document.getElementById('timezone').value);
+const unknownTime = document.getElementById('unknown-time').checked;
 
-                <h3>Дополнительные точки</h3>
-                <div class="checkbox-grid">
-                    <label class="checkbox-item"><input type="checkbox" id="inc-chiron" checked> Хирон</label>
-                    <label class="checkbox-item"><input type="checkbox" id="inc-ceres" checked> Церера</label>
-                    <label class="checkbox-item"><input type="checkbox" id="inc-pallas" checked> Паллада</label>
-                    <label class="checkbox-item"><input type="checkbox" id="inc-juno" checked> Юнона</label>
-                    <label class="checkbox-item"><input type="checkbox" id="inc-vesta" checked> Веста</label>
-                </div>
+if (!datetimeStr || !locationStr || isNaN(timezone)) {
+showError("Пожалуйста, заполните дату, время, часовой пояс и город.");
+return;
+}
+try {
+const [datePart, timePart] = datetimeStr.split('T');
+const [year, month, day] = datePart.split('-').map(Number);
+const [hour, minute] = timePart.split(':').map(Number);
+const jsDate = new Date(Date.UTC(year, month - 1, day, hour - timezone, minute, 0));
+const response = await fetch("https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(locationStr));
+const data = await response.json();
+if (data.length === 0) {
+showError("Город не найден. Попробуйте написать название на английском.");
+return;
+}
+const lat = parseFloat(data[0].lat);
+const lon = parseFloat(data[0].lon);
+const observer = new Astronomy.Observer(lat, lon, 0);
+const planets = [];
+for (let i = 0; i < planetNames.length; i++) {
+const body = planetNames[i];
+const gv = Astronomy.GeoVector(body, jsDate, true);
+const ecl = Astronomy.Ecliptic(gv);
+planets.push({
+name: body,
+russian: planetRussian[i],
+symbol: planetSymbols[i],
+longitude: ecl.elon,
+latitude: ecl.elat
+});
+}
 
-                <h3>Арабские точки (Парсы)</h3>
-                <div class="checkbox-grid">
-                    <label class="checkbox-item"><input type="checkbox" id="inc-fortune" checked> Парс Фортуны</label>
-                    <label class="checkbox-item"><input type="checkbox" id="inc-spirit" checked> Парс Духа</label>
-                    <label class="checkbox-item"><input type="checkbox" id="inc-eros"> Парс Эроса</label>
-                    <label class="checkbox-item"><input type="checkbox" id="inc-wealth"> Парс Богатства</label>
-                    <label class="checkbox-item"><input type="checkbox" id="inc-death"> Парс Смерти</label>
-                </div>
+let houses = [];
+let ascLon = 0;
 
-                <h3>Аспекты</h3>
-                <div class="checkbox-grid">
-                    <label class="checkbox-item" style="font-weight:bold; grid-column: 1/-1;">Мажорные:</label>
-                    <label class="checkbox-item"><input type="checkbox" id="asp-conj" checked> Соединение (0°)</label>
-                    <label class="checkbox-item"><input type="checkbox" id="asp-sex" checked> Секстиль (60°)</label>
-                    <label class="checkbox-item"><input type="checkbox" id="asp-squ" checked> Квадрат (90°)</label>
-                    <label class="checkbox-item"><input type="checkbox" id="asp-tri" checked> Трин (120°)</label>                    <label class="checkbox-item"><input type="checkbox" id="asp-opp" checked> Оппозиция (180°)</label>
-                    
-                    <label class="checkbox-item" style="font-weight:bold; grid-column: 1/-1; margin-top: 5px;">Минорные:</label>
-                    <label class="checkbox-item"><input type="checkbox" id="asp-semisex"> Полусекстиль (30°)</label>
-                    <label class="checkbox-item"><input type="checkbox" id="asp-semisqu"> Полуквадрат (45°)</label>
-                    <label class="checkbox-item"><input type="checkbox" id="asp-sesqui"> Сескваквадрат (135°)</label>
-                    <label class="checkbox-item"><input type="checkbox" id="asp-quin"> Квиконс (150°)</label>
-                    <label class="checkbox-item"><input type="checkbox" id="asp-quint"> Квинтиль (72°)</label>
-                    <label class="checkbox-item"><input type="checkbox" id="asp-biquint"> Биквинтиль (144°)</label>
-                </div>
+if (!unknownTime) {
+const gst = Astronomy.SiderealTime(jsDate);
+let ramc = (gst * 15 + lon) % 360;
+if (ramc < 0) ramc += 360;
+const eps = 23.4392911;
+const houseSystem = document.getElementById('house-system').value;
+if (houseSystem === 'placidus') {
+houses = getPlacidusHouses(lat, ramc, eps);
+} else {
+houses = getRegiomontanusHouses(lat, ramc, eps);
+}
+const ascHouse = houses.find(h => h.cusp === 1);
+ascLon = ascHouse ? ascHouse.longitude : 0;
+}
 
-                <button id="calc-btn" onclick="calculateChart()">Рассчитать</button>
-            </div>
-        </div>
+planets.forEach(p => {
+let relLon = p.longitude - ascLon;
+if (relLon < 0) relLon += 360;
+let relCusps = houses.map(h => {
+let rel = h.longitude - ascLon;
+if (rel < 0) rel += 360;
+return { cusp: h.cusp, rel: rel };
+}).sort((a, b) => a.rel - b.rel);
+p.house = unknownTime ? "-" : 12;
+if (!unknownTime) {
+for (let i = 0; i < 11; i++) {
+if (relLon >= relCusps[i].rel && relLon < relCusps[i+1].rel) {
+p.house = relCusps[i].cusp;
+break;
+}
+}
+}
+});
+const aspects = [];
+for (let i = 0; i < planets.length; i++) {
+for (let j = i + 1; j < planets.length; j++) {
+let diff = Math.abs(planets[i].longitude - planets[j].longitude);
+if (diff > 180) diff = 360 - diff;
+for (const asp of aspectDefs) {
+if (Math.abs(diff - asp.angle) <= asp.orb) {
+aspects.push({
+p1: i, p2: j,
+p1name: planets[i].name, p2name: planets[j].name,
+p1symbol: planets[i].symbol, p2symbol: planets[j].symbol,
+aspect: asp.name, aspectSymbol: asp.symbol,
+orb: Math.abs(diff - asp.angle).toFixed(2),
+color: asp.color
+});
+}
+}
+}
+}
+currentData = {
+name: document.getElementById('chart-name').value.trim(),
+datetime: datetimeStr, location: locationStr, timezone: timezone,
+unknownTime: unknownTime,
+lat: lat, lon: lon, planets: planets, houses: houses, aspects: aspects, ascLon: ascLon,
+houseSystem: document.getElementById('house-system').value
+};
+document.getElementById('chart-card').style.display = 'block';
+document.getElementById('ruler-card').style.display = 'block';
+document.getElementById('data-card').style.display = 'block';
+renderTables();
+drawChart();
+drawRuler();
+document.getElementById('chart-card').scrollIntoView({ behavior: 'smooth' });
+} catch (error) {
+console.error("Ошибка:", error);
+showError("Произошла ошибка: " + error.message);
+}
+}
+function renderTables() {
+if (!currentData) return;
+const pTable = document.querySelector('#planets-table tbody');
+if (pTable) {
+pTable.innerHTML = currentData.planets.map(p =>
+`<tr><td>${p.symbol} ${p.russian}</td><td>${getSignSymbol(p.longitude)} ${getSign(p.longitude)}</td><td>${getDegree(p.longitude)}°</td><td>${p.house}</td></tr>`
+).join('');
+}
+const hTable = document.querySelector('#houses-table tbody');
+if (hTable) {
+if (currentData.unknownTime || !currentData.houses || currentData.houses.length === 0) {
+hTable.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #7f8c8d; padding: 15px;">Время рождения неизвестно, дома не рассчитаны</td></tr>';
+} else {
+hTable.innerHTML = currentData.houses.map(h =>
+`<tr><td>${h.cusp}</td><td>${getSignSymbol(h.longitude)} ${getDegree(h.longitude)}°</td><td>${getSign(h.longitude)}</td></tr>`
+).join('');
+}
+}
+const dTable = document.querySelector('#dignities-table tbody');
+if (dTable) {
+dTable.innerHTML = currentData.planets.map(p => {
+const signIdx = getSignIndex(p.longitude);
+const dignity = getDignity(p.name, signIdx);
+const dispositor = getDispositor(signIdx);
+return `<tr><td>${p.symbol} ${p.russian}</td><td>${getSignSymbol(p.longitude)} ${getSign(p.longitude)}</td><td>${dignity}</td><td>${dispositor}</td></tr>`;
+}).join('');
+}
+const aTable = document.querySelector('#aspects-table tbody');
+if (aTable) {
+aTable.innerHTML = currentData.aspects.map(a =>
+`<tr><td>${a.p1symbol} ${a.p1name}</td><td style="color:${a.color}; font-weight:bold;">${a.aspectSymbol} ${a.aspect}</td><td>${a.p2symbol} ${a.p2name}</td><td>${a.orb}°</td></tr>`
+).join('');
+}
+if (currentData.minorAspects) {
+renderMinorAspectsTable(currentData.minorAspects);
+}
+if (currentData.fixedStars) {
+renderFixedStarsTable(currentData.fixedStars);
+}
+if (currentData.arabicParts) {
+renderArabicPartsTable(currentData.arabicParts);
+}
+}
+function drawChart() {
+if (!currentData) return;
+const canvas = document.getElementById('natal-chart');
+const ctx = canvas.getContext('2d');
+const centerX = canvas.width / 2;
+const centerY = canvas.height / 2;
+const ascLon = currentData.ascLon;
+const R_outer = 180;
+const R_inner = 140;
+const R_planet = 95;
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+ctx.font = 'bold 20px "Segoe UI Symbol", "Arial Unicode MS", Arial, sans-serif';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+for (let i = 0; i < 12; i++) {
+const startLon = i * 30;
+const endLon = (i + 1) * 30;
+const startAngle = getCanvasAngle(startLon, ascLon);
+const endAngle = getCanvasAngle(endLon, ascLon);
+ctx.beginPath();
+ctx.arc(centerX, centerY, R_outer, startAngle, endAngle, true);
+ctx.lineTo(centerX + Math.cos(endAngle) * R_inner, centerY + Math.sin(endAngle) * R_inner);
+ctx.arc(centerX, centerY, R_inner, endAngle, startAngle, false);
+ctx.closePath();
+ctx.fillStyle = '#f9f9f9';
+ctx.fill();
+ctx.strokeStyle = '#2c3e50';
+ctx.lineWidth = 1;
+ctx.stroke();
+const midLon = startLon + 15;
+const midAngle = getCanvasAngle(midLon, ascLon);
+ctx.fillStyle = '#2c3e50';
+ctx.fillText(signSymbols[i], centerX + Math.cos(midAngle) * 160, centerY + Math.sin(midAngle) * 160);
+}
 
-        <div class="card" id="chart-card" style="display: none;">
-            <h2>Натальная карта</h2>
-            <div class="canvas-wrapper">
-                <canvas id="natal-chart" width="450" height="450"></canvas>
-            </div>
-        </div>
+if (!currentData.unknownTime && currentData.houses && currentData.houses.length > 0) {
+ctx.font = 'bold 13px Arial, sans-serif';
+for (let i = 0; i < 12; i++) {
+const h = currentData.houses[i];
+if (!h) continue;
+const angle = getCanvasAngle(h.longitude, ascLon);
+const isAngular = (h.cusp === 1 || h.cusp === 4 || h.cusp === 7 || h.cusp === 10);
+ctx.beginPath();
+ctx.moveTo(centerX, centerY);
+ctx.lineTo(centerX + Math.cos(angle) * R_outer, centerY + Math.sin(angle) * R_outer);
+ctx.strokeStyle = isAngular ? '#000000' : '#888888';
+ctx.lineWidth = isAngular ? 2.5 : 1;
+ctx.stroke();
+if (h.cusp === 1) {
+ctx.fillStyle = '#000000';
+ctx.font = 'bold 14px Arial';
+ctx.fillText('ASC', centerX + Math.cos(angle) * 120, centerY + Math.sin(angle) * 120);
+} else if (h.cusp === 10) {
+ctx.fillStyle = '#000000';
+ctx.font = 'bold 14px Arial';
+ctx.fillText('MC', centerX + Math.cos(angle) * 120, centerY + Math.sin(angle) * 120);
+} else if (h.cusp === 7) {
+ctx.fillStyle = '#000000';
+ctx.font = 'bold 14px Arial';
+ctx.fillText('DESC', centerX + Math.cos(angle) * 120, centerY + Math.sin(angle) * 120);
+} else if (h.cusp === 4) {
+ctx.fillStyle = '#000000';
+ctx.font = 'bold 14px Arial';
+ctx.fillText('IC', centerX + Math.cos(angle) * 120, centerY + Math.sin(angle) * 120);
+} else {
+const nextH = currentData.houses[(i + 1) % 12];
+if (nextH) {
+let midLon = (h.longitude + (nextH.longitude < h.longitude ? nextH.longitude + 360 : nextH.longitude)) / 2;
+if (midLon >= 360) midLon -= 360;
+const midAngle = getCanvasAngle(midLon, ascLon);
+ctx.fillStyle = '#2c3e50';
+ctx.font = 'bold 12px Arial';
+ctx.fillText(h.cusp.toString(), centerX + Math.cos(midAngle) * 120, centerY + Math.sin(midAngle) * 120);
+}
+}
+}
+}
 
-        <div class="card" id="data-card" style="display: none;">
-            <h2>Планеты и точки</h2>
-            <div class="table-wrapper">
-                <table id="planets-table"><thead><tr><th>Объект</th><th>Знак</th><th>Градус</th><th>Дом</th></tr></thead><tbody></tbody></table>
-            </div>
+currentData.aspects.forEach(a => {
+const p1 = currentData.planets[a.p1];
+const p2 = currentData.planets[a.p2];
+const angle1 = getCanvasAngle(p1.longitude, ascLon);
+const angle2 = getCanvasAngle(p2.longitude, ascLon);
+ctx.save();
+ctx.globalAlpha = 0.5;
+ctx.strokeStyle = a.color;
+ctx.lineWidth = 1.5;
+ctx.beginPath();
+ctx.moveTo(centerX + Math.cos(angle1) * R_planet, centerY + Math.sin(angle1) * R_planet);
+ctx.lineTo(centerX + Math.cos(angle2) * R_planet, centerY + Math.sin(angle2) * R_planet);
+ctx.stroke();
+ctx.restore();
+});
+ctx.font = 'bold 20px "Segoe UI Symbol", "Arial Unicode MS", Arial, sans-serif';
+currentData.planets.forEach(p => {
+const angle = getCanvasAngle(p.longitude, ascLon);
+const x = centerX + Math.cos(angle) * R_planet;
+const y = centerY + Math.sin(angle) * R_planet;
+ctx.fillStyle = '#ffffff';
+ctx.beginPath();
+ctx.arc(x, y, 14, 0, 2 * Math.PI);
+ctx.fill();
+ctx.fillStyle = '#000000';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.fillText(p.symbol, x, y);
+});
+ctx.fillStyle = '#2c3e50';
+ctx.beginPath();
+ctx.arc(centerX, centerY, 3, 0, 2 * Math.PI);
+ctx.fill();
+}
+function drawRuler() {
+if (!currentData) return;
+const canvas = document.getElementById('degree-ruler');
+const ctx = canvas.getContext('2d');
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+ctx.fillStyle = '#f9f9f9';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+ctx.strokeStyle = '#2c3e50';
+ctx.beginPath(); ctx.moveTo(0, 60); ctx.lineTo(canvas.width, 60); ctx.stroke();
+for (let i = 0; i <= 30; i++) {
+const x = (i / 30) * canvas.width;
+ctx.beginPath(); ctx.moveTo(x, 50); ctx.lineTo(x, 70); ctx.stroke();
+if (i % 5 === 0) {
+ctx.fillStyle = '#2c3e50'; ctx.font = '12px Arial'; ctx.textAlign = 'center';
+ctx.fillText(i + '°', x, 40);
+}
+}
+currentData.planets.forEach(p => {
+const deg = p.longitude % 30;
+const x = (deg / 30) * canvas.width;
+ctx.fillStyle = '#2c3e50'; ctx.font = 'bold 20px Arial'; ctx.textAlign = 'center';
+ctx.fillText(p.symbol, x, 25);
+ctx.fillStyle = '#2c3e50';
+ctx.font = '11px Arial';
+ctx.fillText(getSignSymbol(p.longitude) + ' ' + deg.toFixed(1) + '°', x, 85);
+});
+}
+function copyData() {
+if (!currentData) { showError("Сначала рассчитайте карту"); return; }
+let text = `Натальная карта: ${currentData.name || 'Без названия'}
+Дата: ${currentData.datetime}
+Место: ${currentData.location} (GMT+${currentData.timezone})
+${currentData.unknownTime ? 'Время рождения: Неизвестно (дома не рассчитаны)\n' : ''}`;
+text += "Планеты:\n";
+currentData.planets.forEach(p => {
+text += `${p.symbol} ${p.russian}: ${getSign(p.longitude)} ${getDegree(p.longitude)}°, Дом ${p.house}\n`;
+});
+text += "\nЭссенциальные достоинства:\n";
+currentData.planets.forEach(p => {
+const signIdx = getSignIndex(p.longitude);
+text += `${p.symbol} ${p.russian} в ${getSign(p.longitude)}: ${getDignity(p.name, signIdx)} (Диспозитор: ${getDispositor(signIdx)})\n`;
+});
+if (!currentData.unknownTime && currentData.houses && currentData.houses.length > 0) {
+text += "\nДома:\n";
+currentData.houses.forEach(h => {
+text += `Дом ${h.cusp}: ${getSign(h.longitude)} ${getDegree(h.longitude)}°\n`;
+});
+}
+text += "\nАспекты:\n";
+currentData.aspects.forEach(a => {
+text += `${a.p1symbol} ${a.p1name} ${a.aspectSymbol} ${a.aspect} ${a.p2symbol} ${a.p2name} (орбис ${a.orb}°)\n`;
+});
+if (currentData.minorAspects && currentData.minorAspects.length > 0) {
+text += "\nМинорные аспекты:\n";
+currentData.minorAspects.forEach(a => {
+text += `${a.p1.symbol} ${a.p1.russian} ${a.aspectSymbol} ${a.aspect} ${a.p2.symbol} ${a.p2.russian} (орбис ${a.orb}°)\n`;
+});
+}
+if (currentData.fixedStars && currentData.fixedStars.length > 0) {
+text += "\nНеподвижные звёзды:\n";
+currentData.fixedStars.forEach(s => {
+text += `${s.planetSymbol} ${s.planetName} соединена со звездой ${s.starName} (${s.signSymbol} ${s.starDegree}°), орбис ${s.diff}°\n`;
+});
+}
+if (currentData.arabicParts && currentData.arabicParts.length > 0) {
+text += "\nАрабские точки:\n";
+currentData.arabicParts.forEach(p => {
+text += `${p.name}: ${p.signSymbol} ${p.degree}° (Дом ${p.house})\n`;
+});
+}
+text += "\nВопрос: [ВСТАВЬТЕ СЮДА ВАШ ЗАПРОС ДЛЯ AI]";
+navigator.clipboard.writeText(text).then(() => alert('Данные скопированы')).catch(() => alert('Не удалось скопировать'));
+}
+function saveToJSON() {
+if (!currentData) { 
+showError("Сначала рассчитайте карту"); 
+return; 
+}
+const nameInput = document.getElementById('chart-name').value.trim();
+const baseName = nameInput ? nameInput.replace(/[^a-zA-Z0-9а-яА-ЯёЁ_-]/g, '_') : 'natal_chart';
+const safeDate = currentData.datetime.replace(/[: ]/g, '_');
+const filename = baseName + '_' + safeDate + '.json';
 
-            <h2>Неподвижные звёзды (орбис ≤ 1.5°)</h2>
-            <div class="table-wrapper">
-                <table id="stars-table"><thead><tr><th>Звезда</th><th>Объект</th><th>Разница</th></tr></thead><tbody></tbody></table>
-            </div>
+const dataStr = JSON.stringify(currentData, null, 2);
+const blob = new Blob([dataStr], { type: "application/json" });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = filename;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+}
+function loadFromJSON(input) {
+const file = input.files[0];
+if (!file) return;
+const reader = new FileReader();
+reader.onload = function(e) {
+try {
+const data = JSON.parse(e.target.result);
+if (!data.datetime || !data.planets) {
+throw new Error("Неверный формат файла JSON");
+}
+currentData = data;
+document.getElementById('chart-name').value = data.name || '';
+document.getElementById('datetime').value = data.datetime;
+document.getElementById('location').value = data.location;
+document.getElementById('timezone').value = data.timezone;
+document.getElementById('unknown-time').checked = data.unknownTime || false;
+if (data.houseSystem) {
+document.getElementById('house-system').value = data.houseSystem;
+}
+document.getElementById('chart-card').style.display = 'block';
+document.getElementById('ruler-card').style.display = 'block';
+document.getElementById('data-card').style.display = 'block';
+document.getElementById('error-display').style.display = 'none';
+renderTables();
+drawChart();
+drawRuler();
+document.getElementById('chart-card').scrollIntoView({ behavior: 'smooth' });
+alert('Карта успешно загружена');
+} catch (error) {
+console.error("Ошибка загрузки:", error);
+showError("Ошибка при чтении файла JSON: " + error.message);
+}
+};
+reader.readAsText(file);
+input.value = '';
+}
 
-            <h2>Аспекты</h2>
-            <div class="table-wrapper">
-                <table id="aspects-table"><thead><tr><th>Объект 1</th><th>Аспект</th><th>Объект 2</th><th>Орбис</th></tr></thead><tbody></tbody></table>
-            </div>
+const minorAspectDefs = [
+    { id: "minor-semisextile", name: "Полусекстиль", symbol: "⚺", angle: 30, orb: 1.0, color: "#7f8c8d" },
+    { id: "minor-semisquare", name: "Полуквадрат", symbol: "∠", angle: 45, orb: 1.0, color: "#7f8c8d" },
+    { id: "minor-quintile", name: "Квинтиль", symbol: "⌼", angle: 72, orb: 1.0, color: "#7f8c8d" },
+    { id: "minor-sesquiquadrate", name: "Сескиквадрат", symbol: "⚼", angle: 135, orb: 1.0, color: "#7f8c8d" },
+    { id: "minor-quincunx", name: "Квиконс", symbol: "⚻", angle: 150, orb: 1.0, color: "#7f8c8d" },
+    { id: "minor-biquintile", name: "Биквинтиль", symbol: "⌽", angle: 144, orb: 1.0, color: "#7f8c8d" }
+];
 
-            <h2>Дома (Куспиды)</h2>
-            <div class="table-wrapper">
-                <table id="houses-table"><thead><tr><th>Дом</th><th>Куспид</th><th>Знак</th></tr></thead><tbody></tbody></table>
-            </div>
-
-            <h2>Эссенциальные достоинства</h2>
-            <div class="table-wrapper">
-                <table id="dignities-table"><thead><tr><th>Планета</th><th>Знак</th><th>Достоинство</th><th>Диспозитор</th></tr></thead><tbody></tbody></table>
-            </div>
-
-            <div class="input-group" style="margin-top: 15px;">
-                <button onclick="copyData()">📋 Копировать все данные для AI</button>            </div>
-        </div>
-    </div>
-
-    <script>
-        const signs = ["Овен", "Телец", "Близнецы", "Рак", "Лев", "Дева", "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы"];
-        const signSymbols = ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"];
-        
-        const mainBodies = [
-            { id: "Sun", name: "Солнце", symbol: "☉" }, { id: "Moon", name: "Луна", symbol: "☽" },
-            { id: "Mercury", name: "Меркурий", symbol: "☿" }, { id: "Venus", name: "Венера", symbol: "♀" },
-            { id: "Mars", name: "Марс", symbol: "♂" }, { id: "Jupiter", name: "Юпитер", symbol: "♃" },
-            { id: "Saturn", name: "Сатурн", symbol: "♄" }, { id: "Uranus", name: "Уран", symbol: "♅" },
-            { id: "Neptune", name: "Нептун", symbol: "♆" }, { id: "Pluto", name: "Плутон", symbol: "♇" },
-            { id: "North Node", name: "Сев. Узел", symbol: "☊" }, { id: "South Node", name: "Юж. Узел", symbol: "☋" },
-            { id: "Lilith", name: "Лилит", symbol: "⚸" }, { id: "Selena", name: "Селена", symbol: "Sln" }
-        ];
-
-        const fixedStars = [
-            { name: "Альдебаран", lon: 69.5 }, { name: "Алголь", lon: 26.0 }, { name: "Плеяды", lon: 59.5 },
-            { name: "Регул", lon: 150.0 }, { name: "Спика", lon: 204.0 }, { name: "Арктур", lon: 204.5 },
-            { name: "Антарес", lon: 250.0 }, { name: "Вега", lon: 104.0 }, { name: "Денеб", lon: 305.0 },
-            { name: "Фомальгаут", lon: 301.0 }, { name: "Сириус", lon: 104.5 }, { name: "Канопус", lon: 345.0 },
-            { name: "Процион", lon: 115.5 }, { name: "Хамаль", lon: 8.0 }, { name: "Альферац", lon: 14.5 }
-        ];
-
-        const allAspectDefs = [
-            { id: 'conj', name: "Соединение", symbol: "☌", angle: 0, orb: 8, color: "#2c3e50" },
-            { id: 'sex', name: "Секстиль", symbol: "⚹", angle: 60, orb: 6, color: "#2980b9" },
-            { id: 'squ', name: "Квадрат", symbol: "□", angle: 90, orb: 8, color: "#c0392b" },
-            { id: 'tri', name: "Трин", symbol: "△", angle: 120, orb: 8, color: "#27ae60" },
-            { id: 'opp', name: "Оппозиция", symbol: "☍", angle: 180, orb: 8, color: "#c0392b" },
-            { id: 'semisex', name: "Полусекстиль", symbol: "⚺", angle: 30, orb: 1, color: "#7f8c8d" },
-            { id: 'semisqu', name: "Полуквадрат", symbol: "∠", angle: 45, orb: 1, color: "#e67e22" },
-            { id: 'sesqui', name: "Сескваквадрат", symbol: "∟", angle: 135, orb: 1, color: "#e67e22" },
-            { id: 'quin', name: "Квиконс", symbol: "⚻", angle: 150, orb: 2, color: "#8e44ad" },
-            { id: 'quint', name: "Квинтиль", symbol: "⚼", angle: 72, orb: 1, color: "#9b59b6" },
-            { id: 'biquint', name: "Биквинтиль", symbol: "⚽", angle: 144, orb: 1, color: "#9b59b6" }
-        ];
-
-        let currentData = null;
-
-        function toggleUnknownTime() {
-            const isUnknown = document.getElementById('unknown-time').checked;
-            const timeInput = document.getElementById('datetime');
-            if (isUnknown) {
-                timeInput.disabled = true;
-                const datePart = timeInput.value.split('T')[0] || new Date().toISOString().split('T')[0];
-                timeInput.value = datePart + 'T12:00';
-                document.getElementById('house-system').value = 'whole_sun';            } else {
-                timeInput.disabled = false;
-            }
-        }
-
-        function getSign(longitude) { return signs[Math.floor(longitude / 30)]; }
-        function getSignSymbol(longitude) { return signSymbols[Math.floor(longitude / 30)]; }
-        function getDegree(longitude) { return (longitude % 30).toFixed(2); }
-        function getSignIndex(longitude) { return Math.floor(longitude / 30); }
-
-        function getRuler(signIndex, rulerSystem, isDay) {
-            if (rulerSystem === 'classical') {
-                return ["Mars", "Venus", "Mercury", "Moon", "Sun", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Saturn", "Jupiter"][signIndex];
-            } else if (rulerSystem === 'modern') {
-                return ["Mars", "Venus", "Mercury", "Moon", "Sun", "Mercury", "Venus", "Pluto", "Jupiter", "Saturn", "Uranus", "Neptune"][signIndex];
-            } else if (rulerSystem === 'sect') {
-                if (signIndex === 7) return isDay ? "Pluto" : "Mars"; 
-                if (signIndex === 10) return isDay ? "Uranus" : "Saturn"; 
-                if (signIndex === 11) return isDay ? "Jupiter" : "Neptune"; 
-                return ["Mars", "Venus", "Mercury", "Moon", "Sun", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Saturn", "Jupiter"][signIndex];
-            }
-            return "Unknown";
-        }
-
-        function getDignity(planetId, signIndex, rulerSystem, isDay) {
-            const ruler = getRuler(signIndex, rulerSystem, isDay);
-            if (ruler === planetId) return "Обитель";
-            const exaltations = { "Sun": 0, "Moon": 1, "Mercury": 5, "Venus": 11, "Mars": 9, "Jupiter": 3, "Saturn": 6 };
-            if (exaltations[planetId] === signIndex) return "Экзальтация";
-            const detriments = { "Sun": 10, "Moon": 9, "Mercury": [8, 11], "Venus": [7, 0], "Mars": [6, 1], "Jupiter": [2, 5], "Saturn": [3, 4], "Uranus": 4, "Neptune": 5, "Pluto": 1 };
-            if (detriments[planetId]) {
-                const isDet = Array.isArray(detriments[planetId]) ? detriments[planetId].includes(signIndex) : detriments[planetId] === signIndex;
-                if (isDet) return "Изгнание";
-            }
-            const falls = { "Sun": 6, "Moon": 7, "Mercury": 11, "Venus": 5, "Mars": 3, "Jupiter": 9, "Saturn": 0 };
-            if (falls[planetId] === signIndex) return "Падение";
-            return "Перегрин";
-        }
-
-        function getCanvasAngle(longitude, ascLon) {
-            let diff = (longitude - ascLon + 360) % 360;
-            return Math.PI - (diff * Math.PI / 180);
-        }
-
-        function getCusps(system, lat, ramc, eps, sunLon) {
-            const epsRad = eps * Math.PI / 180;
-            const latRad = lat * Math.PI / 180;
-            const ramcRad = ramc * Math.PI / 180;
-            const mc = Math.atan2(Math.sin(ramcRad), Math.cos(ramcRad) * Math.cos(epsRad)) * 180 / Math.PI;
-            const mcLon = (mc + 360) % 360;            const asc = Math.atan2(Math.cos(ramcRad), Math.sin(ramcRad) * Math.cos(epsRad) - Math.tan(latRad) * Math.sin(epsRad)) * 180 / Math.PI;
-            const ascLon = (asc + 360) % 360;
-
-            const cusps = new Array(12).fill(0);
-            cusps[0] = ascLon; cusps[3] = (mcLon + 180) % 360; cusps[6] = (ascLon + 180) % 360; cusps[9] = mcLon;
-
-            if (system === 'equal_asc') { for (let i = 0; i < 12; i++) cusps[i] = (ascLon + i * 30) % 360; return cusps; }
-            if (system === 'equal_mc') { const start = (mcLon - 90 + 360) % 360; for (let i = 0; i < 12; i++) cusps[i] = (start + i * 30) % 360; return cusps; }
-            if (system === 'whole_asc') { const start = Math.floor(ascLon / 30) * 30; for (let i = 0; i < 12; i++) cusps[i] = (start + i * 30) % 360; return cusps; }
-            if (system === 'whole_sun') { const start = Math.floor(sunLon / 30) * 30; for (let i = 0; i < 12; i++) cusps[i] = (start + i * 30) % 360; return cusps; }
-            if (system === 'whole_aries') { for (let i = 0; i < 12; i++) cusps[i] = (i * 30) % 360; return cusps; }
-
-            const offsets = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
-            const cuspOrder = [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-            const houses = [];
-            for (let i = 0; i < 12; i++) {
-                if (i === 0 || i === 3 || i === 6 || i === 9) continue;
-                const ra = (ramc + offsets[i]) * Math.PI / 180;
-                let pole = Math.atan(Math.tan(latRad) * Math.sin(offsets[i] * Math.PI / 180));
-                const sinRa = Math.sin(ra), cosRa = Math.cos(ra);
-                const denom = cosRa * Math.cos(epsRad) - Math.tan(pole) * Math.sin(epsRad);
-                let L = Math.atan2(sinRa, denom) * 180 / Math.PI;
-                if (L < 0) L += 360;
-                houses.push({ cusp: cuspOrder[i], longitude: L });
-            }
-            houses.sort((a, b) => a.cusp - b.cusp);
-            houses.forEach(h => { cusps[h.cusp - 1] = h.longitude; });
-            return cusps;
-        }
-
-        async function calculateChart() {
-            const btn = document.getElementById('calc-btn');
-            const errBox = document.getElementById('error-display');
-            errBox.style.display = 'none';
-            btn.disabled = true;
-            btn.textContent = "Вычисление...";
-
-            try {
-                if (typeof Astronomy === 'undefined') throw new Error("Файл astronomy.js не загрузился.");
-
-                let datetimeStr = document.getElementById('datetime').value;
-                const locationStr = document.getElementById('location').value;
-                const timezone = parseFloat(document.getElementById('timezone').value);
-                const houseSystem = document.getElementById('house-system').value;
-                const rulerSystem = document.getElementById('ruler-system').value;
-
-                if (!datetimeStr || !locationStr || isNaN(timezone)) throw new Error("Заполните дату, город и часовой пояс.");
-
-                const [datePart, timePart] = datetimeStr.split('T');
-                const [year, month, day] = datePart.split('-').map(Number);                const [hour, minute] = timePart.split(':').map(Number);
-                const jsDate = new Date(Date.UTC(year, month - 1, day, hour - timezone, minute, 0));
-                
-                const response = await fetch("https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(locationStr));
-                const data = await response.json();
-                if (data.length === 0) throw new Error("Город не найден. Попробуйте название на английском.");
-                
-                const lat = parseFloat(data[0].lat);
-                const lon = parseFloat(data[0].lon);
-                
-                const mainPlanets = [];
-                const fixedPoints = [];
-                const asteroids = [];
-                const parts = [];
-                let sunLon = 0;
-
-                for (const body of mainBodies) {
-                    let plon = 0;
-                    if (["North Node", "South Node", "Lilith", "Selena"].includes(body.id)) {
-                        const T = (jsDate.getTime() / 86400000 - 10957.5) / 36525;
-                        let node = (125.04452 - 1934.13626 * T) % 360;
-                        if (node < 0) node += 360;
-                        if (body.id === "North Node") plon = node;
-                        else if (body.id === "South Node") plon = (node + 180) % 360;
-                        else if (body.id === "Lilith") plon = (112.18 + 40690.137 * T) % 360;
-                        else if (body.id === "Selena") plon = ((112.18 + 40690.137 * T) + 180) % 360;
-                        fixedPoints.push({ id: body.id, name: body.name, symbol: body.symbol, longitude: plon, category: 'fixed' });
-                    } else {
-                        const gv = Astronomy.GeoVector(body.id, jsDate, true);
-                        const ecl = Astronomy.Ecliptic(gv);
-                        plon = ecl.elon;
-                        if (body.id === "Sun") sunLon = plon;
-                        mainPlanets.push({ id: body.id, name: body.name, symbol: body.symbol, longitude: plon, category: 'planet' });
-                    }
-                }
-
-                const daysSinceJ2000 = (jsDate.getTime() / 86400000) - 10957.5;
-                const astData = { 
-                    "Ceres": { name: "Церера", symbol: "⚳", L0: 83.3, n: 0.214 }, 
-                    "Pallas": { name: "Паллада", symbol: "⚴", L0: 138.0, n: 0.210 }, 
-                    "Juno": { name: "Юнона", symbol: "⚵", L0: 30.0, n: 0.270 }, 
-                    "Vesta": { name: "Веста", symbol: "⚶", L0: 345.0, n: 0.274 } 
-                };
-                
-                if (document.getElementById('inc-chiron').checked) {
-                    try {
-                        const gv = Astronomy.GeoVector("Chiron", jsDate, true);
-                        const ecl = Astronomy.Ecliptic(gv);
-                        asteroids.push({ id: "Chiron", name: "Хирон", symbol: "⚷", longitude: ecl.elon, category: 'asteroid' });
-                    } catch(e) { console.warn("Хирон не рассчитан", e); }                }
-                for (const [id, d] of Object.entries(astData)) {
-                    if (document.getElementById('inc-' + id.toLowerCase()).checked) {
-                        let plon = (d.L0 + d.n * daysSinceJ2000) % 360;
-                        if (plon < 0) plon += 360;
-                        asteroids.push({ id: id, name: d.name, symbol: d.symbol, longitude: plon, category: 'asteroid' });
-                    }
-                }
-
-                const gst = Astronomy.SiderealTime(jsDate);
-                let ramc = (gst * 15 + lon) % 360;
-                if (ramc < 0) ramc += 360;
-                const cusps = getCusps(houseSystem, lat, ramc, 23.4392911, sunLon);
-                const ascLon = cusps[0];
-                
-                let sunHouse = 1;
-                for (let i = 11; i >= 0; i--) {
-                    let c1 = cusps[i], c2 = cusps[(i + 1) % 12];
-                    if (c2 < c1) c2 += 360;
-                    let p = sunLon;
-                    if (p < c1) p += 360;
-                    if (p >= c1 && p < c2) { sunHouse = i + 1; break; }
-                }
-                const isDay = sunHouse >= 7;
-
-                const addPart = (chkId, name, symbol, type, planetId) => {
-                    if (document.getElementById(chkId).checked) {
-                        let plon = 0;
-                        const moon = mainPlanets.find(p => p.id === "Moon").longitude;
-                        const pl = mainPlanets.find(p => p.id === planetId)?.longitude || 0;
-                        if (type === 'fortune') plon = isDay ? (ascLon + moon - sunLon) : (ascLon + sunLon - moon);
-                        else if (type === 'spirit') plon = isDay ? (ascLon + sunLon - moon) : (ascLon + moon - sunLon);
-                        else plon = ascLon + pl - moon;
-                        plon = (plon % 360 + 360) % 360;
-                        parts.push({ id: name, name: name, symbol: symbol, longitude: plon, category: 'part' });
-                    }
-                };
-                addPart('inc-fortune', 'Парс Фортуны', '⊕', 'fortune', 'Sun');
-                addPart('inc-spirit', 'Парс Духа', '🜁', 'spirit', 'Sun');
-                addPart('inc-eros', 'Парс Эроса', '🜂', 'eros', 'Venus');
-                addPart('inc-wealth', 'Парс Богатства', '🜃', 'wealth', 'Jupiter');
-                addPart('inc-death', 'Парс Смерти', '🜄', 'death', 'Saturn');
-
-                const allPoints = [...mainPlanets, ...fixedPoints, ...asteroids, ...parts];
-
-                allPoints.forEach(p => {
-                    p.house = 1;
-                    for (let i = 11; i >= 0; i--) {
-                        let c1 = cusps[i], c2 = cusps[(i + 1) % 12];
-                        if (c2 < c1) c2 += 360;                        let pLon = p.longitude;
-                        if (pLon < c1) pLon += 360;
-                        if (pLon >= c1 && pLon < c2) { p.house = i + 1; break; }
-                    }
-                });
-
-                const activeAspects = allAspectDefs.filter(asp => document.getElementById('asp-' + asp.id).checked);
-                const aspects = [];
-                for (let i = 0; i < allPoints.length; i++) {
-                    for (let j = i + 1; j < allPoints.length; j++) {
-                        let diff = Math.abs(allPoints[i].longitude - allPoints[j].longitude);
-                        if (diff > 180) diff = 360 - diff;
-                        for (const asp of activeAspects) {
-                            if (Math.abs(diff - asp.angle) <= asp.orb) {
-                                aspects.push({ 
-                                    p1: allPoints[i], p2: allPoints[j], 
-                                    aspect: asp.name, symbol: asp.symbol, 
-                                    orb: Math.abs(diff - asp.angle).toFixed(2), color: asp.color 
-                                });
-                            }
-                        }
-                    }
-                }
-
-                const starConjunctions = [];
-                const precession = ((jsDate.getTime() / 86400000 - 10957.5) / 365.25) * (50.29 / 3600);
-                fixedStars.forEach(star => {
-                    let starLon = (star.lon + precession) % 360;
-                    allPoints.forEach(p => {
-                        let diff = Math.abs(p.longitude - starLon);
-                        if (diff > 180) diff = 360 - diff;
-                        if (diff <= 1.5) {
-                            starConjunctions.push({ star: star.name, planet: p.symbol + " " + p.name, diff: diff.toFixed(2) });
-                        }
+function calculateMinorAspects() {
+    if (!currentData || !currentData.planets) {
+        showError("Сначала рассчитайте натальную карту.");
+        return;
+    }
+    const activeAspects = minorAspectDefs.filter(def => {
+        const checkbox = document.getElementById(def.id);
+        return checkbox && checkbox.checked;
+    });
+    if (activeAspects.length === 0) {
+        renderMinorAspectsTable([]);
+        return;
+    }
+    const minorAspects = [];
+    const planets = currentData.planets;
+    for (let i = 0; i < planets.length; i++) {
+        for (let j = i + 1; j < planets.length; j++) {
+            const p1 = planets[i];
+            const p2 = planets[j];
+            let diff = Math.abs(p1.longitude - p2.longitude);
+            if (diff > 180) diff = 360 - diff;
+            for (const asp of activeAspects) {
+                if (Math.abs(diff - asp.angle) <= asp.orb) {
+                    minorAspects.push({
+                        p1: p1, p2: p2,
+                        aspect: asp.name, aspectSymbol: asp.symbol,
+                        orb: Math.abs(diff - asp.angle).toFixed(2),
+                        color: asp.color
                     });
+                }
+            }
+        }
+    }
+    minorAspects.sort((a, b) => parseFloat(a.orb) - parseFloat(b.orb));
+    currentData.minorAspects = minorAspects;
+    renderMinorAspectsTable(minorAspects);
+}
+
+function renderMinorAspectsTable(aspects) {
+    const tbody = document.querySelector('#minor-aspects-table tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (aspects.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #7f8c8d; padding: 15px;">Минорные аспекты не найдены при выбранных настройках орбиса</td></tr>';
+        return;
+    }
+    tbody.innerHTML = aspects.map(a => `
+        <tr>
+            <td>${a.p1.symbol} ${a.p1.russian}</td>
+            <td style="color: ${a.color}; font-weight: bold;">${a.aspectSymbol} ${a.aspect}</td>
+            <td>${a.p2.symbol} ${a.p2.russian}</td>
+            <td>${a.orb}°</td>
+        </tr>
+    `).join('');
+}
+
+const fixedStars = [
+    { name: "Альдебаран", longitude: 69.08 }, { name: "Капелла", longitude: 81.25 }, { name: "Ригель", longitude: 76.82 },
+    { name: "Бетельгейзе", longitude: 88.17 }, { name: "Поллукс", longitude: 113.48 }, { name: "Процион", longitude: 115.87 },
+    { name: "Сириус", longitude: 104.18 }, { name: "Канопус", longitude: 104.95 }, { name: "Регул", longitude: 149.98 },
+    { name: "Денебола", longitude: 171.87 }, { name: "Спика", longitude: 203.90 }, { name: "Арктур", longitude: 204.10 },
+    { name: "Альфека", longitude: 192.09 }, { name: "Антарес", longitude: 249.18 }, { name: "Лямбда Скорпиона", longitude: 264.19 },
+    { name: "Акрибикс", longitude: 217.38 }, { name: "Графиас", longitude: 219.08 }, { name: "Шаула", longitude: 264.48 },
+    { name: "Каус Аустралис", longitude: 245.18 }, { name: "Нунки", longitude: 252.08 }, { name: "Вега", longitude: 285.18 },
+    { name: "Альтаир", longitude: 275.98 }, { name: "Денеб", longitude: 305.56 }, { name: "Фомальгаут", longitude: 333.89 },
+    { name: "Ахернар", longitude: 345.18 }, { name: "Альгениб", longitude: 359.18 }, { name: "Мирах", longitude: 350.08 },
+    { name: "Альферац", longitude: 14.18 }, { name: "Хамаль", longitude: 7.78 }, { name: "Менкар", longitude: 51.58 },
+    { name: "Электра", longitude: 59.08 }, { name: "Альнилам", longitude: 82.38 }, { name: "Минтака", longitude: 82.23 },
+    { name: "Альнитак", longitude: 84.38 }, { name: "Полярная", longitude: 83.48 }, { name: "Маркаб", longitude: 323.18 },
+    { name: "Шеат", longitude: 313.18 }, { name: "Лесат", longitude: 260.56 }, { name: "Альриша", longitude: 29.58 },
+    { name: "Зета Рыб", longitude: 23.18 }, { name: "Омега Тельца", longitude: 72.58 }, { name: "Дзета Тельца", longitude: 55.88 },
+    { name: "Эпсилон Близнецов", longitude: 76.08 }, { name: "Дельта Близнецов", longitude: 94.58 }, { name: "Гамма Льва", longitude: 145.58 },
+    { name: "Дельта Льва", longitude: 133.58 }, { name: "Бета Девы", longitude: 199.58 }, { name: "Гамма Девы", longitude: 209.58 },
+    { name: "Дельта Скорпиона", longitude: 239.58 }, { name: "Эпсилон Скорпиона", longitude: 247.58 }, { name: "Кастор", longitude: 111.38 },
+    { name: "Альциона", longitude: 72.28 }, { name: "Майя", longitude: 71.88 }, { name: "Атлас", longitude: 73.18 },
+    { name: "Тайгета", longitude: 72.48 }, { name: "Меропа", longitude: 72.68 }, { name: "Астеропа", longitude: 72.98 },
+    { name: "Саиф", longitude: 255.18 }, { name: "Шератан", longitude: 11.58 }, { name: "Мезартим", longitude: 11.88 },
+    { name: "Мира", longitude: 43.58 }, { name: "Беллатрикс", longitude: 90.18 }, { name: "Эльнат", longitude: 94.88 },
+    { name: "Мейсса", longitude: 96.58 }, { name: "Хекла", longitude: 95.88 }, { name: "Пропус", longitude: 97.18 },
+    { name: "Васат", longitude: 104.58 }, { name: "Мекбуда", longitude: 115.18 }, { name: "Расалас", longitude: 148.58 },
+    { name: "Альгиеба", longitude: 149.28 }, { name: "Зосма", longitude: 168.58 }, { name: "Завиява", longitude: 173.58 },
+    { name: "Виндемиатрикс", longitude: 199.58 }, { name: "Сирма", longitude: 201.58 }, { name: "Унук аль Хайя", longitude: 229.58 },
+    { name: "Кор Серпенс", longitude: 233.58 }, { name: "Эта Змеи", longitude: 235.58 }, { name: "Сабик", longitude: 263.58 },
+    { name: "Везен", longitude: 266.58 }, { name: "Альнилия", longitude: 267.58 }, { name: "Каус Бореалис", longitude: 268.58 },
+    { name: "Каус Медиа", longitude: 269.58 }, { name: "Альбальдах", longitude: 270.58 }, { name: "Полима", longitude: 271.58 },
+    { name: "Альшайн", longitude: 303.58 }, { name: "Тарф", longitude: 118.58 }, { name: "Аселлус Бореалис", longitude: 123.58 },
+    { name: "Аселлус Аустралис", longitude: 124.58 }, { name: "Альфард", longitude: 142.58 }, { name: "Денеб Аледж", longitude: 318.58 },
+    { name: "Эниф", longitude: 337.58 }, { name: "Альгенди", longitude: 315.58 }, { name: "Зубенельгенуби", longitude: 202.08 },
+    { name: "Зубенешамали", longitude: 208.18 }, { name: "Дшубба", longitude: 222.68 }, { name: "Алният", longitude: 228.18 },
+    { name: "Гираб", longitude: 244.58 }, { name: "Дубхе", longitude: 103.58 }, { name: "Мерак", longitude: 110.08 },
+    { name: "Алиот", longitude: 208.38 }, { name: "Мицар", longitude: 158.18 }, { name: "Алькаид", longitude: 27.08 },
+    { name: "Кохаб", longitude: 13.58 }, { name: "Мирзам", longitude: 100.18 }, { name: "Адхара", longitude: 99.58 },
+    { name: "Фуруд", longitude: 105.58 }, { name: "Алудра", longitude: 108.58 }, { name: "Альхена", longitude: 94.18 },
+    { name: "Тейджат", longitude: 112.58 }, { name: "Акубенс", longitude: 135.58 }, { name: "Тегмене", longitude: 141.58 },
+    { name: "Адхафера", longitude: 140.58 }, { name: "Субра", longitude: 144.58 }, { name: "Черта", longitude: 162.58 },
+    { name: "Зания", longitude: 198.58 }, { name: "Аува", longitude: 195.58 }, { name: "Альхиба", longitude: 210.58 },
+    { name: "Крац", longitude: 212.58 }, { name: "Гиена", longitude: 205.58 }, { name: "Минкар", longitude: 225.58 },
+    { name: "Расалхаг", longitude: 221.58 }, { name: "Цебалрай", longitude: 25.58 }, { name: "Йед Приор", longitude: 224.58 },
+    { name: "Йед Постериор", longitude: 232.58 }, { name: "Нусакан", longitude: 194.58 }, { name: "Толиман", longitude: 215.58 },
+    { name: "Хадар", longitude: 218.58 }, { name: "Менкент", longitude: 220.58 }, { name: "Гиадум I", longitude: 68.58 },
+    { name: "Гиадум II", longitude: 71.58 }, { name: "Плейоне", longitude: 72.88 }, { name: "Целено", longitude: 71.28 },
+    { name: "Табит", longitude: 80.58 }, { name: "Аскелла", longitude: 254.58 }, { name: "Нашира", longitude: 284.58 },
+    { name: "Садальсууд", longitude: 308.58 }, { name: "Садальмелик", longitude: 304.18 }, { name: "Скат", longitude: 320.58 },
+    { name: "Фумальсамака", longitude: 340.58 }, { name: "Альмах", longitude: 33.58 }, { name: "Матар", longitude: 319.18 },
+    { name: "Бихам", longitude: 325.58 }, { name: "Садальбари", longitude: 335.58 }, { name: "Хоман", longitude: 316.18 }
+];
+
+function calculateFixedStars() {
+    if (!currentData || !currentData.planets) {
+        showError("Сначала рассчитайте натальную карту.");
+        return;
+    }
+    const conjunctions = [];
+    currentData.planets.forEach(planet => {
+        fixedStars.forEach(star => {
+            let diff = Math.abs(planet.longitude - star.longitude);
+            if (diff > 180) diff = 360 - diff;
+            if (diff <= 1.5) {
+                conjunctions.push({
+                    planetName: planet.russian,
+                    planetSymbol: planet.symbol,
+                    starName: star.name,
+                    starLongitude: star.longitude,
+                    diff: diff.toFixed(2)
                 });
+            }
+        });
+    });
+    conjunctions.sort((a, b) => parseFloat(a.diff) - parseFloat(b.diff));
+    currentData.fixedStars = conjunctions;
+    renderFixedStarsTable(conjunctions);
+}
 
-                currentData = { 
-                    datetime: datetimeStr, location: locationStr, timezone: timezone, 
-                    points: allPoints, cusps: cusps, ascLon: ascLon, aspects: aspects, 
-                    starConjunctions: starConjunctions, rulerSystem: rulerSystem, isDay: isDay, houseSystem: houseSystem 
-                };
+function renderFixedStarsTable(conjunctions) {
+    const tbody = document.querySelector('#fixed-stars-table tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (conjunctions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #7f8c8d; padding: 15px;">Нет конъюнкций планет с неподвижными звездами (орбис <= 1.5°)</td></tr>';
+        return;
+    }
+    tbody.innerHTML = conjunctions.map(c => {
+        const signIndex = Math.floor(c.starLongitude / 30);
+        const signName = signs[signIndex];
+        const signSymbol = signSymbols[signIndex];
+        const degree = (c.starLongitude % 30).toFixed(2);
+        return `
+            <tr>
+                <td>${c.planetSymbol} ${c.planetName}</td>
+                <td>${c.starName}</td>
+                <td>${signSymbol} ${signName}</td>
+                <td>${degree}°</td>
+                <td>${c.diff}°</td>
+            </tr>
+        `;
+    }).join('');
+}
 
-                document.getElementById('chart-card').style.display = 'block';
-                document.getElementById('data-card').style.display = 'block';
-                renderTables();
-                drawChart();
-                document.getElementById('chart-card').scrollIntoView({ behavior: 'smooth' });
+const arabicPartsDefs = [
+    { name: "Парс Фортуны", p1: "Moon", p2: "Sun" },
+    { name: "Парс Духа", p1: "Sun", p2: "Moon" },
+    { name: "Парс Эроса", p1: "Venus", p2: "Sun" },
+    { name: "Парс Необходимости", p1: "Saturn", p2: "Mars" },
+    { name: "Парс Мужества", p1: "Mars", p2: "Sun" },
+    { name: "Парс Победы", p1: "Jupiter", p2: "Mars" },
+    { name: "Парс Богатства", p1: "Jupiter", p2: "Sun" },
+    { name: "Парс Долгов", p1: "Saturn", p2: "Sun" },
+    { name: "Парс Наследства", p1: "Saturn", p2: "Jupiter" },
+    { name: "Парс Торговли", p1: "Mercury", p2: "Sun" },
+    { name: "Парс Отца", p1: "Sun", p2: "Saturn" },
+    { name: "Парс Матери", p1: "Venus", p2: "Moon" },
+    { name: "Парс Брака", p1: "Venus", p2: "Sun" },
+    { name: "Парс Детей", p1: "Jupiter", p2: "Saturn" },
+    { name: "Парс Путешествий", p1: "Mercury", p2: "Moon" },
+    { name: "Парс Славы", p1: "Jupiter", p2: "Sun" },
+    { name: "Парс Веры", p1: "Moon", p2: "Mercury" },
+    { name: "Парс Науки", p1: "Mercury", p2: "Sun" },
+    { name: "Парс Тайн", p1: "Moon", p2: "Saturn" },
+    { name: "Парс Работы", p1: "Mars", p2: "Sun" },
+    { name: "Парс Сельского хозяйства", p1: "Sun", p2: "Mars" },
+    { name: "Парс Искусства", p1: "Venus", p2: "Moon" },
+    { name: "Парс Судебных процессов", p1: "Saturn", p2: "Jupiter" },
+    { name: "Парс Болезней", p1: "Mars", p2: "Saturn" },
+    { name: "Парс Хирургии", p1: "Mars", p2: "Saturn" },
+    { name: "Парс Врачей", p1: "Sun", p2: "Saturn" },
+    { name: "Парс Хронических болезней", p1: "Saturn", p2: "Moon" },
+    { name: "Парс Острых болезней", p1: "Mars", p2: "Sun" },
+    { name: "Парс Несчастья", p1: "Saturn", p2: "Mars" },
+    { name: "Парс Насилия", p1: "Mars", p2: "Saturn" },
+    { name: "Парс Тюрьмы", p1: "Saturn", p2: "Mars" },
+    { name: "Парс Врагов", p1: "Saturn", p2: "Mars" },
+    { name: "Парс Предательств", p1: "Saturn", p2: "Mars" },
+    { name: "Парс Опасностей", p1: "Mars", p2: "Saturn" },
+    { name: "Парс Смерти", p1: "Saturn", p2: "Mars" },
+    { name: "Парс Долгой жизни", p1: "Jupiter", p2: "Saturn" },
+    { name: "Парс Короткой жизни", p1: "Saturn", p2: "Mars" },
+    { name: "Парс Травм", p1: "Mars", p2: "Sun" },
+    { name: "Парс Психических заболеваний", p1: "Moon", p2: "Saturn" },
+    { name: "Парс Выздоровления", p1: "Sun", p2: "Mars" },
+    { name: "Парс братьев и сестер", p1: "Saturn", p2: "Sun" },
+    { name: "Парс дедушки по отцовской линии", p1: "Saturn", p2: "Sun" },
+    { name: "Парс бабушки по материнской линии", p1: "Venus", p2: "Moon" },
+    { name: "Парс беременности", p1: "Moon", p2: "Venus" },
+    { name: "Парс рождения", p1: "PartOfFortune", p2: "Moon" },
+    { name: "Парс имущества и недвижимости", p1: "Moon", p2: "Venus" },
+    { name: "Парс прибыли и доходов", p1: "Jupiter", p2: "Venus" },
+    { name: "Парс убытков и потерь", p1: "Saturn", p2: "Venus" },
+    { name: "Парс профессии и призвания", p1: "Mars", p2: "Mercury" },
+    { name: "Парс рабов или подчиненных", p1: "Venus", p2: "Saturn" },
+    { name: "Парс начальника или господина", p1: "Saturn", p2: "Sun" },
+    { name: "Парс царей и власти", p1: "Jupiter", p2: "Sun" },
+    { name: "Парс друзей", p1: "Mercury", p2: "Moon" },
+    { name: "Парс скандалов и бесчестия", p1: "Saturn", p2: "Mars" },
+    { name: "Парс внезапных событий", p1: "Uranus", p2: "Sun" },
+    { name: "Парс тайных врагов", p1: "Saturn", p2: "Mars" },
+    { name: "Парс открытых врагов", p1: "Mars", p2: "Saturn" },
+    { name: "Парс клеветы и обвинений", p1: "Saturn", p2: "Mercury" },
+    { name: "Парс бегства и побега", p1: "Moon", p2: "Saturn" },
+    { name: "Парс немезиды или возмездия", p1: "Saturn", p2: "PartOfFortune" },
+    { name: "Парс основания или базы", p1: "Moon", p2: "PartOfFortune" },
+    { name: "Парс кораблей и водных путешествий", p1: "Moon", p2: "Sun" },
+    { name: "Парс отсутствующих", p1: "Saturn", p2: "Moon" },
+    { name: "Парс воли и завещания", p1: "Jupiter", p2: "Mercury" },
+    { name: "Парс развода и расставания", p1: "Venus", p2: "Saturn" },
+    { name: "Парс кармы и прошлых жизней", p1: "SouthNode", p2: "Moon" },
+    { name: "Парс таланта", p1: "Sun", p2: "Uranus" },
+    { name: "Парс мистического опыта", p1: "Neptune", p2: "Moon" },
+    { name: "Парс астролога", p1: "Mercury", p2: "Jupiter" }
+];
 
-            } catch (error) {                console.error("ОШИБКА:", error);
-                errBox.innerHTML = "⚠️ " + error.message;
-                errBox.style.display = 'block';
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "Рассчитать";
+function calculateArabicParts() {
+    if (!currentData || !currentData.planets) {
+        showError("Сначала рассчитайте натальную карту.");
+        return;
+    }
+    const sunPlanet = currentData.planets.find(p => p.name === "Sun");
+    const isDay = sunPlanet && sunPlanet.house !== "-" ? (sunPlanet.house >= 7 && sunPlanet.house <= 12) : true;
+    const ascLon = currentData.ascLon;
+
+    const getLon = (name) => {
+        const p = currentData.planets.find(pl => pl.name === name);
+        return p ? p.longitude : null;
+    };
+
+    const fortuneLon = (() => {
+        const lon1 = getLon("Moon");
+        const lon2 = getLon("Sun");
+        if (lon1 === null || lon2 === null) return null;
+        let raw = ascLon + (isDay ? (lon1 - lon2) : (lon2 - lon1));
+        let norm = raw % 360;
+        if (norm < 0) norm += 360;
+        return norm;
+    })();
+
+    const getEffectiveLon = (name) => {
+        if (name === "PartOfFortune") return fortuneLon;
+        return getLon(name);
+    };
+
+    const results = [];
+    arabicPartsDefs.forEach(def => {
+        const lon1 = getEffectiveLon(def.p1);
+        const lon2 = getEffectiveLon(def.p2);
+
+        if (lon1 === null || lon2 === null) {
+            results.push({
+                name: def.name,
+                p1Name: def.p1 === "PartOfFortune" ? "Парс Фортуны" : (def.p1 === "SouthNode" ? "Южный Узел" : def.p1),
+                p2Name: def.p2 === "PartOfFortune" ? "Парс Фортуны" : (def.p2 === "SouthNode" ? "Южный Узел" : def.p2),
+                longitude: null,
+                sign: "N/A",
+                degree: "N/A",
+                house: currentData.unknownTime ? "-" : "N/A"
+            });
+            return;
+        }
+
+        let rawLon = ascLon + (isDay ? (lon1 - lon2) : (lon2 - lon1));
+        let normLon = rawLon % 360;
+        if (normLon < 0) normLon += 360;
+
+        let house = currentData.unknownTime ? "-" : 12;
+        if (!currentData.unknownTime && currentData.houses && currentData.houses.length > 0) {
+            let relLon = normLon - ascLon;
+            if (relLon < 0) relLon += 360;
+            let relCusps = currentData.houses.map(h => {
+                let rel = h.longitude - ascLon;
+                if (rel < 0) rel += 360;
+                return { cusp: h.cusp, rel: rel };
+            }).sort((a, b) => a.rel - b.rel);
+
+            for (let i = 0; i < 11; i++) {
+                if (relLon >= relCusps[i].rel && relLon < relCusps[i+1].rel) {
+                    house = relCusps[i].cusp;
+                    break;
+                }
             }
         }
 
-        function renderTables() {
-            if (!currentData) return;
-            const { points, cusps, aspects, starConjunctions, rulerSystem, isDay } = currentData;
+        const signIndex = Math.floor(normLon / 30);
+        const signName = signs[signIndex];
+        const signSymbol = signSymbols[signIndex];
+        const degree = (normLon % 30).toFixed(2);
 
-            const fillTable = (id, rows) => {
-                const tbody = document.querySelector(`#${id} tbody`);
-                if (tbody) tbody.innerHTML = rows.length > 0 ? rows.join('') : '<tr><td colspan="4">Нет данных</td></tr>';
-            };
+        const p1Obj = currentData.planets.find(p => p.name === def.p1);
+        const p2Obj = currentData.planets.find(p => p.name === def.p2);
+        
+        const p1Display = def.p1 === "PartOfFortune" ? "Парс Фортуны" : (p1Obj ? p1Obj.russian : def.p1);
+        const p2Display = def.p2 === "PartOfFortune" ? "Парс Фортуны" : (p2Obj ? p2Obj.russian : def.p2);
 
-            const planetRows = [];
-            let lastCategory = '';
-            points.forEach(p => {
-                if (p.category !== lastCategory) {
-                    const catNames = { 'planet': 'Основные планеты', 'fixed': 'Узлы и фиктивные точки', 'asteroid': 'Астероиды', 'part': 'Арабские точки (Парсы)' };
-                    planetRows.push(`<tr class="separator-row"><td colspan="4">${catNames[p.category]}</td></tr>`);
-                    lastCategory = p.category;
-                }
-                planetRows.push(`<tr><td>${p.symbol} ${p.name}</td><td>${getSignSymbol(p.longitude)} ${getSign(p.longitude)}</td><td>${getDegree(p.longitude)}°</td><td>${p.house}</td></tr>`);
-            });
-            fillTable('planets-table', planetRows);
-            
-            const sTable = document.querySelector('#stars-table tbody');
-            if (sTable) {
-                if (starConjunctions.length > 0) {
-                    sTable.innerHTML = starConjunctions.map(s => `<tr><td>${s.star}</td><td>${s.planet}</td><td>${s.diff}°</td></tr>`).join('');
-                } else {
-                    sTable.innerHTML = '<tr><td colspan="3">Нет точных конъюнкций (орбис ≤ 1.5°)</td></tr>';
-                }
-            }
+        results.push({
+            name: def.name,
+            p1Name: p1Display,
+            p2Name: p2Display,
+            longitude: normLon,
+            sign: signSymbol + " " + signName,
+            degree: degree + "°",
+            house: house
+        });
+    });
 
-            fillTable('aspects-table', aspects.map(a => `<tr><td>${a.p1.symbol} ${a.p1.name}</td><td style="color:${a.color}; font-weight:bold;">${a.symbol} ${a.aspect}</td><td>${a.p2.symbol} ${a.p2.name}</td><td>${a.orb}°</td></tr>`));
-            fillTable('houses-table', cusps.map((c, i) => `<tr><td>Дом ${i + 1}</td><td>${getDegree(c)}°</td><td>${getSignSymbol(c)} ${getSign(c)}</td></tr>`));
+    currentData.arabicParts = results;
+    renderArabicPartsTable(results);
+}
 
-            const evalPlanets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"];
-            fillTable('dignities-table', points.filter(p => evalPlanets.includes(p.id)).map(p => {
-                const signIdx = getSignIndex(p.longitude);
-                const dignity = getDignity(p.id, signIdx, rulerSystem, isDay);
-                const rulerId = getRuler(signIdx, rulerSystem, isDay);
-                const rulerBody = mainBodies.find(b => b.id === rulerId);
-                return `<tr><td>${p.symbol} ${p.name}</td><td>${getSignSymbol(p.longitude)} ${getSign(p.longitude)}</td><td>${dignity}</td><td>${rulerBody ? rulerBody.symbol + " " + rulerBody.name : rulerId}</td></tr>`;
-            }));        }
-
-        function drawChart() {
-            if (!currentData) return;
-            const canvas = document.getElementById('natal-chart');
-            const ctx = canvas.getContext('2d');
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const ascLon = currentData.ascLon;
-            
-            const R_zodiac_out = 180;
-            const R_zodiac_in = 140;
-            const R_planet = 95;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // ИСПРАВЛЕННАЯ ОТРИСОВКА ЗНАКОВ ЗОДИАКА (гарантированно 30-градусные сектора без перекрытий)
-            for (let i = 0; i < 12; i++) {
-                const startLon = i * 30;
-                const endLon = (i + 1) * 30;
-                const angleStart = getCanvasAngle(startLon, ascLon);
-                const angleEnd = getCanvasAngle(endLon, ascLon);
-                
-                ctx.beginPath();
-                // Начинаем с внешнего края
-                ctx.moveTo(centerX + Math.cos(angleStart) * R_zodiac_out, centerY + Math.sin(angleStart) * R_zodiac_out);
-                // Рисуем внешнюю дугу (против часовой стрелки, что означает уменьшение угла от angleStart к angleEnd)
-                ctx.arc(centerX, centerY, R_zodiac_out, angleStart, angleEnd, true);
-                // Линия к внутреннему краю
-                ctx.lineTo(centerX + Math.cos(angleEnd) * R_zodiac_in, centerY + Math.sin(angleEnd) * R_zodiac_in);
-                // Рисуем внутреннюю дугу обратно (по часовой стрелке, увеличение угла от angleEnd к angleStart)
-                ctx.arc(centerX, centerY, R_zodiac_in, angleEnd, angleStart, false);
-                ctx.closePath();
-                
-                ctx.fillStyle = '#f9f9f9';
-                ctx.fill();
-                ctx.strokeStyle = '#2c3e50';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-
-                const midLon = startLon + 15;
-                const midAngle = getCanvasAngle(midLon, ascLon);
-                ctx.fillStyle = '#2c3e50';
-                ctx.font = 'bold 20px "Segoe UI Symbol", "Arial Unicode MS", Arial, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(signSymbols[i], centerX + Math.cos(midAngle) * 160, centerY + Math.sin(midAngle) * 160);
-            }
-
-            // Отрисовка линий домов            ctx.font = 'bold 13px Arial, sans-serif';
-            for (let i = 0; i < 12; i++) {
-                const h = currentData.cusps[i];
-                const angle = getCanvasAngle(h, ascLon);
-                const isAngular = (i === 0 || i === 3 || i === 6 || i === 9);
-
-                ctx.beginPath();
-                ctx.moveTo(centerX, centerY);
-                ctx.lineTo(centerX + Math.cos(angle) * R_zodiac_out, centerY + Math.sin(angle) * R_zodiac_out);
-                ctx.strokeStyle = isAngular ? '#000000' : '#888888';
-                ctx.lineWidth = isAngular ? 2.5 : 1;
-                ctx.stroke();
-
-                if (i === 0) {
-                    ctx.fillStyle = '#000000'; ctx.font = 'bold 14px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                    ctx.fillText('ASC', centerX + Math.cos(angle) * 120, centerY + Math.sin(angle) * 120);
-                } else if (i === 9) {
-                    ctx.fillStyle = '#000000'; ctx.font = 'bold 14px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                    ctx.fillText('MC', centerX + Math.cos(angle) * 120, centerY + Math.sin(angle) * 120);
-                } else if (i === 6) {
-                    ctx.fillStyle = '#000000'; ctx.font = 'bold 14px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                    ctx.fillText('DESC', centerX + Math.cos(angle) * 120, centerY + Math.sin(angle) * 120);
-                } else if (i === 3) {
-                    ctx.fillStyle = '#000000'; ctx.font = 'bold 14px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                    ctx.fillText('IC', centerX + Math.cos(angle) * 120, centerY + Math.sin(angle) * 120);
-                } else {
-                    const nextH = currentData.cusps[(i + 1) % 12];
-                    let midLon = (h + (nextH < h ? nextH + 360 : nextH)) / 2;
-                    if (midLon >= 360) midLon -= 360;
-                    const midAngle = getCanvasAngle(midLon, ascLon);
-                    ctx.fillStyle = '#2c3e50';
-                    ctx.font = 'bold 12px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText((i+1).toString(), centerX + Math.cos(midAngle) * 120, centerY + Math.sin(midAngle) * 120);
-                }
-            }
-
-            // Отрисовка аспектов
-            currentData.aspects.forEach(a => {
-                const angle1 = getCanvasAngle(a.p1.longitude, ascLon);
-                const angle2 = getCanvasAngle(a.p2.longitude, ascLon);
-                ctx.save();
-                ctx.globalAlpha = 0.5;
-                ctx.strokeStyle = a.color;
-                ctx.lineWidth = 1.5;
-                ctx.beginPath();
-                ctx.moveTo(centerX + Math.cos(angle1) * R_planet, centerY + Math.sin(angle1) * R_planet);
-                ctx.lineTo(centerX + Math.cos(angle2) * R_planet, centerY + Math.sin(angle2) * R_planet);
-                ctx.stroke();                ctx.restore();
-            });
-
-            // Отрисовка планет и точек
-            ctx.font = 'bold 20px "Segoe UI Symbol", "Arial Unicode MS", Arial, sans-serif';
-            currentData.points.forEach(p => {
-                const angle = getCanvasAngle(p.longitude, ascLon);
-                const x = centerX + Math.cos(angle) * R_planet;
-                const y = centerY + Math.sin(angle) * R_planet;
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.arc(x, y, 14, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.fillStyle = '#000000';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(p.symbol, x, y);
-            });
-
-            // Центральная точка
-            ctx.fillStyle = '#2c3e50';
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, 3, 0, 2 * Math.PI);
-            ctx.fill();
-        }
-
-        function copyData() {
-            if (!currentData) { alert("Сначала рассчитайте карту"); return; }
-            const { datetime, location, timezone, points, cusps, aspects, starConjunctions, rulerSystem, isDay, houseSystem } = currentData;
-            let text = `Натальная карта\nДата: ${datetime}\nМесто: ${location} (GMT${timezone >= 0 ? '+' : ''}${timezone})\nСистема домов: ${houseSystem}\nСистема управителей: ${rulerSystem} (${isDay ? 'День' : 'Ночь'})\n\n`;
-            
-            text += "Планеты и точки:\n";
-            points.forEach(p => { text += `${p.symbol} ${p.name}: ${getSign(p.longitude)} ${getDegree(p.longitude)}°, Дом ${p.house}\n`; });
-
-            if (starConjunctions.length > 0) {
-                text += "\nНеподвижные звёзды (конъюнкции ≤ 1.5°):\n";
-                starConjunctions.forEach(s => { text += `${s.star} конъюнкция ${s.planet} (орбис ${s.diff}°)\n`; });
-            }
-
-            if (aspects.length > 0) { 
-                text += "\nАспекты:\n"; 
-                aspects.forEach(a => { text += `${a.p1.symbol}${a.p1.name} ${a.symbol} ${a.aspect} ${a.p2.symbol}${a.p2.name} (орбис ${a.orb}°)\n`; }); 
-            }
-
-            text += "\nДома (Куспиды):\n";
-            cusps.forEach((c, i) => { text += `Дом ${i + 1}: ${getSign(c)} ${getDegree(c)}°\n`; });
-
-            navigator.clipboard.writeText(text).then(() => alert('Все данные успешно скопированы!')).catch(() => alert('Не удалось скопировать'));
-        }
-    </script></body>
+function renderArabicPartsTable(parts) {
+    const tbody = document.querySelector('#arabic-parts-table tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (parts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #7f8c8d; padding: 15px;">Нет данных для расчета</td></tr>';
+        return;
+    }
+    tbody.innerHTML = parts.map(p => `
+        <tr>
+            <td>${p.name}</td>
+            <td>${p.p1Name}</td>
+            <td>${p.p2Name}</td>
+            <td>${p.sign}</td>
+            <td>${p.degree}</td>
+            <td>${p.house}</td>
+        </tr>
+    `).join('');
+}
+</script>
+</body>
 </html>
