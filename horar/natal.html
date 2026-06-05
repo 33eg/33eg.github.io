@@ -604,13 +604,17 @@ text += `${a.p1.symbol} ${a.p1.russian} ${a.aspectSymbol} ${a.aspect} ${a.p2.sym
 if (currentData.fixedStars && currentData.fixedStars.length > 0) {
 text += "\nНеподвижные звёзды:\n";
 currentData.fixedStars.forEach(s => {
-text += `${s.planetSymbol} ${s.planetName} соединена со звездой ${s.starName} (${s.signSymbol} ${s.starDegree}°), орбис ${s.diff}°\n`;
+const signIndex = Math.floor(s.starLongitude / 30);
+const signName = signs[signIndex];
+const signSymbol = signSymbols[signIndex];
+const degree = (s.starLongitude % 30).toFixed(2);
+text += `${s.planetSymbol} ${s.planetName} соединена со звездой ${s.starName} (${signSymbol} ${signName} ${degree}°), орбис ${s.diff}°\n`;
 });
 }
 if (currentData.arabicParts && currentData.arabicParts.length > 0) {
 text += "\nАрабские точки:\n";
 currentData.arabicParts.forEach(p => {
-text += `${p.name}: ${p.signSymbol} ${p.degree}° (Дом ${p.house})\n`;
+text += `${p.name}: ${p.sign} ${p.degree} (Дом ${p.house})\n`;
 });
 }
 text += "\nВопрос: [ВСТАВЬТЕ СЮДА ВАШ ЗАПРОС ДЛЯ AI]";
